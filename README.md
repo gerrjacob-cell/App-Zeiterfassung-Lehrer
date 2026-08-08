@@ -143,13 +143,30 @@ Abhängigkeiten, kein npm.
 
 **Auf GitHub Pages veröffentlichen:**
 
-1. Repository-Einstellungen → *Pages* → Source: *Deploy from a branch*
-2. Branch wählen, Ordner `/ (root)`, speichern
-3. Die App ist unter `https://<benutzer>.github.io/<repo>/` erreichbar
+1. **Repository auf öffentlich stellen** – Einstellungen → ganz unten
+   *Danger Zone* → *Change visibility*. GitHub Pages ist für private
+   Repositories nur in kostenpflichtigen Tarifen verfügbar; mit einem
+   Free-Konto bleibt die Seite sonst auf 404. Bedenkenlos möglich, weil im
+   Repository nur Programmcode liegt – die Arbeitszeitdaten entstehen erst im
+   Browser der Lehrkraft und werden nie hochgeladen.
+2. Einstellungen → *Pages* → Source: *Deploy from a branch*
+3. Branch wählen, Ordner `/ (root)`, speichern
+4. Nach ein bis zwei Minuten ist die App unter
+   `https://<benutzer>.github.io/<repo>/` erreichbar
 
-**Auf einem eigenen Webspace:** alle Dateien in ein Verzeichnis hochladen. Es
-wird nur HTTPS benötigt – ohne HTTPS funktionieren Service Worker und damit der
-Offline-Betrieb nicht.
+Die App ist darauf ausgelegt, in einem Unterverzeichnis zu laufen: Alle Pfade
+sind relativ, der Service Worker registriert sich auf den Unterpfad, und das
+Manifest nutzt `start_url: "."`.
+
+**Auf einem eigenen Webspace oder Schulserver:** alle Dateien in ein Verzeichnis
+hochladen, fertig. Zwingend ist **HTTPS** – ohne verschlüsselte Verbindung
+verweigern Browser den Service Worker, und damit entfällt der Offline-Betrieb
+und die Installation auf dem Startbildschirm. Eine Ausnahme gilt nur für
+`localhost` beim Ausprobieren.
+
+**Andere kostenlose Möglichkeiten:** Netlify Drop (Ordner auf die Website
+ziehen, sofort online, auch ohne Konto) oder Cloudflare Pages. Beide liefern
+HTTPS automatisch.
 
 **Lokal ausprobieren:**
 
@@ -161,8 +178,17 @@ python3 -m http.server 8000
 (Direktes Öffnen der `index.html` über `file://` funktioniert nicht, weil
 ES-Module dabei blockiert werden.)
 
-**Auf dem Telefon installieren:** Seite im Browser öffnen → „Zum Startbildschirm
-hinzufügen“. Danach startet die App im Vollbild und läuft offline.
+**Auf dem Telefon installieren:** Es gibt sie bewusst nicht im App Store oder
+bei Google Play – sie wird direkt von der Adresse installiert: Seite im Browser
+öffnen, dann *Teilen → Zum Home-Bildschirm* (iPhone) bzw. *Menü → App
+installieren* (Android). Danach hat sie ein eigenes Symbol, startet im Vollbild
+und läuft offline.
+
+Für die Stores wäre ein Entwicklerkonto nötig (Apple 99 US-Dollar im Jahr,
+Google einmalig 25), dazu ein Verpackungsschritt und ein Freigabeverfahren pro
+Aktualisierung – für eine App, die ohnehin nur im eigenen Kollegium läuft, wäre
+das viel Aufwand ohne Gegenwert. Der einzige praktische Unterschied: Ein Link
+muss verteilt werden, gefunden wird die App nicht von allein.
 
 ### Android und iPhone
 
