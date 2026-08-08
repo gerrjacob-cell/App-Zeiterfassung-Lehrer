@@ -5,7 +5,13 @@
 
 import { h, toast, bestaetigen, dialogOeffnen } from '../ui.js';
 import * as store from '../store.js';
-import { KATEGORIEN, KATEGORIE_MAP, TAGESTYPEN, leererEintrag } from '../model.js';
+import {
+  KATEGORIEN,
+  KATEGORIE_MAP,
+  TAGESTYPEN,
+  ERMAESSIGUNG_ARTEN,
+  leererEintrag,
+} from '../model.js';
 import { minutenAlsStunden, parseDauer } from '../soll.js';
 import { WOCHENTAGE, ausIso, iso, plusTage } from '../kalender-sh.js';
 import { deutschesDatum } from '../export.js';
@@ -433,6 +439,27 @@ export function eintragDialog(ctx, vorlage) {
       value: vorlage.notiz || '',
     });
 
+    // Zuordnung zu einer Funktionsaufgabe mit Anrechnungsstunden. Nur sichtbar,
+    // wenn es überhaupt solche Aufgaben gibt - sonst wäre es ein leeres Feld,
+    // das niemand versteht.
+    const einstellungen = store.get().einstellungen;
+    const aufgaben = (einstellungen.ermaessigungen || []).filter(
+      (a) => ERMAESSIGUNG_ARTEN[a.art]?.aufgabenbezogen,
+    );
+    const aufgabe = aufgaben.length
+      ? h(
+          'select',
+          { id: 'd-aufgabe' },
+          [
+            h('option', { value: '', text: '– keine –' }),
+            ...aufgaben.map((a) =>
+              h('option', { value: a.id, text: `${a.bezeichnung} (${a.stunden} Std.)` }),
+            ),
+          ],
+        )
+      : null;
+    if (aufgabe) aufgabe.value = vorlage.aufgabeId || '';
+
     // Aus Beginn und Ende die Dauer ableiten, sobald beides gesetzt ist.
     const dauerAusZeit = () => {
       if (!beginn.value || !ende.value) return;
@@ -460,6 +487,18 @@ export function eintragDialog(ctx, vorlage) {
         h('div', { class: 'feld' }, [h('label', { for: 'd-ende', text: 'Ende (optional)' }), ende]),
       ]),
       h('div', { class: 'feld' }, [h('label', { for: 'd-notiz', text: 'Notiz (optional)' }), notiz]),
+      aufgabe
+        ? h('div', { class: 'feld' }, [
+            h('label', { for: 'd-aufgabe', text: 'Gehört zu einer Aufgabe mit Anrechnungsstunden?' }),
+            aufgabe,
+            h('p', {
+              class: 'feld-hinweis',
+              text:
+                'Wird zugeordnet, vergleicht die Auswertung den tatsächlichen Aufwand mit der ' +
+                'gewährten Entlastung.',
+            }),
+          ])
+        : null,
       h('p', {
         class: 'feld-hinweis',
         text: 'Notizen bleiben auf diesem Gerät. In den anonymen Kollegiums-Export gehen sie nie ein.',
@@ -484,6 +523,7 @@ export function eintragDialog(ctx, vorlage) {
               beginn: beginn.value || null,
               ende: ende.value || null,
               notiz: notiz.value.trim(),
+              aufgabeId: aufgabe && aufgabe.value ? aufgabe.value : null,
             };
             if (istNeu) store.eintragHinzufuegen({ ...leererEintrag(daten.datum, daten.kategorieId), ...daten });
             else store.eintragAendern(vorlage.id, daten);

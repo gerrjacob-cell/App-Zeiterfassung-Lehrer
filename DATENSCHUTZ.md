@@ -37,10 +37,13 @@ ausdrücklich zu bestätigender Schritt. Die Datei enthält:
 - Beschäftigungsumfang in Prozent, Schulform, Schuljahr, Zeitraum
 - Summe der Soll- und Ist-Stunden sowie den Saldo
 - Summen je Kategorie und Summen je Kalenderwoche
+- die **Summe** der Ermäßigungsstunden und die Unterrichtsverpflichtung
 - ein bei jedem Export neu gewürfeltes Pseudonym
 
 Sie enthält **nicht**: Name, Fächer, Klassen, Notizen, einzelne Einträge,
-einzelne Tage, Uhrzeiten, Gerätekennungen.
+einzelne Tage, Uhrzeiten, Gerätekennungen. Auch die **Liste der
+Funktionsaufgaben** bleibt draußen – „Sicherheitsbeauftragte:r“ gibt es an einer
+Schule meistens genau einmal, das wäre ein Name.
 
 Das Pseudonym wird bei jedem Export neu erzeugt. Zwei Exporte derselben Person
 lassen sich dadurch nicht miteinander verknüpfen.
@@ -68,6 +71,17 @@ Abgabe gedrängt werden, und die Abstimmung mit dem Personalrat vor der
 Veröffentlichung ist der richtige Weg. Wer die Sammlung organisiert, sollte
 vorher festlegen, wer die Dateien erhält, wie lange sie aufbewahrt werden und
 wann sie gelöscht werden.
+
+## Aufbewahrung und Verlust
+
+Die App fordert beim Start dauerhaften Speicher an (`navigator.storage.persist`).
+Gewährt der Browser ihn, werden die Daten bei Platzmangel nicht geräumt; in den
+Einstellungen unter „Daten“ steht, ob das geklappt hat.
+
+Auf dem iPhone gilt zusätzlich: Safari löscht Daten von Websites, die sieben
+Tage lang nicht geöffnet wurden. Für zum Startbildschirm hinzugefügte Web-Apps
+gilt das nicht – deshalb weist die App beim ersten Start darauf hin. Die einzige
+Sicherung, die einen Gerätewechsel übersteht, bleibt der Backup-Export.
 
 ## Löschen
 

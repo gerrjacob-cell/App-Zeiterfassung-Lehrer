@@ -158,7 +158,9 @@ export function wocheView(ctx) {
 
       const feld = h('input', {
         type: 'text',
-        inputmode: 'text',
+        // Beim Nachtragen tippt man Zahlen und Kommas, selten einen Doppelpunkt -
+        // die Dezimaltastatur ist auf dem Telefon der schnellere Weg.
+        inputmode: 'decimal',
         value: minuten ? minutenAlsStunden(minuten).replace(' h', '') : '',
         placeholder: '',
         disabled: !bearbeitbar,

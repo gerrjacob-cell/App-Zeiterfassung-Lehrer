@@ -56,8 +56,6 @@ zugleich der inhaltliche Kern:
 ```
 Tages-Soll = wöchentliche Arbeitszeit ÷ 5 × Beschäftigungsumfang
            = 41 h ÷ 5 = 8:12 h bei Vollzeit
-
-Beschäftigungsumfang = eigene Pflichtstunden ÷ Pflichtstunden bei Vollzeit
 ```
 
 Soll-Arbeitszeit besteht an **jedem Werktag**, der weder gesetzlicher Feiertag
@@ -72,9 +70,40 @@ sichtbar, wie viel Arbeit tatsächlich in die Ferien verlagert wird.
 Die App verteilt den Urlaub auf Wunsch automatisch (Sommerferien zuerst); jeder
 einzelne Tag lässt sich in der Tagesansicht anders setzen.
 
-**Altersermäßigung und Anrechnungsstunden** mindern die Unterrichts­verpflichtung,
-nicht die Arbeitszeit. Sie werden deshalb nur nachrichtlich geführt und
-verändern das Soll bewusst nicht.
+### Teilzeit
+
+Teilzeit wird je nach Statusgruppe unterschiedlich bewilligt. Die App nimmt alle
+drei üblichen Formen entgegen, damit niemand seinen Bescheid umrechnen muss:
+als **Zahl der Unterrichtsstunden** (21 von 27), als **Bruchteil in Prozent**
+(3/4 = 75 %) oder als **Wochenstunden der Arbeitszeit** (30,75 von 41, üblich
+nach TV-L). Alle drei führen zum selben Faktor.
+
+Bei Teilzeit weist die App auf zwei Punkte hin, die regelmäßig strittig sind:
+dass Teilzeit auch für Konferenzen, Aufsichten und Elterngespräche gilt – und
+dass Alters- und Schwerbehindertenermäßigung unterhalb von drei Vierteln nur
+noch anteilig gewährt werden.
+
+### Ermäßigungs- und Anrechnungsstunden
+
+Funktionsaufgaben wie Sicherheitsbeauftragung, Fachkonferenzleitung, Personalrat
+oder Medienbetreuung werden mit Stunden entlastet. Diese Stunden lassen sich
+einzeln eintragen – und hier liegt eine bewusste Designentscheidung:
+
+> **Ermäßigungsstunden senken die Unterrichtsverpflichtung, nicht die Arbeitszeit.**
+
+Wer wegen einer Funktionsaufgabe zwei Stunden weniger unterrichtet, arbeitet
+keine Minute weniger. Würde man Ermäßigungen in den Beschäftigungsumfang
+einrechnen, käme ein zu niedriges Arbeitszeit-Soll heraus – und die
+Dokumentation würde ausgerechnet die Mehrarbeit verschleiern, die sie sichtbar
+machen soll.
+
+Stattdessen rechnet die App um, was eine Anrechnungsstunde an Zeit wert ist
+(41 h ÷ 27 Pflichtstunden = **1:31 h pro Woche**), und stellt in der Auswertung
+**gewährte Entlastung und tatsächlich erfassten Aufwand gegenüber**. Aus „die
+eine Stunde für die Sicherheitsbeauftragung reicht hinten und vorne nicht" wird
+so eine Zahl, mit der man in ein Gespräch gehen kann.
+
+Ausführlich: [RECHTSGRUNDLAGEN.md](RECHTSGRUNDLAGEN.md).
 
 ---
 
@@ -87,6 +116,9 @@ sind in der App editierbar, ohne Code anzufassen:
    (Sek I) und 25,5 mit Oberstufe. Bitte gegen die aktuelle Fassung der
    *Landesverordnung über die regelmäßige Pflichtstundenzahl der Lehrkräfte*
    abgleichen – die Werte in `js/model.js` sind Startwerte, keine Rechtsauskunft.
+   Dasselbe gilt für die Stundenzahl je Funktionsaufgabe: Die Vorlagen starten
+   alle mit einer Stunde, weil die tatsächliche Verteilung von Schule zu Schule
+   verschieden ist.
 2. **Wöchentliche Arbeitszeit.** Voreingestellt sind 41 Stunden nach der
    Arbeitszeitverordnung für Beamtinnen und Beamte in Schleswig-Holstein.
    Tarifbeschäftigte nach TV-L tragen ihren eigenen Wert ein.
@@ -132,6 +164,30 @@ ES-Module dabei blockiert werden.)
 **Auf dem Telefon installieren:** Seite im Browser öffnen → „Zum Startbildschirm
 hinzufügen“. Danach startet die App im Vollbild und läuft offline.
 
+### Android und iPhone
+
+Die App ist für das Telefon gebaut, nicht nur dafür verkleinert:
+
+- **Eigenes Diagramm-Layout für schmale Displays** – Kategorienamen stehen über
+  dem Balken statt daneben, damit nichts abgeschnitten wird; beim Drehen des
+  Geräts wird neu gezeichnet.
+- **Touch-Ziele durchgehend mindestens 44 px**, auch in der dichten Wochenmatrix.
+- **Dezimaltastatur** beim Nachtragen, Zeitfelder mit nativen Datums- und
+  Uhrzeitwählern.
+- **Sticky statt fixierter Leisten**: Die Navigation belegt echten Platz und kann
+  den Inhalt nicht verdecken; Safe-Area-Ränder für Geräte mit Notch und
+  Home-Indikator werden berücksichtigt.
+- **Dark Mode** nach Systemeinstellung, umschaltbar.
+- **iPhone-Besonderheit**: Safari löscht Daten von Websites nach sieben Tagen
+  ohne Nutzung. Die App weist beim ersten Start darauf hin, fordert dauerhaften
+  Speicher an und zeigt in den Einstellungen, ob der Browser ihn gewährt hat.
+- **Mitteilungen** funktionieren auf iOS nur bei installierter App; die
+  Erinnerung ist rein lokal und wird bei fehlender Erlaubnis sauber deaktiviert.
+
+Geprüft mit Chromium in Telefon- und Desktop-Auflösung (iPhone-13-Profil,
+Touch-Emulation). Ein Test in echtem Safari auf einem iPhone steht aus – wer
+eines zur Hand hat, sollte vor dem Rollout einmal durchklicken.
+
 ---
 
 ## Aufbau
@@ -153,6 +209,7 @@ js/
   export.js             xlsx-Erzeugung, CSV, anonyme Kennzahlen
   erinnerung.js         lokale Abenderinnerung
   kollegium.js          Logik von auswertung.html
+  geraet.js             dauerhafter Speicher, iOS-Hinweis
   ui.js                 DOM-Helfer, Dialoge, Hinweise
   views/                Tagesansicht, Woche, Auswertung, Stundenplan, Einstellungen
 ```
@@ -175,6 +232,8 @@ von Abhängigkeiten – und damit auch in einigen Jahren noch wartbar.
 | Export | Excel | Excel, CSV, PDF-Bericht mit Unterschriftszeile |
 | Kollegium | – | freiwilliger anonymer Beitrag + Auswertungswerkzeug |
 | Ferien/Feiertage | – | automatisch, editierbar |
+| Teilzeit | Deputat | drei Eingabewege, Hinweise zur Rechtslage |
+| Ermäßigungsstunden | – | einzeln verwaltet, Entlastung gegen Aufwand |
 | Offline | Web-App | vollständige PWA, installierbar |
 
 ---
@@ -188,6 +247,11 @@ von Abhängigkeiten – und damit auch in einigen Jahren noch wartbar.
 - Die Daten liegen im `localStorage` des Browsers. Wer den Browser wechselt, das
   Gerät tauscht oder die Browserdaten löscht, verliert sie **ohne Backup**. Der
   Backup-Export sollte zur Gewohnheit werden – etwa zu jedem Halbjahr.
+- **Auf dem iPhone gilt das besonders:** Safari löscht Daten von Websites, die
+  sieben Tage lang nicht geöffnet wurden – in den Ferien schnell erreicht. Wird
+  die App zum Startbildschirm hinzugefügt, gilt diese Löschung nicht. Die App
+  weist beim ersten Start darauf hin und fordert zusätzlich dauerhaften Speicher
+  an; in den Einstellungen steht, ob der Browser ihn gewährt hat.
 - Die Erinnerung ist rein lokal und funktioniert nur, solange die App geöffnet
   ist oder im Hintergrund läuft. Echte Push-Mitteilungen bräuchten einen Server –
   und damit genau das, was hier bewusst nicht existiert.

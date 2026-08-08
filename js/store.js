@@ -4,7 +4,7 @@
  * zweites Gerät holen will, nutzt Backup exportieren / importieren.
  */
 
-import { SCHEMA_VERSION, defaultEinstellungen } from './model.js';
+import { SCHEMA_VERSION, defaultEinstellungen, neueErmaessigung } from './model.js';
 
 const KEY = 'lehrerzeit.v1';
 
@@ -29,7 +29,12 @@ export function laden() {
     const roh = localStorage.getItem(KEY);
     if (roh) {
       const daten = JSON.parse(roh);
+      const alteVersion = daten.schemaVersion || 1;
       stand = migriere({ ...leererStand(), ...daten });
+      // Eine Migration wird sofort festgeschrieben. Sonst liegt im Speicher
+      // weiterhin das alte Format, und ein Backup-Export vor der ersten
+      // Änderung würde den veralteten Stand sichern.
+      if (alteVersion !== SCHEMA_VERSION) speichern();
     }
   } catch (err) {
     console.error('Gespeicherte Daten konnten nicht gelesen werden:', err);
@@ -39,10 +44,54 @@ export function laden() {
 }
 
 function migriere(daten) {
-  // Platzhalter für künftige Schema-Änderungen. Einstellungen werden mit den
-  // Voreinstellungen aufgefüllt, damit neue Felder nicht undefined sind.
-  daten.einstellungen = { ...defaultEinstellungen(), ...(daten.einstellungen || {}) };
+  const alt = daten.einstellungen || {};
+  daten.einstellungen = { ...defaultEinstellungen(), ...alt };
+
+  // Version 1 -> 2: Beschäftigungsumfang und Unterrichtsverpflichtung wurden
+  // getrennt. Vorher gab es nur "meine Pflichtstunden", in denen Teilzeit und
+  // Ermäßigungen vermischt waren. Die Stundenzahl wird als Teilzeitumfang
+  // übernommen, Altersermäßigung und Anrechnungsstunden werden zu Einträgen in
+  // der neuen Ermäßigungsliste.
+  if ((daten.schemaVersion || 1) < 2 && alt.pflichtstundenSoll !== undefined) {
+    const voll = Number(alt.pflichtstundenSoll) || 27;
+    const meine = Number(alt.pflichtstundenIst) || voll;
+    daten.einstellungen.pflichtstundenVollzeit = voll;
+    daten.einstellungen.beschaeftigungsart = meine < voll ? 'teilzeit' : 'vollzeit';
+    daten.einstellungen.teilzeitEingabe = 'stunden';
+    daten.einstellungen.teilzeitStunden = meine;
+
+    const uebernommen = [];
+    if (Number(alt.altersermaessigung) > 0) {
+      uebernommen.push(
+        neueErmaessigung({
+          bezeichnung: 'Altersermäßigung',
+          stunden: Number(alt.altersermaessigung),
+          art: 'alter',
+          kategorieId: null,
+        }),
+      );
+    }
+    if (Number(alt.anrechnungsstunden) > 0) {
+      uebernommen.push(
+        neueErmaessigung({
+          bezeichnung: 'Anrechnungsstunden',
+          stunden: Number(alt.anrechnungsstunden),
+          art: 'funktion',
+          kategorieId: 'funktion',
+        }),
+      );
+    }
+    if (uebernommen.length) daten.einstellungen.ermaessigungen = uebernommen;
+
+    delete daten.einstellungen.pflichtstundenSoll;
+    delete daten.einstellungen.pflichtstundenIst;
+    delete daten.einstellungen.altersermaessigung;
+    delete daten.einstellungen.anrechnungsstunden;
+  }
+
+  if (!Array.isArray(daten.einstellungen.ermaessigungen)) daten.einstellungen.ermaessigungen = [];
   daten.schemaVersion = SCHEMA_VERSION;
+  daten.einstellungen.schemaVersion = SCHEMA_VERSION;
   if (!Array.isArray(daten.eintraege)) daten.eintraege = [];
   if (!daten.stundenplan || !Array.isArray(daten.stundenplan.stunden)) {
     daten.stundenplan = { wochen: 1, raster: [], stunden: [] };

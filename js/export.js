@@ -7,7 +7,13 @@
  * Abhängigkeiten und damit offline- und langzeittauglich.
  */
 
-import { KATEGORIEN, KATEGORIE_MAP, beschaeftigungsfaktor } from './model.js';
+import {
+  KATEGORIEN,
+  KATEGORIE_MAP,
+  beschaeftigungsprozent,
+  ermaessigungsstunden,
+  unterrichtsverpflichtung,
+} from './model.js';
 import { minutenDezimal, minutenAlsStunden } from './soll.js';
 import { WOCHENTAGE_KURZ, ausIso, kalenderwoche } from './kalender-sh.js';
 
@@ -225,12 +231,11 @@ function kopfzeilen(einst, ergebnis) {
     ['Name', einst.name || '(nicht angegeben)'],
     ['Schuljahr', einst.schuljahr],
     ['Zeitraum', `${deutschesDatum(ergebnis.von)} bis ${deutschesDatum(ergebnis.bis)}`],
-    [
-      'Beschäftigungsumfang',
-      `${einst.pflichtstundenIst} von ${einst.pflichtstundenSoll} Pflichtstunden ` +
-        `(${Math.round(beschaeftigungsfaktor(einst) * 1000) / 10} %)`,
-    ],
+    ['Beschäftigungsumfang', `${beschaeftigungsprozent(einst)} %`],
     ['Wöchentliche Arbeitszeit (Vollzeit)', `${einst.wochenarbeitszeit} Stunden`],
+    ['Pflichtstunden einer Vollzeitkraft', einst.pflichtstundenVollzeit],
+    ['Unterrichtsverpflichtung', `${unterrichtsverpflichtung(einst)} Unterrichtsstunden`],
+    ['davon Ermäßigung', `${ermaessigungsstunden(einst)} Unterrichtsstunden`],
     ['Erstellt am', deutschesDatum(new Date().toISOString().slice(0, 10))],
     [],
   ];
@@ -379,7 +384,11 @@ export function anonymeKennzahlen(einst, ergebnis) {
     schulform: einst.schulform,
     zeitraumVon: ergebnis.von,
     zeitraumBis: ergebnis.bis,
-    beschaeftigungsumfangProzent: Math.round(beschaeftigungsfaktor(einst) * 1000) / 10,
+    beschaeftigungsumfangProzent: beschaeftigungsprozent(einst),
+    // Nur die Summe, nicht die einzelnen Aufgaben - eine Aufgabenliste wäre in
+    // einem kleinen Kollegium ein Name.
+    ermaessigungsstundenGesamt: ermaessigungsstunden(einst),
+    unterrichtsverpflichtung: unterrichtsverpflichtung(einst),
     wochenarbeitszeitStunden: Number(einst.wochenarbeitszeit) || 41,
     sollStunden: minutenDezimal(ergebnis.sollMinuten),
     istStunden: minutenDezimal(ergebnis.istMinuten),

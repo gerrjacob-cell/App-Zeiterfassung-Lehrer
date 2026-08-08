@@ -8,7 +8,16 @@
 
 import { h, toast, bestaetigen } from '../ui.js';
 import * as store from '../store.js';
-import { KATEGORIEN, KATEGORIE_MAP, schuljahrZeitraum, beschaeftigungsfaktor } from '../model.js';
+import {
+  KATEGORIEN,
+  KATEGORIE_MAP,
+  schuljahrZeitraum,
+  beschaeftigungsprozent,
+  ermaessigungsstunden,
+  unterrichtsverpflichtung,
+  minutenProDeputatsstunde,
+  ERMAESSIGUNG_ARTEN,
+} from '../model.js';
 import { auswerten, minutenAlsStunden, jahresKennzahlen } from '../soll.js';
 import { kategorienDiagramm, wochenDiagramm, sollFortschritt } from '../charts.js';
 import {
@@ -179,6 +188,11 @@ export function auswertungView(ctx) {
     ]),
   );
 
+  /* --------------------- Entlastung gegen Aufwand -------------------- */
+
+  const entlastung = entlastungsKarte(einst, ergebnis, stand.eintraege);
+  if (entlastung) wurzel.appendChild(entlastung);
+
   /* ------------------------------ Export ----------------------------- */
 
   wurzel.appendChild(
@@ -286,7 +300,7 @@ export function auswertungView(ctx) {
       h('strong', { text: 'Wie das Soll zustande kommt: ' }),
       document.createTextNode(
         `${einst.wochenarbeitszeit} Wochenstunden bei Vollzeit, davon ` +
-          `${Math.round(beschaeftigungsfaktor(einst) * 1000) / 10} % Beschäftigungsumfang. Im Schuljahr ` +
+          `${beschaeftigungsprozent(einst)} % Beschäftigungsumfang. Im Schuljahr ` +
           `${einst.schuljahr} ergibt das ${minutenAlsStunden(jahr.sollMinuten)} an ${jahr.arbeitstage} ` +
           `Arbeitstagen – darunter ${jahr.ferienArbeitstage} Tage in der unterrichtsfreien Zeit, denn ` +
           `Ferien sind kein Urlaub. Als Erholungsurlaub sind ${jahr.urlaubstage} Tage hinterlegt.`,
@@ -295,6 +309,129 @@ export function auswertungView(ctx) {
   );
 
   return wurzel;
+}
+
+/* ------------------- Entlastung gegen tatsächlichen Aufwand -------------- */
+
+/**
+ * Stellt jeder Funktionsaufgabe die gewährte Entlastung und den tatsächlich
+ * erfassten Aufwand gegenüber.
+ *
+ * Der Vergleich ist der eigentliche Sinn der Ermäßigungsverwaltung: Eine
+ * Anrechnungsstunde ist ein Versprechen über Zeit. Ob dieses Versprechen trägt,
+ * lässt sich nur beantworten, wenn beide Seiten nebeneinander stehen - und ein
+ * belegtes "die eine Stunde für die Sicherheitsbeauftragung deckt tatsächlich
+ * ein Drittel des Aufwands" ist ein ganz anderes Argument als ein Gefühl.
+ *
+ * Zugeordnet wird über das Feld `aufgabeId` am Eintrag. Alters- und
+ * Schwerbehindertenermäßigung bleiben außen vor: Sie sind ein Ausgleich, keine
+ * Gegenleistung für eine Aufgabe.
+ */
+function entlastungsKarte(einst, ergebnis, alleEintraege) {
+  const aufgaben = (einst.ermaessigungen || []).filter(
+    (e) => ERMAESSIGUNG_ARTEN[e.art]?.aufgabenbezogen && Number(e.stunden) > 0,
+  );
+  if (!aufgaben.length) return null;
+
+  // Der Zeitraum wird in Arbeitswochen umgerechnet, damit sich eine Angabe
+  // "pro Woche" auf ihn beziehen lässt.
+  const wochen = ergebnis.proWoche.filter((w) => w.soll > 0).length || 1;
+  const proStunde = minutenProDeputatsstunde(einst);
+
+  const eintraegeImZeitraum = alleEintraege.filter(
+    (e) => e.datum >= ergebnis.von && e.datum <= ergebnis.bis,
+  );
+
+  const zeilen = aufgaben.map((a) => {
+    const gewaehrt = Number(a.stunden) * proStunde * wochen;
+    const erfasst = eintraegeImZeitraum
+      .filter((e) => e.aufgabeId === a.id)
+      .reduce((s, e) => s + (Number(e.minuten) || 0), 0);
+    return { aufgabe: a, gewaehrt, erfasst, zugeordnet: erfasst > 0 };
+  });
+
+  const summeGewaehrt = zeilen.reduce((s, z) => s + z.gewaehrt, 0);
+  const summeErfasst = zeilen.reduce((s, z) => s + z.erfasst, 0);
+  const nichtsZugeordnet = zeilen.every((z) => !z.zugeordnet);
+
+  const tabelle = h('table');
+  tabelle.append(
+    h('thead', {}, [
+      h('tr', {}, [
+        h('th', { text: 'Aufgabe' }),
+        h('th', { class: 'zahl', text: 'Std./Woche' }),
+        h('th', { class: 'zahl', text: 'entspricht' }),
+        h('th', { class: 'zahl', text: 'erfasst' }),
+        h('th', { class: 'zahl', text: 'Differenz' }),
+      ]),
+    ]),
+    h(
+      'tbody',
+      {},
+      [
+        ...zeilen.map((z) => {
+          const diff = z.erfasst - z.gewaehrt;
+          return h('tr', {}, [
+            h('th', { scope: 'row', text: z.aufgabe.bezeichnung }),
+            h('td', { class: 'zahl', text: String(z.aufgabe.stunden).replace('.', ',') }),
+            h('td', { class: 'zahl', text: minutenAlsStunden(z.gewaehrt) }),
+            h('td', { class: 'zahl', text: z.zugeordnet ? minutenAlsStunden(z.erfasst) : '–' }),
+            h('td', {
+              class: `zahl ${z.zugeordnet && diff > 0 ? 'saldo-plus' : ''}`,
+              text: z.zugeordnet ? minutenAlsStunden(diff, true) : '–',
+            }),
+          ]);
+        }),
+        h('tr', {}, [
+          h('th', { scope: 'row', text: 'Summe' }),
+          h('td', { class: 'zahl', text: '' }),
+          h('td', { class: 'zahl', text: minutenAlsStunden(summeGewaehrt) }),
+          h('td', { class: 'zahl', text: minutenAlsStunden(summeErfasst) }),
+          h('td', {
+            class: `zahl ${summeErfasst - summeGewaehrt > 0 ? 'saldo-plus' : ''}`,
+            text: minutenAlsStunden(summeErfasst - summeGewaehrt, true),
+          }),
+        ]),
+      ],
+    ),
+  );
+
+  const karte = h('div', { class: 'karte' }, [
+    h('h2', { text: 'Entlastung und tatsächlicher Aufwand' }),
+    h('p', {
+      class: 'feld-hinweis',
+      text:
+        `Gewährte Ermäßigungsstunden, umgerechnet in Arbeitszeit über ${wochen} ` +
+        `${wochen === 1 ? 'Woche' : 'Wochen'} mit Soll-Zeit im gewählten Zeitraum. Eine ` +
+        `Ermäßigungsstunde entspricht ${minutenAlsStunden(proStunde)} Arbeitszeit pro Woche.`,
+    }),
+    h('div', { class: 'tabelle-wrap' }, [tabelle]),
+  ]);
+
+  if (nichtsZugeordnet) {
+    karte.appendChild(
+      h('p', {
+        class: 'feld-hinweis',
+        text:
+          'Noch kein Eintrag einer Aufgabe zugeordnet. Beim Erfassen über "Genau erfassen" lässt sich ' +
+          'unten die Aufgabe auswählen – erst dann kann die App zeigen, ob die gewährten Stunden reichen.',
+      }),
+    );
+  } else if (summeErfasst > summeGewaehrt) {
+    karte.appendChild(
+      h('div', { class: 'hinweis warnung' }, [
+        h('strong', { text: 'Die Entlastung deckt den Aufwand nicht. ' }),
+        document.createTextNode(
+          `Für die zugeordneten Aufgaben sind ${minutenAlsStunden(summeGewaehrt)} vorgesehen, ` +
+            `erfasst sind ${minutenAlsStunden(summeErfasst)} – also ` +
+            `${minutenAlsStunden(summeErfasst - summeGewaehrt)} mehr. Das ist eine belegbare Zahl für ` +
+            'das Gespräch mit der Schulleitung über die Verteilung der Anrechnungsstunden.',
+        ),
+      ]),
+    );
+  }
+
+  return karte;
 }
 
 /* ------------------------------- Hilfen ---------------------------------- */
@@ -345,12 +482,13 @@ function berichtDrucken(einst, ergebnis, ctx) {
         zeile('Name', einst.name || '(nicht angegeben)'),
         zeile('Schuljahr', einst.schuljahr),
         zeile('Zeitraum', `${deutschesDatum(ergebnis.von)} bis ${deutschesDatum(ergebnis.bis)}`),
-        zeile(
-          'Beschäftigungsumfang',
-          `${einst.pflichtstundenIst} von ${einst.pflichtstundenSoll} Pflichtstunden ` +
-            `(${Math.round(beschaeftigungsfaktor(einst) * 1000) / 10} %)`,
-        ),
+        zeile('Beschäftigungsumfang', `${beschaeftigungsprozent(einst)} %`),
         zeile('Wöchentliche Arbeitszeit bei Vollzeit', `${einst.wochenarbeitszeit} Stunden`),
+        zeile(
+          'Unterrichtsverpflichtung',
+          `${unterrichtsverpflichtung(einst)} von ${einst.pflichtstundenVollzeit} Unterrichtsstunden ` +
+            `(nach Abzug von ${ermaessigungsstunden(einst)} Ermäßigungsstunden)`,
+        ),
         zeile('Erstellt am', deutschesDatum(iso(new Date()))),
       ]),
     ]),

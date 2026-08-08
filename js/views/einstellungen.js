@@ -5,11 +5,24 @@
 
 import { h, toast, bestaetigen } from '../ui.js';
 import * as store from '../store.js';
-import { PFLICHTSTUNDEN_SH, schuljahrFuer } from '../model.js';
-import { urlaubsvorschlag } from '../soll.js';
+import {
+  PFLICHTSTUNDEN_SH,
+  ERMAESSIGUNG_VORLAGEN,
+  ERMAESSIGUNG_ARTEN,
+  KATEGORIEN,
+  schuljahrFuer,
+  beschaeftigungsfaktor,
+  beschaeftigungsprozent,
+  ermaessigungsstunden,
+  unterrichtsverpflichtung,
+  minutenProDeputatsstunde,
+  neueErmaessigung,
+} from '../model.js';
+import { urlaubsvorschlag, minutenAlsStunden } from '../soll.js';
 import { FERIEN_SH_VOREINSTELLUNG, ferienFuerSchuljahr } from '../kalender-sh.js';
 import { deutschesDatum } from '../export.js';
 import { erinnerungEinrichten } from '../erinnerung.js';
+import { speicherBericht, istIOS, alsAppInstalliert } from '../geraet.js';
 
 export function einstellungenView(ctx) {
   const stand = store.get();
@@ -27,9 +40,9 @@ export function einstellungenView(ctx) {
         const patch = { schulform: e.target.value };
         if (gewaehlt && gewaehlt.id !== 'eigen') {
           // Wer Vollzeit arbeitet, soll nach dem Wechsel nicht plötzlich Teilzeit sein.
-          const warVollzeit = Number(einst.pflichtstundenIst) === Number(einst.pflichtstundenSoll);
-          patch.pflichtstundenSoll = gewaehlt.stunden;
-          if (warVollzeit) patch.pflichtstundenIst = gewaehlt.stunden;
+          const warVollzeit = Number(einst.teilzeitStunden) === Number(einst.pflichtstundenVollzeit);
+          patch.pflichtstundenVollzeit = gewaehlt.stunden;
+          if (warVollzeit) patch.teilzeitStunden = gewaehlt.stunden;
         }
         store.einstellungenSetzen(patch);
         ctx.neuZeichnen();
@@ -41,7 +54,7 @@ export function einstellungenView(ctx) {
 
   wurzel.appendChild(
     h('div', { class: 'karte' }, [
-      h('h2', { text: 'Person und Deputat' }),
+      h('h2', { text: 'Person und Schulform' }),
       h('div', { class: 'feld' }, [
         h('label', { for: 'e-name', text: 'Name (nur für Ausdruck und Excel-Datei)' }),
         h('input', {
@@ -53,57 +66,25 @@ export function einstellungenView(ctx) {
         }),
         h('p', { class: 'feld-hinweis', text: 'Bleibt auf diesem Gerät. Geht nie in den anonymen Export ein.' }),
       ]),
-      h('div', { class: 'feld' }, [
-        h('label', { for: 'e-schulform', text: 'Schulform' }),
-        schulformFeld,
-      ]),
-      h('div', { class: 'feld-reihe' }, [
-        zahlFeld('e-pf-soll', 'Pflichtstunden bei Vollzeit', einst.pflichtstundenSoll, {
-          min: 10,
-          max: 35,
-          step: 0.5,
-          onSet: (v) => store.einstellungenSetzen({ pflichtstundenSoll: v }),
-          ctx,
-        }),
-        zahlFeld('e-pf-ist', 'Meine Pflichtstunden', einst.pflichtstundenIst, {
-          min: 0,
-          max: 35,
-          step: 0.5,
-          onSet: (v) => store.einstellungenSetzen({ pflichtstundenIst: v }),
-          ctx,
-        }),
-      ]),
-      h('p', {
-        class: 'feld-hinweis',
-        text:
-          'Aus dem Verhältnis beider Werte ergibt sich der Beschäftigungsumfang und damit die ' +
-          'Soll-Arbeitszeit. Bitte die Pflichtstundenzahl gegen die aktuelle Fassung der ' +
-          'Pflichtstundenverordnung Schleswig-Holstein prüfen – die Voreinstellung ist nur ein Startwert.',
+      h('div', { class: 'feld' }, [h('label', { for: 'e-schulform', text: 'Schulform' }), schulformFeld]),
+      zahlFeld('e-pf-voll', 'Pflichtstunden einer Vollzeitkraft', einst.pflichtstundenVollzeit, {
+        min: 10,
+        max: 35,
+        step: 0.5,
+        onSet: (v) => store.einstellungenSetzen({ pflichtstundenVollzeit: v }),
+        ctx,
       }),
-      h('div', { class: 'feld-reihe' }, [
-        zahlFeld('e-alters', 'Altersermäßigung (Unterrichtsstunden)', einst.altersermaessigung, {
-          min: 0,
-          max: 6,
-          step: 0.5,
-          onSet: (v) => store.einstellungenSetzen({ altersermaessigung: v }),
-          ctx,
-        }),
-        zahlFeld('e-anrechnung', 'Anrechnungsstunden', einst.anrechnungsstunden, {
-          min: 0,
-          max: 20,
-          step: 0.5,
-          onSet: (v) => store.einstellungenSetzen({ anrechnungsstunden: v }),
-          ctx,
-        }),
-      ]),
       h('p', {
         class: 'feld-hinweis',
         text:
-          'Altersermäßigung und Anrechnungsstunden mindern die Unterrichtsverpflichtung, nicht die ' +
-          'Arbeitszeit. Sie werden deshalb hier nur nachrichtlich geführt und verändern das Soll nicht.',
+          'Bitte gegen die aktuelle Fassung der Pflichtstundenverordnung Schleswig-Holstein prüfen – ' +
+          'die Voreinstellung ist ein Startwert, keine Rechtsauskunft.',
       }),
     ]),
   );
+
+  wurzel.appendChild(beschaeftigungsKarte(ctx, einst));
+  wurzel.appendChild(ermaessigungsKarte(ctx, einst));
 
   /* ------------------------ Arbeitszeitmodell ----------------------- */
 
@@ -215,7 +196,7 @@ export function einstellungenView(ctx) {
       h('div', { class: 'btn-reihe', style: 'margin-top:0.75rem' }, [
         h('button', {
           class: 'btn klein',
-          text: 'Ferienzeitraum hinzufuegen',
+          text: 'Ferienzeitraum hinzufügen',
           onclick: () => ferienHinzufuegen(einst.schuljahr, ctx),
         }),
         FERIEN_SH_VOREINSTELLUNG[einst.schuljahr]
@@ -414,6 +395,7 @@ export function einstellungenView(ctx) {
           'Alle Daten liegen ausschließlich in diesem Browser auf diesem Gerät. Wer den Browser ' +
           'wechselt, das Gerät tauscht oder die Browserdaten löscht, verliert sie ohne Backup.',
       }),
+      speicherStatus(),
       h('div', { class: 'btn-reihe' }, [
         h('button', {
           class: 'btn primaer',
@@ -465,6 +447,427 @@ export function einstellungenView(ctx) {
   );
 
   return wurzel;
+}
+
+/* -------------------------- Beschäftigungsumfang ------------------------- */
+
+/**
+ * Der Beschäftigungsumfang bestimmt allein die Soll-Arbeitszeit. Er wird je
+ * nach Statusgruppe unterschiedlich bewilligt, deshalb drei Eingabewege - so
+ * kann jede Lehrkraft die Zahl aus ihrem Bescheid direkt übernehmen, ohne
+ * vorher umzurechnen.
+ */
+function beschaeftigungsKarte(ctx, einst) {
+  const teilzeit = einst.beschaeftigungsart === 'teilzeit';
+  const faktor = beschaeftigungsfaktor(einst);
+  const wochenSollMinuten = (Number(einst.wochenarbeitszeit) || 41) * 60 * faktor;
+
+  const karte = h('div', { class: 'karte' }, [
+    h('h2', { text: 'Beschäftigungsumfang' }),
+    h('p', {
+      class: 'feld-hinweis',
+      text: 'Diese Angabe bestimmt die Soll-Arbeitszeit. Ermäßigungsstunden gehören nicht hierher.',
+    }),
+    h('div', { class: 'chip-reihe' }, [
+      h('button', {
+        class: 'chip',
+        type: 'button',
+        'aria-pressed': String(!teilzeit),
+        text: 'Vollzeit',
+        onclick: () => {
+          store.einstellungenSetzen({ beschaeftigungsart: 'vollzeit' });
+          ctx.neuZeichnen();
+        },
+      }),
+      h('button', {
+        class: 'chip',
+        type: 'button',
+        'aria-pressed': String(teilzeit),
+        text: 'Teilzeit',
+        onclick: () => {
+          store.einstellungenSetzen({
+            beschaeftigungsart: 'teilzeit',
+            teilzeitStunden: einst.teilzeitStunden || einst.pflichtstundenVollzeit,
+          });
+          ctx.neuZeichnen();
+        },
+      }),
+    ]),
+  ]);
+
+  if (teilzeit) {
+    const artFeld = h(
+      'select',
+      {
+        id: 'e-tz-art',
+        onchange: (e) => {
+          store.einstellungenSetzen({ teilzeitEingabe: e.target.value });
+          ctx.neuZeichnen();
+        },
+      },
+      [
+        h('option', { value: 'stunden', text: 'als Zahl der Unterrichtsstunden' }),
+        h('option', { value: 'prozent', text: 'als Bruchteil / Prozent' }),
+        h('option', { value: 'wochenstunden', text: 'als Wochenstunden der Arbeitszeit' }),
+      ],
+    );
+    artFeld.value = einst.teilzeitEingabe;
+
+    karte.appendChild(
+      h('div', { class: 'feld', style: 'margin-top:0.85rem' }, [
+        h('label', { for: 'e-tz-art', text: 'Wie wurde die Teilzeit bewilligt?' }),
+        artFeld,
+      ]),
+    );
+
+    if (einst.teilzeitEingabe === 'prozent') {
+      karte.appendChild(
+        zahlFeld('e-tz-prozent', 'Bewilligter Umfang in Prozent', einst.teilzeitProzent, {
+          min: 1,
+          max: 100,
+          step: 0.1,
+          onSet: (v) => store.einstellungenSetzen({ teilzeitProzent: v }),
+          ctx,
+        }),
+      );
+      karte.appendChild(
+        h('p', {
+          class: 'feld-hinweis',
+          text: 'Bruchteile umrechnen: 1/2 = 50, 3/4 = 75, 2/3 = 66,7 Prozent.',
+        }),
+      );
+    } else if (einst.teilzeitEingabe === 'wochenstunden') {
+      karte.appendChild(
+        zahlFeld('e-tz-wstd', 'Bewilligte Wochenarbeitszeit (Std.)', einst.teilzeitWochenstunden, {
+          min: 1,
+          max: Number(einst.wochenarbeitszeit) || 41,
+          step: 0.25,
+          onSet: (v) => store.einstellungenSetzen({ teilzeitWochenstunden: v }),
+          ctx,
+        }),
+      );
+      karte.appendChild(
+        h('p', {
+          class: 'feld-hinweis',
+          text: 'Üblich bei Tarifbeschäftigten nach TV-L, deren Teilzeit in Arbeitsstunden bemessen wird.',
+        }),
+      );
+    } else {
+      karte.appendChild(
+        zahlFeld('e-tz-stunden', 'Bewilligte Unterrichtsstunden pro Woche', einst.teilzeitStunden, {
+          min: 0.5,
+          max: Number(einst.pflichtstundenVollzeit) || 27,
+          step: 0.5,
+          onSet: (v) => store.einstellungenSetzen({ teilzeitStunden: v }),
+          ctx,
+        }),
+      );
+      karte.appendChild(
+        h('p', {
+          class: 'feld-hinweis',
+          text:
+            'Die Zahl aus dem Teilzeitbescheid – ohne Abzug von Ermäßigungsstunden. Wer 21 von 27 ' +
+            'Stunden bewilligt bekommen hat und zusätzlich 2 Stunden Ermäßigung erhält, trägt hier 21 ein.',
+        }),
+      );
+    }
+  }
+
+  karte.appendChild(
+    h('dl', { class: 'kennzahlen', style: 'margin-top:0.85rem' }, [
+      h('div', { class: 'kennzahl' }, [
+        h('dt', { text: 'Beschäftigungsumfang' }),
+        h('dd', {}, [
+          document.createTextNode(`${beschaeftigungsprozent(einst)} %`),
+          h('span', { class: 'zusatz', text: teilzeit ? 'Teilzeit' : 'Vollzeit' }),
+        ]),
+      ]),
+      h('div', { class: 'kennzahl' }, [
+        h('dt', { text: 'Soll-Arbeitszeit pro Woche' }),
+        h('dd', {}, [
+          document.createTextNode(minutenAlsStunden(wochenSollMinuten)),
+          h('span', { class: 'zusatz', text: `${minutenAlsStunden(wochenSollMinuten / 5)} pro Arbeitstag` }),
+        ]),
+      ]),
+    ]),
+  );
+
+  if (teilzeit) {
+    karte.appendChild(
+      h('div', { class: 'hinweis' }, [
+        h('strong', { text: 'Teilzeit heißt Teilzeit – auch außerhalb des Unterrichts. ' }),
+        document.createTextNode(
+          'Konferenzen, Aufsichten, Korrekturen und Elterngespräche dürfen nur im Umfang der ' +
+            'bewilligten Teilzeit verlangt werden, nicht in vollem Umfang. Genau das lässt sich mit ' +
+            'dieser Erfassung belegen: Der Saldo vergleicht mit dem anteiligen Soll, nicht mit dem einer ' +
+            'Vollzeitkraft.',
+        ),
+      ]),
+    );
+    if (faktor < 0.75) {
+      karte.appendChild(
+        h('p', {
+          class: 'feld-hinweis',
+          text:
+            'Hinweis zur Rechtslage: Bei einer Teilzeit unter drei Vierteln werden Alters- und ' +
+            'Schwerbehindertenermäßigung in Schleswig-Holstein nur zur Hälfte gewährt, unterhalb der ' +
+            'Hälfte entfällt die Altersermäßigung ganz. Die App rechnet das nicht automatisch – bitte ' +
+            'unten die tatsächlich bewilligten Stunden eintragen.',
+        }),
+      );
+    }
+  }
+
+  return karte;
+}
+
+/* --------------------------- Ermäßigungsstunden -------------------------- */
+
+/**
+ * Ermäßigungs- und Anrechnungsstunden. Der zentrale Satz steht auch in der
+ * Oberfläche, weil er häufig missverstanden wird: Diese Stunden verkürzen die
+ * Arbeitszeit nicht. Sie nehmen Unterricht weg, um Zeit für eine andere
+ * Aufgabe zu schaffen - und ob diese Zeit reicht, zeigt erst die Erfassung.
+ */
+function ermaessigungsKarte(ctx, einst) {
+  const liste = Array.isArray(einst.ermaessigungen) ? einst.ermaessigungen : [];
+  const summe = ermaessigungsstunden(einst);
+  const proStunde = minutenProDeputatsstunde(einst);
+
+  const karte = h('div', { class: 'karte' }, [
+    h('h2', { text: 'Ermäßigungs- und Anrechnungsstunden' }),
+    h('p', {
+      class: 'feld-hinweis',
+      text:
+        'Stunden, die für Funktionsaufgaben, Alter oder Schwerbehinderung vom Unterricht abgezogen ' +
+        'werden. Sie mindern die Unterrichtsverpflichtung, nicht die Arbeitszeit.',
+    }),
+  ]);
+
+  if (liste.length) {
+    const tabelle = h('table', { class: 'ermaessigungen' });
+    tabelle.append(
+      h('thead', {}, [
+        h('tr', {}, [
+          h('th', { text: 'Aufgabe' }),
+          h('th', { class: 'zahl', text: 'Std.' }),
+          h('th', { text: 'Art' }),
+          h('th', { text: 'erfasst unter' }),
+          h('th', { text: '' }),
+        ]),
+      ]),
+      h(
+        'tbody',
+        {},
+        liste.map((e, i) =>
+          h('tr', {}, [
+            h('td', {}, [
+              h('input', {
+                type: 'text',
+                value: e.bezeichnung,
+                'aria-label': `Bezeichnung der ${i + 1}. Ermäßigung`,
+                maxlength: '60',
+                onchange: (ev) => ermaessigungSetzen(i, { bezeichnung: ev.target.value.trim() }, ctx),
+              }),
+            ]),
+            h('td', { class: 'zahl' }, [
+              h('input', {
+                type: 'number',
+                min: '0',
+                max: '20',
+                step: '0.5',
+                inputmode: 'decimal',
+                value: String(e.stunden),
+                'aria-label': `Stunden für ${e.bezeichnung}`,
+                style: 'width:5.5rem;text-align:right',
+                onchange: (ev) =>
+                  ermaessigungSetzen(i, { stunden: Number(ev.target.value) || 0 }, ctx),
+              }),
+            ]),
+            h('td', {}, [
+              (() => {
+                const s = h(
+                  'select',
+                  {
+                    'aria-label': `Art der Ermäßigung für ${e.bezeichnung}`,
+                    onchange: (ev) => ermaessigungSetzen(i, { art: ev.target.value }, ctx),
+                  },
+                  Object.values(ERMAESSIGUNG_ARTEN).map((a) =>
+                    h('option', { value: a.id, text: a.name }),
+                  ),
+                );
+                s.value = e.art;
+                return s;
+              })(),
+            ]),
+            h('td', {}, [
+              (() => {
+                const s = h(
+                  'select',
+                  {
+                    'aria-label': `Erfassungskategorie für ${e.bezeichnung}`,
+                    onchange: (ev) =>
+                      ermaessigungSetzen(i, { kategorieId: ev.target.value || null }, ctx),
+                  },
+                  [
+                    h('option', { value: '', text: '– keine –' }),
+                    ...KATEGORIEN.map((k) => h('option', { value: k.id, text: k.name })),
+                  ],
+                );
+                s.value = e.kategorieId || '';
+                return s;
+              })(),
+            ]),
+            h('td', {}, [
+              h('button', {
+                class: 'btn klein gefahr',
+                text: 'Entfernen',
+                'aria-label': `${e.bezeichnung} entfernen`,
+                onclick: () => {
+                  store.aendern((st) => {
+                    st.einstellungen.ermaessigungen.splice(i, 1);
+                  });
+                  toast('Ermäßigung entfernt.');
+                  ctx.neuZeichnen();
+                },
+              }),
+            ]),
+          ]),
+        ),
+      ),
+    );
+    karte.appendChild(h('div', { class: 'tabelle-wrap' }, [tabelle]));
+  } else {
+    karte.appendChild(h('p', { class: 'leer', text: 'Noch keine Ermäßigung eingetragen.' }));
+  }
+
+  /* Vorlagen zum Anklicken */
+  const nochNichtGenutzt = ERMAESSIGUNG_VORLAGEN.filter(
+    (v) => !liste.some((e) => e.bezeichnung === v.bezeichnung),
+  );
+  karte.appendChild(
+    h('details', { style: 'margin-top:0.85rem' }, [
+      h('summary', { text: 'Aufgabe hinzufügen' }),
+      h('p', {
+        class: 'feld-hinweis',
+        text:
+          'Alle Vorlagen starten mit einer Stunde – wie viele Stunden tatsächlich gewährt werden, ' +
+          'steht im Erlass und im Bescheid der Schulleitung und ist von Schule zu Schule verschieden.',
+      }),
+      h(
+        'div',
+        { class: 'chip-reihe' },
+        nochNichtGenutzt.map((v) =>
+          h('button', {
+            class: 'chip',
+            type: 'button',
+            text: `+ ${v.bezeichnung}`,
+            onclick: () => {
+              store.aendern((st) => {
+                st.einstellungen.ermaessigungen.push(neueErmaessigung(v));
+              });
+              ctx.neuZeichnen();
+            },
+          }),
+        ),
+      ),
+      h('div', { class: 'btn-reihe', style: 'margin-top:0.6rem' }, [
+        h('button', {
+          class: 'btn klein',
+          text: 'Freie Aufgabe anlegen',
+          onclick: () => {
+            store.aendern((st) => {
+              st.einstellungen.ermaessigungen.push(neueErmaessigung());
+            });
+            ctx.neuZeichnen();
+          },
+        }),
+      ]),
+    ]),
+  );
+
+  karte.appendChild(
+    h('dl', { class: 'kennzahlen', style: 'margin-top:0.85rem' }, [
+      h('div', { class: 'kennzahl' }, [
+        h('dt', { text: 'Ermäßigung gesamt' }),
+        h('dd', {}, [
+          document.createTextNode(`${zahl(summe)} Std.`),
+          h('span', { class: 'zusatz', text: `≙ ${minutenAlsStunden(summe * proStunde)} Arbeitszeit je Woche` }),
+        ]),
+      ]),
+      h('div', { class: 'kennzahl' }, [
+        h('dt', { text: 'Unterrichtsverpflichtung' }),
+        h('dd', {}, [
+          document.createTextNode(`${zahl(unterrichtsverpflichtung(einst))} Std.`),
+          h('span', {
+            class: 'zusatz',
+            text: `von ${zahl((Number(einst.pflichtstundenVollzeit) || 0) * beschaeftigungsfaktor(einst))} anteilig`,
+          }),
+        ]),
+      ]),
+    ]),
+  );
+
+  karte.appendChild(
+    h('div', { class: 'hinweis' }, [
+      h('strong', { text: 'Warum das die Arbeitszeit nicht senkt: ' }),
+      document.createTextNode(
+        `Eine Deputatsstunde entspricht rechnerisch ${minutenAlsStunden(proStunde)} Arbeitszeit ` +
+          `(${einst.wochenarbeitszeit} Wochenstunden geteilt durch ${einst.pflichtstundenVollzeit} ` +
+          'Pflichtstunden). Wer eine Stunde Ermäßigung für eine Aufgabe erhält, hat dafür also rund ' +
+          `${minutenAlsStunden(proStunde)} pro Woche zur Verfügung – nicht 45 Minuten. Ob das reicht, ` +
+          'zeigt die Auswertung: Dort werden gewährte Entlastung und tatsächlich erfasster Aufwand ' +
+          'gegenübergestellt.',
+      ),
+    ]),
+  );
+
+  return karte;
+}
+
+/**
+ * Zeigt, ob der Browser den Speicher als dauerhaft markiert hat. Bei einer App
+ * ohne Server ist das die einzige Zusage, die es überhaupt gibt - man sollte
+ * nachsehen können, statt hoffen zu müssen.
+ */
+function speicherStatus() {
+  const knoten = h('p', { class: 'feld-hinweis', text: 'Speicherzustand wird geprüft …' });
+  speicherBericht().then((b) => {
+    const teile = [];
+    if (b.dauerhaft === true) {
+      teile.push('Der Browser hat den Speicher als dauerhaft markiert – die Daten werden nicht bei Platzmangel geräumt.');
+    } else if (b.dauerhaft === false) {
+      teile.push(
+        'Der Browser hat den Speicher nicht als dauerhaft markiert. Bei Platzmangel könnten die Daten ' +
+          'geräumt werden – dagegen hilft, die App zum Startbildschirm hinzuzufügen, und regelmäßige Backups.',
+      );
+    } else {
+      teile.push('Dieser Browser gibt über den Speicherzustand keine Auskunft.');
+    }
+    if (b.belegt != null) {
+      teile.push(`Belegt: ${Math.max(1, Math.round(b.belegt / 1024))} KB.`);
+    }
+    if (istIOS() && !alsAppInstalliert()) {
+      teile.push(
+        'Auf dem iPhone gilt zusätzlich: Safari löscht Daten von Websites, die sieben Tage nicht ' +
+          'geöffnet wurden. Zum Startbildschirm hinzugefügt, gilt das nicht.',
+      );
+    }
+    knoten.textContent = teile.join(' ');
+  });
+  return knoten;
+}
+
+function ermaessigungSetzen(index, patch, ctx) {
+  store.aendern((st) => {
+    const liste = st.einstellungen.ermaessigungen;
+    if (liste[index]) liste[index] = { ...liste[index], ...patch };
+  });
+  ctx.neuZeichnen();
+}
+
+function zahl(x) {
+  return String(Math.round(x * 100) / 100).replace('.', ',');
 }
 
 /* ------------------------------- Hilfen ---------------------------------- */

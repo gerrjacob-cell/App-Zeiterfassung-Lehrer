@@ -12,6 +12,7 @@ import { aktuellesSchuljahr, schuljahrFuer, PFLICHTSTUNDEN_SH } from './model.js
 import { baueJahreskalender, urlaubsvorschlag } from './soll.js';
 import { iso } from './kalender-sh.js';
 import { erinnerungEinrichten } from './erinnerung.js';
+import { speicherSichern, iosHinweisNoetig, iosHinweisMerken } from './geraet.js';
 
 import { heuteView } from './views/heute.js';
 import { wocheView } from './views/woche.js';
@@ -102,6 +103,26 @@ if (schuljahrFuer(new Date()) !== store.get().einstellungen.schuljahr) {
 
 if (!store.get().einstellungen.setupFertig) setTimeout(erstesSetup, 300);
 
+// Dauerhaften Speicher anfordern, damit der Browser die Daten nicht bei
+// Platzmangel wegräumt.
+speicherSichern();
+
+// Auf dem iPhone ohne Installation drohen die Daten nach sieben Tagen ohne
+// Nutzung verloren zu gehen. Das ist kein Detail, das man in die Einstellungen
+// schreibt - das gehört einmal deutlich auf den Bildschirm. Aber erst, wenn die
+// Ersteinrichtung durch ist: zwei gestapelte Dialoge beim allerersten Start
+// sind eine Zumutung.
+if (iosHinweisNoetig()) setTimeout(iosHinweisWennFrei, 1500);
+
+function iosHinweisWennFrei() {
+  if (!iosHinweisNoetig()) return;
+  if (document.querySelector('dialog[open]') || !store.get().einstellungen.setupFertig) {
+    setTimeout(iosHinweisWennFrei, 2000);
+    return;
+  }
+  iosHinweisZeigen();
+}
+
 /* -------------------------------- Aufbau --------------------------------- */
 
 function aufbauen() {
@@ -174,6 +195,43 @@ function zeichnen() {
   document.title = `${ANSICHTEN[ctx.ansicht].name} · Lehrerzeit`;
 }
 
+/* ---------------------------- iOS-Speicherhinweis ------------------------ */
+
+function iosHinweisZeigen() {
+  dialogOeffnen((dialog, schliessen) => {
+    dialog.append(
+      h('h2', { text: 'Bitte zum Startbildschirm hinzufügen' }),
+      h('p', {
+        text:
+          'Diese App speichert alles nur auf deinem Gerät – das ist gut für den Datenschutz, hat auf ' +
+          'dem iPhone aber einen Haken: Safari löscht die Daten von Websites, die sieben Tage lang ' +
+          'nicht geöffnet wurden. In den Ferien ist das schnell erreicht.',
+      }),
+      h('p', {
+        text:
+          'Wird die App zum Startbildschirm hinzugefügt, gilt diese Löschung nicht mehr. In Safari: ' +
+          'auf das Teilen-Symbol tippen, dann „Zum Home-Bildschirm“.',
+      }),
+      h('p', {
+        class: 'feld-hinweis',
+        text:
+          'Unabhängig davon lohnt sich der Backup-Export unter „Mehr“ – etwa zu jedem Halbjahr. ' +
+          'Er ist die einzige Sicherung, die einen Gerätewechsel übersteht.',
+      }),
+      h('div', { class: 'btn-reihe', style: 'justify-content:flex-end;margin-top:1rem' }, [
+        h('button', {
+          class: 'btn primaer',
+          text: 'Verstanden',
+          onclick: () => {
+            iosHinweisMerken();
+            schliessen();
+          },
+        }),
+      ]),
+    );
+  });
+}
+
 /* ------------------------------ Erstes Setup ----------------------------- */
 
 /**
@@ -209,8 +267,14 @@ function erstesSetup() {
       }),
       h('div', { class: 'feld' }, [h('label', { for: 's-schulform', text: 'Schulform' }), schulform]),
       h('div', { class: 'feld' }, [
-        h('label', { for: 's-meine', text: 'Meine Pflichtstunden (bei Teilzeit weniger)' }),
+        h('label', { for: 's-meine', text: 'Meine bewilligten Unterrichtsstunden' }),
         meine,
+        h('p', {
+          class: 'feld-hinweis',
+          text:
+            'Bei Vollzeit die volle Pflichtstundenzahl, bei Teilzeit die Zahl aus dem Bescheid – ' +
+            'jeweils ohne Abzug von Ermäßigungsstunden. Die trägst du später unter "Mehr" ein.',
+        }),
       ]),
       h('div', { class: 'feld' }, [h('label', { for: 's-name', text: 'Name für Ausdrucke' }), name]),
       h('div', { class: 'feld' }, [
@@ -233,8 +297,11 @@ function erstesSetup() {
             const gewaehlt = PFLICHTSTUNDEN_SH.find((s) => s.id === schulform.value);
             store.einstellungenSetzen({
               schulform: schulform.value,
-              pflichtstundenSoll: gewaehlt ? gewaehlt.stunden : 27,
-              pflichtstundenIst: Number(meine.value) || (gewaehlt ? gewaehlt.stunden : 27),
+              pflichtstundenVollzeit: gewaehlt ? gewaehlt.stunden : 27,
+              beschaeftigungsart:
+                Number(meine.value) < (gewaehlt ? gewaehlt.stunden : 27) ? 'teilzeit' : 'vollzeit',
+              teilzeitEingabe: 'stunden',
+              teilzeitStunden: Number(meine.value) || (gewaehlt ? gewaehlt.stunden : 27),
               name: name.value.trim(),
               schuljahr: aktuellesSchuljahr(),
               setupFertig: true,

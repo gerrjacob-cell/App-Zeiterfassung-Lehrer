@@ -24,6 +24,7 @@ const HUELLE = [
   'js/charts.js',
   'js/export.js',
   'js/erinnerung.js',
+  'js/geraet.js',
   'js/kalender-sh.js',
   'js/kollegium.js',
   'js/views/heute.js',

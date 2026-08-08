@@ -96,8 +96,20 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Die App-Hülle ist eine Flex-Spalte: Kopf, Inhalt, Navigation. Beide Leisten
+   kleben per `sticky` am Rand, statt mit `fixed` über dem Inhalt zu schweben.
+   Der Vorteil ist handfest: Die Navigation belegt echten Platz im Layout und
+   kann den Inhalt nicht verdecken - das bisherige `padding-bottom: 6.5rem` am
+   Inhalt war eine Schätzung, die bei größerer Schrift oder mehr Einträgen
+   irgendwann nicht mehr gepasst hätte.
+   Höhe in `svh`: das ist der kleine Viewport, also die Höhe, die auch bei
+   ausgeklappter Browserleiste sicher sichtbar ist. Lieber ein paar Pixel Luft
+   als eine Leiste, die unter dem Rand verschwindet. */
 body {
-  min-height: 100dvh;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -111,6 +123,7 @@ a { color: var(--accent); }
 /* ------------------------------- Layout --------------------------------- */
 
 .kopf {
+  order: 0;
   position: sticky;
   top: 0;
   z-index: 30;
@@ -128,28 +141,27 @@ a { color: var(--accent); }
 .kopf-titel span { display: block; font-size: 0.78rem; color: var(--text-secondary); }
 
 main {
+  /* Steht im Markup vor der Navigation, wird aber darüber angezeigt - so bleibt
+     die Dokumentreihenfolge für Screenreader sinnvoll. */
+  order: 2;
+  flex: 1 0 auto;
+  width: 100%;
   max-width: 860px;
   margin: 0 auto;
-  padding: 1rem 1rem 6.5rem;
-}
-
-@media (min-width: 760px) {
-  main { padding-bottom: 3rem; }
+  padding: 1rem 1rem 2rem;
 }
 
 /* ---------------------------- Navigation -------------------------------- */
 
 .nav {
-  position: fixed;
+  order: 3;
+  position: sticky;
   bottom: 0;
-  left: 0;
-  right: 0;
   z-index: 40;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   background: var(--surface-1);
   border-top: 1px solid var(--line);
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .nav button {
@@ -173,10 +185,12 @@ main {
 .nav button[aria-current='page'] { color: var(--accent); border-top-color: var(--accent); }
 
 @media (min-width: 760px) {
+  /* Auf dem Desktop wandert die Navigation nach oben unter den Kopf. */
   .nav {
-    position: sticky;
+    order: 1;
     top: 57px;
     bottom: auto;
+    width: 100%;
     max-width: 860px;
     margin: 0 auto;
     grid-template-columns: repeat(5, auto);
@@ -187,6 +201,7 @@ main {
     background: var(--plane);
   }
   .nav button { flex-direction: row; font-size: 0.9rem; padding: 0.6rem 0.9rem; min-height: 0; }
+  main { padding-bottom: 3rem; }
 }
 
 /* ------------------------------- Karten --------------------------------- */
@@ -292,6 +307,15 @@ button:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
   outline-offset: 2px;
 }
 
+/* Kopf- und Navigationsleiste sind fixiert. Ohne diesen Abstand landet ein
+   Element, zu dem der Browser springt - per Tastatur, per Sprungmarke oder beim
+   Öffnen der Bildschirmtastatur - unter einer der beiden Leisten und ist dann
+   weder sichtbar noch antippbar. */
+button, input, select, textarea, summary, a, [tabindex] {
+  scroll-margin-top: 96px;
+  scroll-margin-bottom: 96px;
+}
+
 .feld { margin-bottom: 0.85rem; }
 .feld-hinweis { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem; }
 
@@ -326,6 +350,14 @@ button:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-reihe { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+/* Auf schmalen Displays und Touch-Geräten bleibt auch der kleine Knopf bei
+   44px - mit dem Finger trifft man 36px nicht zuverlässig. Beide Bedingungen,
+   weil nicht jeder Browser `pointer: coarse` korrekt meldet. */
+@media (pointer: coarse), (max-width: 760px) {
+  .btn.klein { min-height: 44px; }
+  .chip { min-height: 44px; }
+}
 
 .chip-reihe { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 
@@ -413,8 +445,10 @@ tbody tr:hover { background: var(--surface-2); }
 /* --------------------------- Wochen-Matrix ------------------------------- */
 
 .matrix { min-width: 640px; }
+/* Touch-Ziele bleiben auch in der dichten Matrix bei 44px - darunter trifft
+   man auf dem Telefon regelmäßig die Nachbarzelle. */
 .matrix input {
-  min-height: 38px;
+  min-height: 44px;
   padding: 0.25rem 0.35rem;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -423,11 +457,20 @@ tbody tr:hover { background: var(--surface-2); }
 .matrix th.kat { min-width: 170px; font-weight: 500; color: var(--text-primary); }
 .matrix .heute { background: var(--accent-schwach); }
 
+/* -------------------------- Ermäßigungstabelle ---------------------------- */
+
+/* Ohne Mindestbreite quetscht der Browser die fünf Spalten auf dem Telefon zu
+   unlesbaren Stummeln zusammen. Lieber waagerecht scrollen - wie bei der
+   Wochenmatrix und dem Stundenplan auch. */
+.ermaessigungen { min-width: 620px; }
+.ermaessigungen input[type='text'] { min-width: 11rem; }
+.ermaessigungen select { min-width: 9rem; }
+
 /* ---------------------------- Stundenplan -------------------------------- */
 
 .plan { min-width: 620px; }
 .plan td { padding: 0.25rem; }
-.plan input { min-height: 38px; padding: 0.25rem 0.4rem; font-size: 0.85rem; }
+.plan input { min-height: 44px; padding: 0.25rem 0.4rem; font-size: 0.85rem; }
 .plan .stundennr { font-variant-numeric: tabular-nums; color: var(--text-secondary); width: 3rem; }
 
 /* ------------------------------ Diagramme -------------------------------- */
@@ -496,6 +539,7 @@ dialog h2 { margin-top: 0; }
   transform: translateX(-50%);
   bottom: calc(76px + env(safe-area-inset-bottom));
   z-index: 90;
+  /* Klebt am unteren Rand, ohne die Navigation zu verdecken. */
   background: var(--text-primary);
   color: var(--plane);
   padding: 0.6rem 1rem;
@@ -538,6 +582,7 @@ dialog h2 { margin-top: 0; }
 @media print {
   :root { color-scheme: light; }
   body { background: #fff; color: #000; }
+  body { display: block; }
   .kopf, .nav, .toast, .viz-tooltip, main { display: none !important; }
   #bericht { display: block; padding: 0; }
   #bericht h1 { font-size: 20pt; }

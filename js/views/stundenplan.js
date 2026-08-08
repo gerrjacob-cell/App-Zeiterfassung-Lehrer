@@ -8,7 +8,11 @@
 import { h, toast } from '../ui.js';
 import * as store from '../store.js';
 import { minutenAlsStunden } from '../soll.js';
-import { beschaeftigungsfaktor } from '../model.js';
+import {
+  beschaeftigungsfaktor,
+  ermaessigungsstunden,
+  unterrichtsverpflichtung,
+} from '../model.js';
 
 const TAGE = [
   { nr: 1, name: 'Montag', kurz: 'Mo' },
@@ -85,6 +89,7 @@ export function stundenplanView(ctx) {
           ]),
         ]),
       ]),
+      deputatsAbgleich(einst, plan),
     ]),
   );
 
@@ -195,6 +200,57 @@ export function stundenplanView(ctx) {
   );
 
   return wurzel;
+}
+
+/**
+ * Vergleicht die Zahl der eingetragenen Unterrichtsstunden mit der
+ * Unterrichtsverpflichtung. Wer über Deputat unterrichtet, leistet Mehrarbeit,
+ * noch bevor die erste Klassenarbeit korrigiert ist – das sollte man sehen,
+ * ohne selbst nachzurechnen.
+ */
+function deputatsAbgleich(einst, plan) {
+  const geplant = stundenGesamt(plan);
+  if (!geplant) return null;
+
+  const soll = unterrichtsverpflichtung(einst);
+  const anteilig = (Number(einst.pflichtstundenVollzeit) || 0) * beschaeftigungsfaktor(einst);
+  const ermaessigt = ermaessigungsstunden(einst);
+  const differenz = Math.round((geplant - soll) * 100) / 100;
+
+  const teile = [
+    `Der Stundenplan enthält ${geplant} Unterrichtsstunden.`,
+    `Die Unterrichtsverpflichtung beträgt ${runden(soll)} Stunden`,
+    ermaessigt > 0
+      ? `(${runden(anteilig)} anteilig abzüglich ${runden(ermaessigt)} Ermäßigungsstunden).`
+      : '.',
+  ];
+
+  if (Math.abs(differenz) < 0.25) {
+    return h('p', {
+      class: 'feld-hinweis',
+      text: `${teile.join(' ')} Der Plan entspricht damit dem Deputat.`,
+    });
+  }
+
+  if (differenz > 0) {
+    return h('div', { class: 'hinweis warnung' }, [
+      h('strong', { text: `${runden(differenz)} Stunden über dem Deputat. ` }),
+      document.createTextNode(
+        `${teile.join(' ')} Diese Differenz ist Mehrarbeit im Unterricht – unabhängig von allem, ` +
+          'was daneben noch anfällt. Sie gehört in die Dokumentation und ins Gespräch mit der ' +
+          'Schulleitung.',
+      ),
+    ]);
+  }
+
+  return h('p', {
+    class: 'feld-hinweis',
+    text: `${teile.join(' ')} Der Plan liegt ${runden(-differenz)} Stunden darunter.`,
+  });
+}
+
+function runden(x) {
+  return String(Math.round(x * 100) / 100).replace('.', ',');
 }
 
 function stundenGesamt(plan) {
