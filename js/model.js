@@ -79,18 +79,46 @@ export const TAGESTYPEN = {
 /**
  * Pflichtstunden-Voreinstellungen für Schleswig-Holstein.
  *
- * ACHTUNG: Diese Werte sind Voreinstellungen und können sich durch Änderung
- * der Pflichtstundenverordnung verschieben. Sie sind in den Einstellungen frei
- * editierbar. Bitte einmalig gegen die aktuelle Fassung der Landesverordnung
- * über die regelmäßige Pflichtstundenzahl der Lehrkräfte prüfen.
+ * Quelle: KMK, "Übersicht über die Pflichtstunden der Lehrkräfte an
+ * allgemeinbildenden und beruflichen Schulen", Stand September 2019
+ * (Schuljahr 2019/2020), Spalte Schleswig-Holstein.
+ *
+ * ACHTUNG: Die Quelle ist von 2019, die Pflichtstundenverordnung wurde seither
+ * neu gefasst. Die Werte sind deshalb Startwerte und keine Rechtsauskunft - sie
+ * sind in den Einstellungen frei editierbar und sollten einmal gegen die
+ * aktuelle Fassung geprüft werden.
  */
 export const PFLICHTSTUNDEN_SH = [
   { id: 'grundschule', name: 'Grundschule', stunden: 28 },
-  { id: 'gemeinschaftsschule', name: 'Gemeinschaftsschule (Sek I)', stunden: 27 },
-  { id: 'gemeinschaftsschule_oberstufe', name: 'Gemeinschaftsschule mit Oberstufe', stunden: 25.5 },
-  { id: 'foerderzentrum', name: 'Förderzentrum', stunden: 26.5 },
-  { id: 'gymnasium', name: 'Gymnasium', stunden: 25.5 },
-  { id: 'berufsbildend', name: 'Berufsbildende Schule', stunden: 25.5 },
+  {
+    id: 'gemeinschaftsschule',
+    name: 'Gemeinschaftsschule',
+    stunden: 27,
+    hinweis:
+      'Gilt auch für Gemeinschaftsschulen mit gymnasialer Oberstufe. Wer in der Oberstufe in einem ' +
+      'Kernfach, einem profilgebenden Fach, zwei profilergänzenden Fächern oder mit mindestens fünf ' +
+      'Wochenstunden eingesetzt ist, trägt die Ermäßigung von 1,5 Stunden unten als Aufgabe ein.',
+  },
+  {
+    id: 'foerderzentrum',
+    name: 'Förderzentrum',
+    stunden: 27,
+  },
+  {
+    id: 'gymnasium',
+    name: 'Gymnasium',
+    stunden: 25.5,
+    hinweis:
+      'Für Lehrkräfte, die nicht in der Oberstufe eingesetzt werden, gelten stattdessen 27 Stunden.',
+  },
+  {
+    id: 'berufsbildend',
+    name: 'Berufsbildende Schule',
+    stunden: 25.5,
+    hinweis:
+      'Wert für die Laufbahn der Studienrätinnen und Studienräte. Andere Lehrkräfte an ' +
+      'berufsbildenden Schulen 27 Stunden, Lehrwerkmeisterinnen und Lehrwerkmeister 28 Stunden.',
+  },
   { id: 'eigen', name: 'Eigener Wert', stunden: 27 },
 ];
 
@@ -99,14 +127,27 @@ export const PFLICHTSTUNDEN_SH = [
  *
  * Die Liste ist ein Angebot zum Anklicken, keine Rechtsaussage: Welche Aufgabe
  * mit wie vielen Stunden entlastet wird, steht im jeweiligen Erlass und im
- * Bescheid der Schulleitung. Deshalb sind alle Werte frei änderbar und die
- * Voreinstellung ist bewusst 1 Stunde, nicht ein erfundener "typischer" Wert.
+ * Bescheid der Schulleitung. Funktionsaufgaben starten deshalb mit einer
+ * Stunde, weil die Verteilung von Schule zu Schule verschieden ist.
+ *
+ * Drei Vorlagen sind dagegen mit belegten Werten vorbelegt - Oberstufeneinsatz,
+ * Alter und Schwerbehinderung folgen einer Landesregelung, nicht einem
+ * Schulbeschluss. Der Zusatz `quelle` erscheint als Hinweis in der Oberfläche.
  *
  * `kategorieId` ordnet die Aufgabe der Erfassungskategorie zu, in der die
  * zugehörige Arbeit üblicherweise anfällt. Dadurch kann die Auswertung die
  * gewährte Entlastung dem tatsächlichen Aufwand gegenüberstellen.
  */
 export const ERMAESSIGUNG_VORLAGEN = [
+  {
+    bezeichnung: 'Einsatz in der gymnasialen Oberstufe',
+    stunden: 1.5,
+    art: 'sonstige',
+    kategorieId: null,
+    quelle:
+      'Schleswig-Holstein: 1,5 Stunden bei Einsatz in der Oberstufe in einem Kernfach, einem ' +
+      'profilgebenden Fach, zwei profilergänzenden Fächern oder mit mindestens fünf Wochenstunden.',
+  },
   { bezeichnung: 'Sicherheitsbeauftragte:r', art: 'funktion', kategorieId: 'funktion' },
   { bezeichnung: 'Fachkonferenzleitung', art: 'funktion', kategorieId: 'funktion' },
   { bezeichnung: 'Sammlungsleitung', art: 'funktion', kategorieId: 'funktion' },
@@ -121,8 +162,23 @@ export const ERMAESSIGUNG_VORLAGEN = [
   { bezeichnung: 'Schulentwicklung / Projektarbeit', art: 'funktion', kategorieId: 'funktion' },
   { bezeichnung: 'Klassenleitung', art: 'funktion', kategorieId: 'funktion' },
   { bezeichnung: 'Korrekturfächer / Oberstufe', art: 'funktion', kategorieId: 'korrektur' },
-  { bezeichnung: 'Altersermäßigung', art: 'alter', kategorieId: null },
-  { bezeichnung: 'Ermäßigung wegen Schwerbehinderung', art: 'schwerbehinderung', kategorieId: null },
+  {
+    bezeichnung: 'Altersermäßigung',
+    stunden: 1,
+    art: 'alter',
+    kategorieId: null,
+    quelle: 'Schleswig-Holstein: 1 Stunde ab dem 60. Lebensjahr.',
+  },
+  {
+    bezeichnung: 'Ermäßigung wegen Schwerbehinderung',
+    stunden: 1,
+    art: 'schwerbehinderung',
+    kategorieId: null,
+    quelle:
+      'Schleswig-Holstein: bei mindestens 50 Prozent 1 Stunde ab dem 55. Lebensjahr, ab dem ' +
+      '63. Lebensjahr eine weitere Stunde. Zusätzlich sinkt die wöchentliche Arbeitszeit von 41 ' +
+      'auf 40 Stunden - das gehört oben unter Arbeitszeitmodell eingetragen.',
+  },
   { bezeichnung: 'Sonstige Ermäßigung', art: 'sonstige', kategorieId: null },
 ];
 

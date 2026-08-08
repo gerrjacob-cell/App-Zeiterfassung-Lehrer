@@ -62,9 +62,11 @@ reguläre Arbeitstage.
 Schuljahr 2026/2027, Vollzeit, 30 Urlaubstage:
 **1836:48 h an 224 Arbeitstagen, davon 30 in der unterrichtsfreien Zeit.**
 
-Grundlage: **Arbeitszeitverordnung Schleswig-Holstein (AZVO SH)** – 41 Stunden
-regelmäßige wöchentliche Arbeitszeit für Beamtinnen und Beamte. Tarifbeschäftigte
-nach TV-L tragen ihren eigenen Wert ein; das Feld ist frei änderbar.
+Grundlage: **41 Stunden regelmäßige wöchentliche Arbeitszeit.** Die KMK-Übersicht
+weist für Schleswig-Holstein 41 Stunden sowohl für Beamtinnen und Beamte als auch
+für Angestellte aus – anders als in den meisten Ländern gibt es hier also keinen
+Unterschied zwischen den Statusgruppen. **Bei anerkannter Schwerbehinderung sind
+es 40 Stunden.** Das Feld ist frei änderbar.
 
 ---
 
@@ -82,6 +84,15 @@ umrechnen muss:
 
 Alle drei führen zum selben Faktor und damit zur selben Soll-Arbeitszeit.
 
+### Ermäßigungen bei Teilzeit
+
+Nach den vorliegenden Darstellungen werden Alters- und Schwerbehinderten­ermäßigung
+bei einer Teilzeit unterhalb von drei Vierteln nur zur Hälfte gewährt. Die
+KMK-Übersicht enthält zu diesem Punkt eine eigene Tabelle, deren Spaltenzuordnung
+sich aus dem PDF nicht zuverlässig auslesen ließ – die Angabe ist deshalb **nicht
+gesichert**. Die App rechnet hier ohnehin nichts automatisch, sondern weist bei
+einer Teilzeit unter drei Vierteln nur hin. Eingetragen wird, was im Bescheid steht.
+
 ### Zwei Punkte, die bei Teilzeit regelmäßig strittig sind
 
 **Teilzeit gilt auch außerhalb des Unterrichts.** Konferenzen, Aufsichten,
@@ -91,22 +102,37 @@ einen eigenen Erlass zur Verbesserung der Bedingungen teilzeitbeschäftigter
 Lehrkräfte. Genau das lässt sich mit der Erfassung belegen – der Saldo
 vergleicht mit dem anteiligen Soll, nie mit dem einer Vollzeitkraft.
 
-**Ermäßigungen werden bei Teilzeit gestaffelt.** Nach den vorliegenden
-Darstellungen der Regelung in Schleswig-Holstein gilt:
-
-- Teilzeit **ab drei Vierteln**: Alters- und Schwerbehindertenermäßigung in
-  voller Höhe
-- Teilzeit **unter drei Vierteln**: beide nur zur Hälfte
-- Teilzeit **unter der Hälfte**: keine Altersermäßigung
-
-Die App rechnet das **nicht automatisch**, sondern weist bei einer Teilzeit
-unter drei Vierteln darauf hin. Eingetragen werden die tatsächlich bewilligten
-Stunden – die stehen im Bescheid und sind belastbarer als jede Faustregel in
-einer Software.
+**Die Bezugsgröße bleibt die volle Pflichtstundenzahl.** Wer 21 von 27 Stunden
+bewilligt bekommen hat und zusätzlich zwei Stunden Ermäßigung erhält, trägt als
+Teilzeitumfang 21 ein – nicht 19. Sonst sänke das Arbeitszeit-Soll doppelt.
 
 ---
 
-## Ermäßigungs- und Anrechnungsstunden
+## Belegte Ermäßigungen in Schleswig-Holstein
+
+Drei Ermäßigungen folgen einer Landesregelung, nicht einem Schulbeschluss – sie
+sind deshalb mit konkreten Werten vorbelegt (Quelle: KMK-Übersicht 2019):
+
+| Ermäßigung | Stunden | Regelung |
+|---|---|---|
+| **Einsatz in der gymnasialen Oberstufe** | 1,5 | bei Einsatz in einem Kernfach, einem profilgebenden Fach, zwei profilergänzenden Fächern oder mit mindestens fünf Wochenstunden |
+| **Altersermäßigung** | 1 | ab dem 60. Lebensjahr |
+| **Schwerbehinderung** (mind. 50 %) | 1, ab 63 weitere 1 | ab dem 55. Lebensjahr |
+
+Die Oberstufen-Ermäßigung ist der Grund, warum es in der App **keine eigene
+Schulform „Gemeinschaftsschule mit Oberstufe“ mehr gibt**: Die Pflichtstundenzahl
+ist dieselbe wie in der Sekundarstufe I, nämlich 27. Der Unterschied entsteht
+erst durch den tatsächlichen Einsatz in der Oberstufe – und wer an einer
+Gemeinschaftsschule mit Oberstufe arbeitet, dort aber nicht unterrichtet, hat
+weiterhin 27 Pflichtstunden. Als feste Schulform-Voreinstellung wäre 25,5 also
+für einen Teil des Kollegiums schlicht falsch gewesen.
+
+Bei anerkannter Schwerbehinderung sinkt zusätzlich die **wöchentliche Arbeitszeit
+von 41 auf 40 Stunden**. Das ist keine Ermäßigung der Unterrichtsverpflichtung,
+sondern verringert die Soll-Arbeitszeit wirklich – es gehört deshalb in das Feld
+„Wöchentliche Arbeitszeit“, nicht in die Ermäßigungsliste.
+
+## Weitere Ermäßigungs- und Anrechnungsstunden
 
 Die App bringt eine Liste anklickbarer Vorlagen mit – Sicherheitsbeauftragung,
 Fachkonferenzleitung, Sammlungsleitung, Medien- und IT-Beauftragung,
@@ -115,7 +141,7 @@ Prävention, Ganztagskoordination, Ausbildung von Lehrkräften im
 Vorbereitungsdienst, Schulentwicklung, Klassenleitung, Korrekturfächer,
 Altersermäßigung, Schwerbehinderung, freie Position.
 
-**Alle starten mit einer Stunde.** Das ist Absicht: Wie viele Stunden für welche
+**Die Funktionsaufgaben starten mit einer Stunde.** Das ist Absicht: Wie viele Stunden für welche
 Aufgabe gewährt werden, steht im jeweiligen Erlass und im Verteilungsbeschluss
 der Schule und ist von Schule zu Schule verschieden. Ein erfundener
 „typischer" Wert wäre bequemer und falsch.
@@ -134,21 +160,31 @@ sie sind ein Ausgleich, keine Gegenleistung für eine Aufgabe.
 Diese Werte sind **Startwerte**, keine Rechtsauskunft, und alle in der App
 änderbar:
 
-| Wert | Voreinstellung | Prüfen gegen |
-|---|---|---|
-| Pflichtstunden Gemeinschaftsschule Sek I | 27 | Pflichtstundenverordnung SH |
-| … mit Oberstufe | 25,5 | dieselbe |
-| Grundschule / Förderzentrum / Gymnasium | 28 / 26,5 / 25,5 | dieselbe |
-| Wöchentliche Arbeitszeit | 41 h | AZVO SH bzw. TV-L |
-| Erholungsurlaub | 30 Werktage | Erholungsurlaubsverordnung |
-| Ferientermine 2026/27, 2027/28 | Festland SH | amtliche Bekanntmachung |
-| Dauer einer Unterrichtsstunde | 45 min | eigener Schulrhythmus |
+| Wert | Voreinstellung | Quelle | Prüfen gegen |
+|---|---|---|---|
+| Gemeinschaftsschule (auch mit Oberstufe) | 27 | KMK 2019 | PflStdVO SH |
+| Grundschule | 28 | KMK 2019 | dieselbe |
+| Förderzentrum | 27 | KMK 2019 | dieselbe |
+| Gymnasium | 25,5 | KMK 2019 | dieselbe |
+| Berufsbildende Schule (Studienräte) | 25,5 | KMK 2019 | dieselbe |
+| Ermäßigung Oberstufeneinsatz | 1,5 | KMK 2019 | dieselbe |
+| Altersermäßigung ab 60 | 1 | KMK 2019 | dieselbe |
+| Schwerbehinderung ab 55 / ab 63 | 1 / +1 | KMK 2019 | dieselbe |
+| Wöchentliche Arbeitszeit | 41 h (40 h bei Schwerbehinderung) | KMK 2019 | AZVO SH |
+| Erholungsurlaub | 30 Werktage | – | Erholungsurlaubsverordnung |
+| Ferientermine 2026/27, 2027/28 | Festland SH | Websuche | amtliche Bekanntmachung |
+| Dauer einer Unterrichtsstunde | 45 min | – | eigener Schulrhythmus |
 
-**Offenlegung zur Quellenlage:** Die Pflichtstundenzahlen und die Staffelung der
-Ermäßigungen bei Teilzeit stammen aus Sekundärquellen, nicht aus dem
-Verordnungstext selbst – die amtlichen Seiten des Landes waren bei der
-Erstellung nicht abrufbar. Deshalb ist jeder dieser Werte in der Oberfläche
-editierbar und mit einem Prüfhinweis versehen, statt fest im Code zu stehen.
+**Offenlegung zur Quellenlage:** Die mit „KMK 2019“ gekennzeichneten Werte
+stammen aus der KMK-Übersicht mit **Stand September 2019 (Schuljahr
+2019/2020)**. Das ist eine amtliche Primärzusammenstellung und damit deutlich
+belastbarer als die zuvor verwendeten Sekundärquellen – aber sie ist mehrere
+Jahre alt, und die Pflichtstundenverordnung Schleswig-Holstein wurde seither neu
+gefasst. Jeder dieser Werte ist deshalb in der Oberfläche editierbar und mit
+einem Prüfhinweis versehen, statt fest im Code zu stehen.
+
+Nicht aus dieser Quelle belegbar waren: die Ferientermine, der Urlaubsanspruch
+und die Staffelung der Ermäßigungen bei Teilzeit.
 
 ---
 
@@ -164,7 +200,11 @@ editierbar und mit einem Prüfhinweis versehen, statt fest im Code zu stehen.
   [Merkblatt des Ministeriums (PDF)](https://www.schleswig-holstein.de/DE/landesregierung/ministerien-behoerden/III/Service/Formulare/Downloads/Beamte_Teilzeit.pdf)
 - Ferientermine:
   [schleswig-holstein.de – Ferientermine](https://www.schleswig-holstein.de/DE/landesregierung/themen/bildung-hochschulen/ferientermine)
-- Pflichtstunden im Ländervergleich:
+- **Hauptquelle der Voreinstellungen:** KMK, „Übersicht über die Pflichtstunden
+  der Lehrkräfte an allgemeinbildenden und beruflichen Schulen“, Stand September
+  2019 – enthält Pflichtstunden je Schulart, Altersermäßigungen, Regelungen für
+  Teilzeit und die wöchentliche Arbeitszeit je Land
+- Aktuellere Fassung derselben Übersicht:
   [KMK-Übersicht 2025/2026 (PDF)](https://www.kmk.org/fileadmin/Dateien/pdf/Statistik/Dokumentationen/Pflichtstunden_der_LehrerInnen_2025_2026.pdf)
 - Gewerkschaftliche Einordnung:
   [GEW Schleswig-Holstein – Rund um Teilzeit](https://www.gew-sh.de/aktuelles/detailseite/rund-um-teilzeit) ·

@@ -894,7 +894,7 @@ function liste(s, opt) {
 
   const grenzen = [
     ['Es sind Selbstaufschreibungen.', 'Sie sind so belastbar, wie sorgfältig erfasst wird. Lücken machen den Saldo eher zu klein als zu groß – die App weist ausdrücklich darauf hin.'],
-    ['Einige Werte müssen geprüft werden.', 'Pflichtstundenzahl, Ferientermine und die Stunden je Funktionsaufgabe sind Startwerte. Alles ist in der App änderbar, ohne Programmierkenntnisse.'],
+    ['Einige Werte müssen geprüft werden.', 'Die Pflichtstunden und Ermäßigungen stammen aus der KMK-Übersicht von 2019, die Verordnung wurde seither neu gefasst. Alles ist in der App änderbar, ohne Programmierkenntnisse.'],
     ['Das ist keine Rechtsberatung.', 'Ob und wie sich aus dokumentierter Mehrarbeit Ansprüche ableiten lassen, beantworten Personalrat, Gewerkschaft oder Rechtsberatung – nicht diese App.'],
   ];
   grenzen.forEach(([titel, text], i) => {

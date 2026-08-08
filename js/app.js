@@ -244,7 +244,10 @@ function erstesSetup() {
       'select',
       { id: 's-schulform' },
       PFLICHTSTUNDEN_SH.filter((s) => s.id !== 'eigen').map((s) =>
-        h('option', { value: s.id, text: `${s.name} – ${s.stunden} Pflichtstunden` }),
+        h('option', {
+          value: s.id,
+          text: `${s.name} – ${String(s.stunden).replace('.', ',')} Pflichtstunden`,
+        }),
       ),
     );
     schulform.value = 'gemeinschaftsschule';

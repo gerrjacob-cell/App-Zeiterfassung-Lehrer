@@ -89,6 +89,15 @@ function migriere(daten) {
     delete daten.einstellungen.anrechnungsstunden;
   }
 
+  // Die Schulform "Gemeinschaftsschule mit Oberstufe" ist entfallen: Die
+  // Pflichtstundenzahl ist dieselbe wie in der Sekundarstufe I, der Unterschied
+  // entsteht erst durch die Ermäßigung für den Oberstufeneinsatz. Die eingetragene
+  // Stundenzahl bleibt bewusst unangetastet - sie ist die Bezugsgröße einer
+  // womöglich eingetragenen Teilzeit, und die darf eine Migration nicht verschieben.
+  if (daten.einstellungen.schulform === 'gemeinschaftsschule_oberstufe') {
+    daten.einstellungen.schulform = 'gemeinschaftsschule';
+  }
+
   if (!Array.isArray(daten.einstellungen.ermaessigungen)) daten.einstellungen.ermaessigungen = [];
   daten.schemaVersion = SCHEMA_VERSION;
   daten.einstellungen.schemaVersion = SCHEMA_VERSION;

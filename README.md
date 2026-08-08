@@ -112,16 +112,16 @@ Ausführlich: [RECHTSGRUNDLAGEN.md](RECHTSGRUNDLAGEN.md).
 Drei Dinge sollten einmalig geprüft und gegebenenfalls angepasst werden – alle
 sind in der App editierbar, ohne Code anzufassen:
 
-1. **Pflichtstundenzahl.** Voreingestellt ist 27 für die Gemeinschaftsschule
-   (Sek I) und 25,5 mit Oberstufe. Bitte gegen die aktuelle Fassung der
-   *Landesverordnung über die regelmäßige Pflichtstundenzahl der Lehrkräfte*
-   abgleichen – die Werte in `js/model.js` sind Startwerte, keine Rechtsauskunft.
-   Dasselbe gilt für die Stundenzahl je Funktionsaufgabe: Die Vorlagen starten
-   alle mit einer Stunde, weil die tatsächliche Verteilung von Schule zu Schule
-   verschieden ist.
-2. **Wöchentliche Arbeitszeit.** Voreingestellt sind 41 Stunden nach der
-   Arbeitszeitverordnung für Beamtinnen und Beamte in Schleswig-Holstein.
-   Tarifbeschäftigte nach TV-L tragen ihren eigenen Wert ein.
+1. **Pflichtstundenzahl.** Voreingestellt ist 27 für die Gemeinschaftsschule –
+   auch mit gymnasialer Oberstufe, denn der Unterschied entsteht erst durch die
+   Ermäßigung für den Oberstufeneinsatz. Grundlage ist die KMK-Übersicht mit
+   Stand 2019; bitte gegen die aktuelle Fassung der *Landesverordnung über die
+   regelmäßige Pflichtstundenzahl der Lehrkräfte* abgleichen. Die Stundenzahl je
+   Funktionsaufgabe steht ohnehin im Bescheid der Schulleitung – diese Vorlagen
+   starten mit einer Stunde.
+2. **Wöchentliche Arbeitszeit.** Voreingestellt sind 41 Stunden – in
+   Schleswig-Holstein gilt dieser Wert für verbeamtete und tarifbeschäftigte
+   Lehrkräfte gleichermaßen. Bei anerkannter Schwerbehinderung sind es 40.
 3. **Ferientermine.** Hinterlegt sind die Termine für das Festland,
    Schuljahre 2026/2027 und 2027/2028. Zu Schuljahresbeginn gegen die amtliche
    Bekanntmachung prüfen. Auf Sylt, Föhr, Amrum, Helgoland und den Halligen

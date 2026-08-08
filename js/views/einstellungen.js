@@ -51,6 +51,7 @@ export function einstellungenView(ctx) {
     PFLICHTSTUNDEN_SH.map((s) => h('option', { value: s.id, text: s.name })),
   );
   schulformFeld.value = einst.schulform;
+  const gewaehlteSchulform = PFLICHTSTUNDEN_SH.find((f) => f.id === einst.schulform);
 
   wurzel.appendChild(
     h('div', { class: 'karte' }, [
@@ -67,6 +68,9 @@ export function einstellungenView(ctx) {
         h('p', { class: 'feld-hinweis', text: 'Bleibt auf diesem Gerät. Geht nie in den anonymen Export ein.' }),
       ]),
       h('div', { class: 'feld' }, [h('label', { for: 'e-schulform', text: 'Schulform' }), schulformFeld]),
+      gewaehlteSchulform && gewaehlteSchulform.hinweis
+        ? h('p', { class: 'feld-hinweis', text: gewaehlteSchulform.hinweis })
+        : null,
       zahlFeld('e-pf-voll', 'Pflichtstunden einer Vollzeitkraft', einst.pflichtstundenVollzeit, {
         min: 10,
         max: 35,
@@ -74,11 +78,27 @@ export function einstellungenView(ctx) {
         onSet: (v) => store.einstellungenSetzen({ pflichtstundenVollzeit: v }),
         ctx,
       }),
+      // Weicht der eingetragene Wert von der Voreinstellung der Schulform ab,
+      // ist das meistens Absicht - manchmal aber ein Überbleibsel aus einer
+      // früheren Fassung der App. Beides sichtbar zu machen kostet nichts.
+      gewaehlteSchulform &&
+      gewaehlteSchulform.id !== 'eigen' &&
+      Number(einst.pflichtstundenVollzeit) !== gewaehlteSchulform.stunden
+        ? h('p', {
+            class: 'feld-hinweis',
+            text:
+              `Abweichung: Für ${gewaehlteSchulform.name} sind ${zahl(gewaehlteSchulform.stunden)} ` +
+              `Stunden hinterlegt, eingetragen sind ${zahl(einst.pflichtstundenVollzeit)}. ` +
+              'Falls das nicht beabsichtigt ist, bitte korrigieren – dieser Wert ist die Bezugsgröße ' +
+              'für Teilzeit und für die Umrechnung der Ermäßigungsstunden.',
+          })
+        : null,
       h('p', {
         class: 'feld-hinweis',
         text:
+          'Grundlage der Voreinstellungen ist die KMK-Übersicht der Pflichtstunden, Stand 2019. ' +
           'Bitte gegen die aktuelle Fassung der Pflichtstundenverordnung Schleswig-Holstein prüfen – ' +
-          'die Voreinstellung ist ein Startwert, keine Rechtsauskunft.',
+          'es sind Startwerte, keine Rechtsauskunft.',
       }),
     ]),
   );
@@ -107,6 +127,13 @@ export function einstellungenView(ctx) {
           ctx,
         }),
       ]),
+      h('p', {
+        class: 'feld-hinweis',
+        text:
+          'In Schleswig-Holstein gelten 41 Stunden – für verbeamtete und für tarifbeschäftigte ' +
+          'Lehrkräfte gleichermaßen. Bei anerkannter Schwerbehinderung sind es 40 Stunden; dann ' +
+          'bitte hier 40 eintragen, denn das verringert die Soll-Arbeitszeit tatsächlich.',
+      }),
       h('div', { class: 'hinweis' }, [
         h('strong', { text: 'Jahresarbeitszeitmodell. ' }),
         document.createTextNode(
@@ -773,8 +800,10 @@ function ermaessigungsKarte(ctx, einst) {
       h('p', {
         class: 'feld-hinweis',
         text:
-          'Alle Vorlagen starten mit einer Stunde – wie viele Stunden tatsächlich gewährt werden, ' +
-          'steht im Erlass und im Bescheid der Schulleitung und ist von Schule zu Schule verschieden.',
+          'Funktionsaufgaben starten mit einer Stunde – wie viele tatsächlich gewährt werden, steht ' +
+          'im Bescheid der Schulleitung und ist von Schule zu Schule verschieden. Oberstufeneinsatz, ' +
+          'Alter und Schwerbehinderung sind dagegen mit den Werten für Schleswig-Holstein vorbelegt; ' +
+          'der Grund steht jeweils im Tooltip.',
       }),
       h(
         'div',
@@ -783,7 +812,8 @@ function ermaessigungsKarte(ctx, einst) {
           h('button', {
             class: 'chip',
             type: 'button',
-            text: `+ ${v.bezeichnung}`,
+            text: `+ ${v.bezeichnung}${v.stunden ? ` (${zahl(v.stunden)})` : ''}`,
+            title: v.quelle || 'Stundenzahl nach dem Bescheid der Schulleitung eintragen.',
             onclick: () => {
               store.aendern((st) => {
                 st.einstellungen.ermaessigungen.push(neueErmaessigung(v));
