@@ -13,7 +13,7 @@ import {
   leererEintrag,
 } from '../model.js';
 import { minutenAlsStunden, parseDauer } from '../soll.js';
-import { WOCHENTAGE, ausIso, iso, plusTage } from '../kalender-sh.js';
+import { WOCHENTAGE, ausIso, iso, plusTage } from '../kalender.js';
 import { deutschesDatum } from '../export.js';
 import { unterrichtsminutenFuerTag, stundenFuerWochentag } from './stundenplan.js';
 

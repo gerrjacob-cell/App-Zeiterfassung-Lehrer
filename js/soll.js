@@ -24,7 +24,7 @@ import {
   ausIso,
   iso,
   plusTage,
-} from './kalender-sh.js';
+} from './kalender.js';
 
 /**
  * Baut den Kalender eines Schuljahres: für jeden Tag Typ, Soll-Minuten und
@@ -37,7 +37,7 @@ import {
 export function baueJahreskalender(einst, tagesTypen = {}, eigeneFerien = null) {
   const schuljahr = einst.schuljahr;
   const { von, bis } = schuljahrZeitraum(schuljahr);
-  const feiertage = feiertageBereich(von, bis);
+  const feiertage = feiertageBereich(von, bis, einst.bundesland);
   const ferien = ferientageSet(schuljahr, eigeneFerien);
   const faktor = beschaeftigungsfaktor(einst);
   const tagesSollVollMin = (Number(einst.wochenarbeitszeit) || 41) * 60 / 5;
@@ -76,7 +76,7 @@ export function baueJahreskalender(einst, tagesTypen = {}, eigeneFerien = null) 
 export function urlaubsvorschlag(einst, eigeneFerien = null) {
   const schuljahr = einst.schuljahr;
   const { von, bis } = schuljahrZeitraum(schuljahr);
-  const feiertage = feiertageBereich(von, bis);
+  const feiertage = feiertageBereich(von, bis, einst.bundesland);
   const ferien = ferientageSet(schuljahr, eigeneFerien);
   const anzahl = Math.round((Number(einst.urlaubstage) || 30) * beschaeftigungsfaktorTage(einst));
 

@@ -77,6 +77,42 @@ export const TAGESTYPEN = {
 };
 
 /**
+ * Bundesländer mit der regelmäßigen wöchentlichen Arbeitszeit der Lehrkräfte.
+ *
+ * Quelle: KMK, "Übersicht über die Pflichtstunden der Lehrkräfte", Stand
+ * September 2019, Tabelle "Arbeitszeit (Zeitstunden pro Woche)".
+ *
+ * Diese Zahl ist wichtiger als die Pflichtstundenzahl: Sie bestimmt die
+ * Soll-Arbeitszeit direkt. Wer die App in einem anderen Land nutzt und nur die
+ * Pflichtstunden anpasst, rechnet mit einem falschen Soll - in Niedersachsen
+ * etwa mit 41 statt 40 Stunden, also rund 46 Stunden zu viel im Schuljahr.
+ *
+ * `angestellte` steht nur dort, wo sie von der Beamtenarbeitszeit abweicht.
+ */
+export const BUNDESLAENDER = [
+  { id: 'BW', name: 'Baden-Württemberg', wochenarbeitszeit: 41 },
+  { id: 'BY', name: 'Bayern', wochenarbeitszeit: 40 },
+  { id: 'BE', name: 'Berlin', wochenarbeitszeit: 40, angestellte: 39.4 },
+  { id: 'BB', name: 'Brandenburg', wochenarbeitszeit: 40 },
+  { id: 'HB', name: 'Bremen', wochenarbeitszeit: 40 },
+  { id: 'HH', name: 'Hamburg', wochenarbeitszeit: 40 },
+  { id: 'HE', name: 'Hessen', wochenarbeitszeit: 41 },
+  { id: 'MV', name: 'Mecklenburg-Vorpommern', wochenarbeitszeit: 40 },
+  { id: 'NI', name: 'Niedersachsen', wochenarbeitszeit: 40 },
+  { id: 'NW', name: 'Nordrhein-Westfalen', wochenarbeitszeit: 41 },
+  { id: 'RP', name: 'Rheinland-Pfalz', wochenarbeitszeit: 40 },
+  { id: 'SL', name: 'Saarland', wochenarbeitszeit: 40, angestellte: 39.5 },
+  { id: 'SN', name: 'Sachsen', wochenarbeitszeit: 40 },
+  { id: 'ST', name: 'Sachsen-Anhalt', wochenarbeitszeit: 40 },
+  { id: 'SH', name: 'Schleswig-Holstein', wochenarbeitszeit: 41 },
+  { id: 'TH', name: 'Thüringen', wochenarbeitszeit: 40 },
+];
+
+export function bundesland(id) {
+  return BUNDESLAENDER.find((l) => l.id === id) || BUNDESLAENDER.find((l) => l.id === 'SH');
+}
+
+/**
  * Pflichtstunden-Voreinstellungen für Schleswig-Holstein.
  *
  * Quelle: KMK, "Übersicht über die Pflichtstunden der Lehrkräfte an
@@ -121,6 +157,19 @@ export const PFLICHTSTUNDEN_SH = [
   },
   { id: 'eigen', name: 'Eigener Wert', stunden: 27 },
 ];
+
+/**
+ * Schulform-Auswahl für ein Bundesland.
+ *
+ * Geprüfte Pflichtstundenzahlen liegen nur für Schleswig-Holstein vor. Für die
+ * übrigen Länder bewusst keine geratenen Werte: Eine falsche Voreinstellung
+ * wäre schlimmer als gar keine, weil sie niemandem auffällt. Dort bleibt das
+ * freie Feld - die Zahl steht ohnehin im eigenen Bescheid.
+ */
+export function schulformenFuer(landId) {
+  if (landId === 'SH') return PFLICHTSTUNDEN_SH;
+  return [{ id: 'eigen', name: 'Eigener Wert', stunden: 27 }];
+}
 
 /**
  * Vorlagen für Ermäßigungs- und Anrechnungsstunden.
@@ -201,6 +250,7 @@ export function defaultEinstellungen() {
     // Anzeige-Name bleibt lokal auf dem Gerät; er wird nie exportiert, ausser
     // in das persönliche Backup und den persönlichen PDF-Bericht.
     name: '',
+    bundesland: 'SH',
     schulform: 'gemeinschaftsschule',
 
     /* ---------------------------------------------------------------------

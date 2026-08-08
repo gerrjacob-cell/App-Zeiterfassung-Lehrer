@@ -155,6 +155,50 @@ sie sind ein Ausgleich, keine Gegenleistung für eine Aufgabe.
 
 ---
 
+## Andere Bundesländer
+
+Die App ist für Schleswig-Holstein gebaut, lässt sich aber anderswo einsetzen.
+Unter *Mehr → Person und Schulform* wird das Bundesland gewählt; daran hängen
+zwei Dinge, die sich sonst leicht übersehen lassen.
+
+**Die wöchentliche Arbeitszeit.** Sie ist wichtiger als die Pflichtstundenzahl,
+weil sie die Soll-Arbeitszeit direkt bestimmt. Wer nur die Pflichtstunden
+anpasst, rechnet mit einem falschen Soll – bei einem Wechsel von 41 auf 40
+Stunden sind das **44:48 Stunden Unterschied im Schuljahr**. Die Pflichtstunden
+allein verändern das Arbeitszeit-Soll dagegen überhaupt nicht; sie bestimmen die
+Unterrichtsverpflichtung und den Wert einer Anrechnungsstunde.
+
+| Land | Beamte | Tarifbeschäftigte | | Land | Beamte | Tarifbeschäftigte |
+|---|---|---|---|---|---|---|
+| Baden-Württemberg | 41 | 41 | | Niedersachsen | 40 | 40 |
+| Bayern | 40 | 40 | | Nordrhein-Westfalen | 41 | 41 |
+| Berlin | 40 | 39,4 | | Rheinland-Pfalz | 40 | 40 |
+| Brandenburg | 40 | 40 | | Saarland | 40 | 39,5 |
+| Bremen | 40 | 40 | | Sachsen | 40 | 40 |
+| Hamburg | 40 | 40 | | Sachsen-Anhalt | 40 | 40 |
+| Hessen | 41 | 41 | | Schleswig-Holstein | 41 | 41 |
+| Mecklenburg-Vorpommern | 40 | 40 | | Thüringen | 40 | 40 |
+
+**Die gesetzlichen Feiertage.** Neun gelten bundesweit, alles Weitere ist
+Landesrecht – Fronleichnam, Allerheiligen, Heilige Drei Könige, Reformationstag,
+Buß- und Bettag, Frauentag, Weltkindertag, Mariä Himmelfahrt. Ein Feiertag zu
+viel oder zu wenig verschiebt das Soll um gut acht Stunden im Jahr. Die App
+stellt sie je Land zusammen und berechnet den Buß- und Bettag (Mittwoch vor dem
+23. November) sowie alle beweglichen Feiertage über die Osterformel.
+
+Zwei bewusste Vereinfachungen: In Bayern gilt Mariä Himmelfahrt nur in Gemeinden
+mit überwiegend katholischer Bevölkerung – die App nimmt ihn an. In Sachsen und
+Thüringen gilt Fronleichnam nur in einzelnen Gemeinden – die App nimmt ihn nicht
+an. Wen das betrifft, setzt den Tag in der Tagesansicht auf *dienstfrei*.
+
+**Was nicht mitkommt:** Ferientermine und Pflichtstundenzahlen. Für die
+Ferien gibt es die Eingabemaske unter *Mehr → Schuljahr und Ferien*; bei den
+Pflichtstunden bleibt das freie Feld. Beides bewusst ohne geratene Werte –
+eine falsche Voreinstellung wäre schlimmer als gar keine, weil sie niemandem
+auffällt.
+
+---
+
 ## Vor dem Einsatz prüfen
 
 Diese Werte sind **Startwerte**, keine Rechtsauskunft, und alle in der App

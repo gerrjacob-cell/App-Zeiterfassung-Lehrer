@@ -229,7 +229,7 @@ icons/                  App-Symbole
 js/
   app.js                Einstieg, Routing, Ersteinrichtung
   model.js              Kategorien, Voreinstellungen, Pflichtstunden SH
-  kalender-sh.js        Feiertage (berechnet) und Ferien (Datensatz)
+  kalender.js           Feiertage je Bundesland (berechnet), Ferien (Datensatz)
   soll.js               Soll-Zeit-Berechnung, Auswertung, Zeitformate
   store.js              Persistenz im localStorage, Backup
   charts.js             Diagramme als Inline-SVG
@@ -274,6 +274,28 @@ von Abhängigkeiten – und damit auch in einigen Jahren noch wartbar.
 - **[Präsentation](praesentation/Lehrerzeit-Vorstellung.pptx)** – 16 Folien zur
   Vorstellung in Dienstversammlung, Personalratssitzung oder Schulkonferenz,
   mit Notizen für den Vortrag.
+
+## Einsatz in anderen Bundesländern
+
+Die App ist für Schleswig-Holstein gebaut, funktioniert aber anderswo. Unter
+*Mehr → Person und Schulform* wird das Bundesland gewählt; das setzt die
+wöchentliche Arbeitszeit und stellt die gesetzlichen Feiertage des Landes
+zusammen.
+
+Beides ist wichtiger, als es klingt. Die **Wochenarbeitszeit** bestimmt die
+Soll-Arbeitszeit direkt: Zwischen 41 und 40 Stunden liegen **44:48 Stunden im
+Schuljahr**. Die Pflichtstundenzahl verändert das Arbeitszeit-Soll dagegen gar
+nicht – sie bestimmt die Unterrichtsverpflichtung und den Wert einer
+Anrechnungsstunde. Wer also von Schleswig-Holstein nach Niedersachsen wechselt
+und nur die Pflichtstunden von 27 auf 24,5 ändert, hat noch nichts am Soll
+geändert.
+
+Nicht mitgeliefert werden Ferientermine und Pflichtstundenzahlen anderer Länder.
+Die Ferien lassen sich in den Einstellungen eintragen, die Pflichtstunden stehen
+im eigenen Bescheid. Bewusst keine geratenen Werte: Eine falsche Voreinstellung
+wäre schlimmer als gar keine, weil sie niemandem auffällt.
+
+Details und die Ländertabelle: [RECHTSGRUNDLAGEN.md](RECHTSGRUNDLAGEN.md).
 
 ## Grenzen
 

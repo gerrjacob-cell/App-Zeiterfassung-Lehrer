@@ -28,7 +28,7 @@ import {
   dateinameStempel,
   deutschesDatum,
 } from '../export.js';
-import { iso, ausIso, plusTage, wochenstart } from '../kalender-sh.js';
+import { iso, ausIso, plusTage, wochenstart } from '../kalender.js';
 
 export function auswertungView(ctx) {
   const stand = store.get();

@@ -9,7 +9,7 @@ import { h, toast } from '../ui.js';
 import * as store from '../store.js';
 import { KATEGORIEN, leererEintrag } from '../model.js';
 import { minutenAlsStunden, parseDauer } from '../soll.js';
-import { WOCHENTAGE_KURZ, ausIso, iso, plusTage, wochenstart, kalenderwoche } from '../kalender-sh.js';
+import { WOCHENTAGE_KURZ, ausIso, iso, plusTage, wochenstart, kalenderwoche } from '../kalender.js';
 import { deutschesDatum } from '../export.js';
 import { saldoKennzahl } from './heute.js';
 

@@ -17,7 +17,7 @@
 import { KATEGORIEN, KATEGORIE_MAP } from './model.js';
 import { minutenAlsStunden, minutenDezimal } from './soll.js';
 import { deutschesDatum } from './export.js';
-import { kalenderwoche } from './kalender-sh.js';
+import { kalenderwoche } from './kalender.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 

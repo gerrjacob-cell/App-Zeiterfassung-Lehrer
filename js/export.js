@@ -15,7 +15,7 @@ import {
   unterrichtsverpflichtung,
 } from './model.js';
 import { minutenDezimal, minutenAlsStunden } from './soll.js';
-import { WOCHENTAGE_KURZ, ausIso, kalenderwoche } from './kalender-sh.js';
+import { WOCHENTAGE_KURZ, ausIso, kalenderwoche } from './kalender.js';
 
 /* ------------------------------- ZIP-Teil ------------------------------ */
 

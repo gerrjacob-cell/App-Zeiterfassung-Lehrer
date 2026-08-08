@@ -8,7 +8,7 @@
  * hier, sondern im localStorage des Browsers.
  */
 
-const CACHE = 'lehrerzeit-v1';
+const CACHE = 'lehrerzeit-v2';
 
 const HUELLE = [
   './',
@@ -26,7 +26,7 @@ const HUELLE = [
   'js/export.js',
   'js/erinnerung.js',
   'js/geraet.js',
-  'js/kalender-sh.js',
+  'js/kalender.js',
   'js/kollegium.js',
   'js/views/heute.js',
   'js/views/woche.js',

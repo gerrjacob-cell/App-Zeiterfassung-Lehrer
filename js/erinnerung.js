@@ -6,7 +6,7 @@
  */
 
 import * as store from './store.js';
-import { iso } from './kalender-sh.js';
+import { iso } from './kalender.js';
 
 const SCHLUESSEL = 'lehrerzeit.letzteErinnerung';
 let intervall = null;

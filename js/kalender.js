@@ -1,14 +1,20 @@
 /**
- * Feiertage und Schulferien für Schleswig-Holstein.
+ * Feiertage und Schulferien.
  *
- * Feiertage werden berechnet (Osterformel nach Gauss/Lichtenberg), Ferien sind
- * als Datensatz hinterlegt und in den Einstellungen editierbar, damit die App
- * über Schuljahre hinweg nutzbar bleibt, ohne dass Code angefasst werden muss.
+ * Feiertage werden berechnet (Osterformel nach Gauß/Lichtenberg) und je nach
+ * Bundesland zusammengestellt - neun Feiertage gelten bundesweit, der Rest ist
+ * Landesrecht. Das ist keine Kosmetik: Ein Feiertag zu viel oder zu wenig
+ * verschiebt die Soll-Arbeitszeit um gut acht Stunden im Jahr.
+ *
+ * Ferien sind als Datensatz hinterlegt und in den Einstellungen editierbar,
+ * damit die App über Schuljahre und Länder hinweg nutzbar bleibt, ohne dass
+ * Code angefasst werden muss.
  *
  * Quellenlage der voreingestellten Ferien: amtliche Ferientermine des Landes
  * Schleswig-Holstein (Festland). Auf Sylt, Föhr, Amrum, Helgoland und den
- * Halligen gelten abweichende Termine – dort bitte in den Einstellungen
- * anpassen.
+ * Halligen gelten abweichende Termine - dort bitte in den Einstellungen
+ * anpassen. Für andere Bundesländer sind keine Ferien hinterlegt; sie werden
+ * dort einmalig eingetragen.
  */
 
 import { schuljahrZeitraum } from './model.js';
@@ -50,10 +56,49 @@ export function ausIso(s) {
   return new Date(j, m - 1, t, 12, 0, 0);
 }
 
-/** Gesetzliche Feiertage in Schleswig-Holstein für ein Kalenderjahr. */
-export function feiertageSH(jahr) {
+/**
+ * Regionale Feiertage je Bundesland. Bundesweit gelten Neujahr, Karfreitag,
+ * Ostermontag, 1. Mai, Christi Himmelfahrt, Pfingstmontag, Tag der Deutschen
+ * Einheit und die beiden Weihnachtsfeiertage - alles Weitere steht hier.
+ */
+const REGIONAL = {
+  BW: ['dreikoenige', 'fronleichnam', 'allerheiligen'],
+  BY: ['dreikoenige', 'fronleichnam', 'mariaeHimmelfahrt', 'allerheiligen'],
+  BE: ['frauentag'],
+  BB: ['ostersonntag', 'pfingstsonntag', 'reformationstag'],
+  HB: ['reformationstag'],
+  HH: ['reformationstag'],
+  HE: ['fronleichnam'],
+  MV: ['frauentag', 'reformationstag'],
+  NI: ['reformationstag'],
+  NW: ['fronleichnam', 'allerheiligen'],
+  RP: ['fronleichnam', 'allerheiligen'],
+  SL: ['fronleichnam', 'mariaeHimmelfahrt', 'allerheiligen'],
+  SN: ['reformationstag', 'bussUndBettag'],
+  ST: ['dreikoenige', 'reformationstag'],
+  SH: ['reformationstag'],
+  TH: ['weltkindertag', 'reformationstag'],
+};
+
+/** Buß- und Bettag: der Mittwoch vor dem 23. November. */
+function bussUndBettag(jahr) {
+  const d = new Date(jahr, 10, 22, 12, 0, 0);
+  while (d.getDay() !== 3) d.setDate(d.getDate() - 1);
+  return iso(d);
+}
+
+/**
+ * Gesetzliche Feiertage eines Kalenderjahres für ein Bundesland.
+ *
+ * Zwei bewusste Vereinfachungen: In Bayern gilt Mariä Himmelfahrt nur in
+ * Gemeinden mit überwiegend katholischer Bevölkerung, in Sachsen und Thüringen
+ * Fronleichnam nur in einzelnen Gemeinden. Die App nimmt für Bayern den
+ * Feiertag an und für Sachsen und Thüringen nicht - wen das betrifft, trägt
+ * den Tag in der Tagesansicht als dienstfrei ein.
+ */
+export function feiertage(jahr, landId = 'SH') {
   const o = ostersonntag(jahr);
-  return {
+  const alle = {
     [`${jahr}-01-01`]: 'Neujahr',
     [iso(plusTage(o, -2))]: 'Karfreitag',
     [iso(plusTage(o, 1))]: 'Ostermontag',
@@ -61,18 +106,41 @@ export function feiertageSH(jahr) {
     [iso(plusTage(o, 39))]: 'Christi Himmelfahrt',
     [iso(plusTage(o, 50))]: 'Pfingstmontag',
     [`${jahr}-10-03`]: 'Tag der Deutschen Einheit',
-    [`${jahr}-10-31`]: 'Reformationstag',
     [`${jahr}-12-25`]: '1. Weihnachtstag',
     [`${jahr}-12-26`]: '2. Weihnachtstag',
   };
+
+  const zusatz = {
+    dreikoenige: [`${jahr}-01-06`, 'Heilige Drei Könige'],
+    frauentag: [`${jahr}-03-08`, 'Internationaler Frauentag'],
+    ostersonntag: [iso(o), 'Ostersonntag'],
+    pfingstsonntag: [iso(plusTage(o, 49)), 'Pfingstsonntag'],
+    fronleichnam: [iso(plusTage(o, 60)), 'Fronleichnam'],
+    mariaeHimmelfahrt: [`${jahr}-08-15`, 'Mariä Himmelfahrt'],
+    weltkindertag: [`${jahr}-09-20`, 'Weltkindertag'],
+    reformationstag: [`${jahr}-10-31`, 'Reformationstag'],
+    allerheiligen: [`${jahr}-11-01`, 'Allerheiligen'],
+    bussUndBettag: [bussUndBettag(jahr), 'Buß- und Bettag'],
+  };
+
+  for (const schluessel of REGIONAL[landId] || REGIONAL.SH) {
+    const [datum, name] = zusatz[schluessel];
+    alle[datum] = name;
+  }
+  return alle;
+}
+
+/** Beibehalten, damit älterer Code weiterhin funktioniert. */
+export function feiertageSH(jahr) {
+  return feiertage(jahr, 'SH');
 }
 
 /** Feiertage für einen Datumsbereich (kann mehrere Kalenderjahre umfassen). */
-export function feiertageBereich(vonIso, bisIso) {
+export function feiertageBereich(vonIso, bisIso, landId = 'SH') {
   const von = Number(vonIso.slice(0, 4));
   const bis = Number(bisIso.slice(0, 4));
   let alle = {};
-  for (let j = von; j <= bis; j += 1) alle = { ...alle, ...feiertageSH(j) };
+  for (let j = von; j <= bis; j += 1) alle = { ...alle, ...feiertage(j, landId) };
   return alle;
 }
 

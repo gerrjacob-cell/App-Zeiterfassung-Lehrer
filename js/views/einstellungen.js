@@ -6,6 +6,9 @@
 import { h, toast, bestaetigen } from '../ui.js';
 import * as store from '../store.js';
 import {
+  BUNDESLAENDER,
+  bundesland,
+  schulformenFuer,
   PFLICHTSTUNDEN_SH,
   ERMAESSIGUNG_VORLAGEN,
   ERMAESSIGUNG_ARTEN,
@@ -19,7 +22,7 @@ import {
   neueErmaessigung,
 } from '../model.js';
 import { urlaubsvorschlag, minutenAlsStunden } from '../soll.js';
-import { FERIEN_SH_VOREINSTELLUNG, ferienFuerSchuljahr } from '../kalender-sh.js';
+import { FERIEN_SH_VOREINSTELLUNG, ferienFuerSchuljahr } from '../kalender.js';
 import { deutschesDatum } from '../export.js';
 import { erinnerungEinrichten } from '../erinnerung.js';
 import { speicherBericht, istIOS, alsAppInstalliert } from '../geraet.js';
@@ -31,12 +34,36 @@ export function einstellungenView(ctx) {
 
   /* ---------------------- Person und Deputat ------------------------ */
 
+  const land = bundesland(einst.bundesland);
+  const schulformen = schulformenFuer(einst.bundesland);
+
+  const landFeld = h(
+    'select',
+    {
+      id: 'e-bundesland',
+      onchange: (e) => {
+        const neu = bundesland(e.target.value);
+        // Die Wochenarbeitszeit wird mitgezogen - sie ist der Wert, der bei
+        // einem Landeswechsel am ehesten vergessen wird und das Soll direkt
+        // verändert. Die Pflichtstunden bleiben stehen, weil es für andere
+        // Länder keine geprüften Voreinstellungen gibt.
+        const patch = { bundesland: neu.id, wochenarbeitszeit: neu.wochenarbeitszeit };
+        if (!schulformenFuer(neu.id).some((f) => f.id === einst.schulform)) patch.schulform = 'eigen';
+        store.einstellungenSetzen(patch);
+        toast(`${neu.name}: Wochenarbeitszeit auf ${zahl(neu.wochenarbeitszeit)} Stunden gesetzt.`);
+        ctx.neuZeichnen();
+      },
+    },
+    BUNDESLAENDER.map((l) => h('option', { value: l.id, text: l.name })),
+  );
+  landFeld.value = einst.bundesland;
+
   const schulformFeld = h(
     'select',
     {
       id: 'e-schulform',
       onchange: (e) => {
-        const gewaehlt = PFLICHTSTUNDEN_SH.find((s) => s.id === e.target.value);
+        const gewaehlt = schulformen.find((s) => s.id === e.target.value);
         const patch = { schulform: e.target.value };
         if (gewaehlt && gewaehlt.id !== 'eigen') {
           // Wer Vollzeit arbeitet, soll nach dem Wechsel nicht plötzlich Teilzeit sein.
@@ -48,10 +75,10 @@ export function einstellungenView(ctx) {
         ctx.neuZeichnen();
       },
     },
-    PFLICHTSTUNDEN_SH.map((s) => h('option', { value: s.id, text: s.name })),
+    schulformen.map((s) => h('option', { value: s.id, text: s.name })),
   );
   schulformFeld.value = einst.schulform;
-  const gewaehlteSchulform = PFLICHTSTUNDEN_SH.find((f) => f.id === einst.schulform);
+  const gewaehlteSchulform = schulformen.find((f) => f.id === einst.schulform);
 
   wurzel.appendChild(
     h('div', { class: 'karte' }, [
@@ -66,6 +93,17 @@ export function einstellungenView(ctx) {
           onchange: (e) => store.einstellungenSetzen({ name: e.target.value.trim() }),
         }),
         h('p', { class: 'feld-hinweis', text: 'Bleibt auf diesem Gerät. Geht nie in den anonymen Export ein.' }),
+      ]),
+      h('div', { class: 'feld' }, [
+        h('label', { for: 'e-bundesland', text: 'Bundesland' }),
+        landFeld,
+        h('p', {
+          class: 'feld-hinweis',
+          text:
+            'Bestimmt die wöchentliche Arbeitszeit und die gesetzlichen Feiertage. Geprüfte ' +
+            'Pflichtstundenzahlen je Schulform liegen nur für Schleswig-Holstein vor – in anderen ' +
+            'Ländern wird die Zahl aus dem eigenen Bescheid eingetragen.',
+        }),
       ]),
       h('div', { class: 'feld' }, [h('label', { for: 'e-schulform', text: 'Schulform' }), schulformFeld]),
       gewaehlteSchulform && gewaehlteSchulform.hinweis
@@ -127,13 +165,7 @@ export function einstellungenView(ctx) {
           ctx,
         }),
       ]),
-      h('p', {
-        class: 'feld-hinweis',
-        text:
-          'In Schleswig-Holstein gelten 41 Stunden – für verbeamtete und für tarifbeschäftigte ' +
-          'Lehrkräfte gleichermaßen. Bei anerkannter Schwerbehinderung sind es 40 Stunden; dann ' +
-          'bitte hier 40 eintragen, denn das verringert die Soll-Arbeitszeit tatsächlich.',
-      }),
+      arbeitszeitHinweis(einst),
       h('div', { class: 'hinweis' }, [
         h('strong', { text: 'Jahresarbeitszeitmodell. ' }),
         document.createTextNode(
@@ -216,8 +248,12 @@ export function einstellungenView(ctx) {
       h('p', {
         class: 'feld-hinweis',
         text:
-          'Ferientermine bitte zu Schuljahresbeginn gegen die amtliche Bekanntmachung prüfen. Auf Sylt, ' +
-          'Föhr, Amrum, Helgoland und den Halligen gelten abweichende Termine.',
+          einst.bundesland === 'SH'
+            ? 'Ferientermine bitte zu Schuljahresbeginn gegen die amtliche Bekanntmachung prüfen. ' +
+              'Auf Sylt, Föhr, Amrum, Helgoland und den Halligen gelten abweichende Termine.'
+            : `Für ${bundesland(einst.bundesland).name} sind keine Ferientermine hinterlegt – bitte ` +
+              'einmalig eintragen. Ohne sie rechnet die App die Ferienwochen wie normale Schulwochen, ' +
+              'was am Soll nichts ändert, aber die Auswertung weniger aussagekräftig macht.',
       }),
       h('div', { class: 'tabelle-wrap' }, [ferienListe]),
       h('div', { class: 'btn-reihe', style: 'margin-top:0.75rem' }, [
@@ -908,6 +944,31 @@ function speicherStatus() {
     knoten.textContent = teile.join(' ');
   });
   return knoten;
+}
+
+/**
+ * Der Hinweis zur Wochenarbeitszeit hängt am Bundesland: 40 oder 41 Stunden,
+ * teils abweichende Werte für Tarifbeschäftigte, und die Absenkung bei
+ * Schwerbehinderung.
+ */
+function arbeitszeitHinweis(einst) {
+  const land = bundesland(einst.bundesland);
+  const teile = [
+    `In ${land.name} gelten ${zahl(land.wochenarbeitszeit)} Stunden für verbeamtete Lehrkräfte.`,
+  ];
+  teile.push(
+    land.angestellte
+      ? `Für Tarifbeschäftigte sind es ${zahl(land.angestellte)} Stunden.`
+      : 'Für Tarifbeschäftigte gilt derselbe Wert.',
+  );
+  if (einst.bundesland === 'SH') {
+    teile.push(
+      'Bei anerkannter Schwerbehinderung sind es 40 Stunden; dann bitte hier 40 eintragen, denn ' +
+        'das verringert die Soll-Arbeitszeit tatsächlich.',
+    );
+  }
+  teile.push('Grundlage: KMK-Übersicht, Stand 2019.');
+  return h('p', { class: 'feld-hinweis', text: teile.join(' ') });
 }
 
 function ermaessigungSetzen(index, patch, ctx) {

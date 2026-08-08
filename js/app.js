@@ -8,9 +8,15 @@
 
 import { h, leeren, toast, dialogOeffnen } from './ui.js';
 import * as store from './store.js';
-import { aktuellesSchuljahr, schuljahrFuer, PFLICHTSTUNDEN_SH } from './model.js';
+import {
+  aktuellesSchuljahr,
+  schuljahrFuer,
+  BUNDESLAENDER,
+  bundesland,
+  schulformenFuer,
+} from './model.js';
 import { baueJahreskalender, urlaubsvorschlag } from './soll.js';
-import { iso } from './kalender-sh.js';
+import { iso } from './kalender.js';
 import { erinnerungEinrichten } from './erinnerung.js';
 import { speicherSichern, iosHinweisNoetig, iosHinweisMerken } from './geraet.js';
 
@@ -240,22 +246,69 @@ function iosHinweisZeigen() {
  */
 function erstesSetup() {
   dialogOeffnen((dialog, schliessen) => {
-    const schulform = h(
+    const landFeld = h(
       'select',
-      { id: 's-schulform' },
-      PFLICHTSTUNDEN_SH.filter((s) => s.id !== 'eigen').map((s) =>
-        h('option', {
-          value: s.id,
-          text: `${s.name} – ${String(s.stunden).replace('.', ',')} Pflichtstunden`,
-        }),
-      ),
+      { id: 's-bundesland' },
+      BUNDESLAENDER.map((l) => h('option', { value: l.id, text: l.name })),
     );
-    schulform.value = 'gemeinschaftsschule';
+    landFeld.value = 'SH';
 
+    const schulform = h('select', { id: 's-schulform' });
+    const vollzeit = h('input', {
+      id: 's-vollzeit', type: 'number', min: '10', max: '35', step: '0.5', value: '27',
+    });
+    const vollzeitFeld = h('div', { class: 'feld' }, [
+      h('label', { for: 's-vollzeit', text: 'Pflichtstunden einer Vollzeitkraft' }),
+      vollzeit,
+      h('p', {
+        class: 'feld-hinweis',
+        text: 'Die volle Stundenzahl deiner Schulform – auch wenn du selbst in Teilzeit arbeitest.',
+      }),
+    ]);
     const meine = h('input', { id: 's-meine', type: 'number', min: '0', max: '35', step: '0.5', value: '27' });
+
+    // Die Schulformliste hängt am Bundesland: geprüfte Pflichtstundenzahlen gibt
+    // es nur für Schleswig-Holstein, anderswo wird die Zahl selbst eingetragen.
+    function schulformenFuellen() {
+      const liste = schulformenFuer(landFeld.value);
+      schulform.replaceChildren(
+        ...liste.map((s) =>
+          h('option', {
+            value: s.id,
+            text:
+              s.id === 'eigen'
+                ? 'Eigene Angabe'
+                : `${s.name} – ${String(s.stunden).replace('.', ',')} Pflichtstunden`,
+          }),
+        ),
+      );
+      schulform.value = liste.some((s) => s.id === 'gemeinschaftsschule') ? 'gemeinschaftsschule' : 'eigen';
+      schulform.disabled = liste.length === 1;
+      // Ohne geprüfte Voreinstellung muss die Vollzeit-Stundenzahl mit abgefragt
+      // werden. Sonst würde die App die eingetragene Zahl gegen einen geratenen
+      // Vollzeitwert rechnen und eine Vollzeitkraft als Teilzeit führen.
+      vollzeitFeld.hidden = schulform.value !== 'eigen';
+      const gewaehlt = liste.find((s) => s.id === schulform.value);
+      if (gewaehlt) {
+        vollzeit.value = String(gewaehlt.stunden);
+        meine.value = String(gewaehlt.stunden);
+      }
+    }
+    schulformenFuellen();
+
+    landFeld.addEventListener('change', schulformenFuellen);
     schulform.addEventListener('change', () => {
-      const gewaehlt = PFLICHTSTUNDEN_SH.find((s) => s.id === schulform.value);
-      if (gewaehlt) meine.value = String(gewaehlt.stunden);
+      const gewaehlt = schulformenFuer(landFeld.value).find((s) => s.id === schulform.value);
+      vollzeitFeld.hidden = schulform.value !== 'eigen';
+      if (gewaehlt) {
+        vollzeit.value = String(gewaehlt.stunden);
+        meine.value = String(gewaehlt.stunden);
+      }
+    });
+    // Wer die Vollzeitzahl anhebt, meint in aller Regel auch für sich selbst
+    // Vollzeit - erst eine bewusste Änderung unten macht daraus Teilzeit.
+    vollzeit.addEventListener('change', () => {
+      if (Number(meine.value) >= Number(vollzeit.value)) meine.value = vollzeit.value;
     });
 
     const name = h('input', { id: 's-name', type: 'text', placeholder: 'optional' });
@@ -268,7 +321,9 @@ function erstesSetup() {
           'Diese App dokumentiert deine Arbeitszeit – nur für dich, nur auf diesem Gerät. ' +
           'Drei Angaben genügen für den Anfang.',
       }),
+      h('div', { class: 'feld' }, [h('label', { for: 's-bundesland', text: 'Bundesland' }), landFeld]),
       h('div', { class: 'feld' }, [h('label', { for: 's-schulform', text: 'Schulform' }), schulform]),
+      vollzeitFeld,
       h('div', { class: 'feld' }, [
         h('label', { for: 's-meine', text: 'Meine bewilligten Unterrichtsstunden' }),
         meine,
@@ -289,22 +344,31 @@ function erstesSetup() {
       h('p', {
         class: 'feld-hinweis',
         text:
-          'Die Pflichtstundenzahlen sind Voreinstellungen für Schleswig-Holstein und in den ' +
-          'Einstellungen jederzeit anpassbar.',
+          'Das Bundesland bestimmt Wochenarbeitszeit und Feiertage. Geprüfte Pflichtstundenzahlen ' +
+          'gibt es nur für Schleswig-Holstein – sonst bitte die Zahl aus dem eigenen Bescheid ' +
+          'eintragen. Alles ist später unter „Mehr“ anpassbar.',
       }),
       h('div', { class: 'btn-reihe', style: 'justify-content:flex-end;margin-top:1rem' }, [
         h('button', {
           class: 'btn primaer',
           text: 'Los geht es',
           onclick: () => {
-            const gewaehlt = PFLICHTSTUNDEN_SH.find((s) => s.id === schulform.value);
+            const gewaehlt = schulformenFuer(landFeld.value).find((s) => s.id === schulform.value);
+            const voll =
+              schulform.value === 'eigen'
+                ? Number(vollzeit.value) || 27
+                : gewaehlt
+                  ? gewaehlt.stunden
+                  : 27;
+            const eigene = Number(meine.value) || voll;
             store.einstellungenSetzen({
+              bundesland: landFeld.value,
+              wochenarbeitszeit: bundesland(landFeld.value).wochenarbeitszeit,
               schulform: schulform.value,
-              pflichtstundenVollzeit: gewaehlt ? gewaehlt.stunden : 27,
-              beschaeftigungsart:
-                Number(meine.value) < (gewaehlt ? gewaehlt.stunden : 27) ? 'teilzeit' : 'vollzeit',
+              pflichtstundenVollzeit: voll,
+              beschaeftigungsart: eigene < voll ? 'teilzeit' : 'vollzeit',
               teilzeitEingabe: 'stunden',
-              teilzeitStunden: Number(meine.value) || (gewaehlt ? gewaehlt.stunden : 27),
+              teilzeitStunden: eigene,
               name: name.value.trim(),
               schuljahr: aktuellesSchuljahr(),
               setupFertig: true,
