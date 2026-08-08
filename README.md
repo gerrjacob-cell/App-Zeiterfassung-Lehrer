@@ -194,6 +194,7 @@ eines zur Hand hat, sollte vor dem Rollout einmal durchklicken.
 
 ```
 index.html              Haupt-App
+leitfaden.html          Anleitung für das Kollegium, druckbar
 auswertung.html         Werkzeug zur Zusammenführung anonymer Kennzahlen
 manifest.webmanifest    PWA-Manifest
 sw.js                   Service Worker (Offline-Betrieb)
@@ -237,6 +238,16 @@ von Abhängigkeiten – und damit auch in einigen Jahren noch wartbar.
 | Offline | Web-App | vollständige PWA, installierbar |
 
 ---
+
+## Material für das Kollegium
+
+- **[Leitfaden](leitfaden.html)** – Anleitung für Lehrkräfte: Einstieg in fünf
+  Schritten, die drei Erfassungswege, Kategorien mit Beispielen, die Ferienfrage,
+  Teilzeit, Ermäßigungsstunden, häufige Fragen. In der App unter *Mehr → Hilfe*
+  erreichbar und über den Druckdialog als PDF ausgebbar.
+- **[Präsentation](praesentation/Lehrerzeit-Vorstellung.pptx)** – 16 Folien zur
+  Vorstellung in Dienstversammlung, Personalratssitzung oder Schulkonferenz,
+  mit Notizen für den Vortrag.
 
 ## Grenzen
 

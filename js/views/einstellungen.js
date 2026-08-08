@@ -435,6 +435,28 @@ export function einstellungenView(ctx) {
   );
 
   wurzel.appendChild(
+    h('div', { class: 'karte' }, [
+      h('h2', { text: 'Hilfe' }),
+      h('p', {
+        text:
+          'Der Leitfaden erklärt in zwanzig Minuten Lesezeit, wie sich die Erfassung in den ' +
+          'Schulalltag einfügt, was in welche Kategorie gehört und warum in den Ferien Soll-Zeit ' +
+          'steht. Er lässt sich auch ausdrucken.',
+      }),
+      h('div', { class: 'btn-reihe' }, [
+        h('a', { class: 'btn primaer', href: 'leitfaden.html', text: 'Leitfaden öffnen' }),
+        h('a', {
+          class: 'btn',
+          href: 'auswertung.html',
+          target: '_blank',
+          rel: 'noopener',
+          text: 'Auswertungswerkzeug',
+        }),
+      ]),
+    ]),
+  );
+
+  wurzel.appendChild(
     h('div', { class: 'hinweis' }, [
       h('strong', { text: 'Datenschutz. ' }),
       document.createTextNode(

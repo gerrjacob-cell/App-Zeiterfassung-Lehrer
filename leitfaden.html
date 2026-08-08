@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Leitfaden &middot; Lehrerzeit</title>
+    <meta
+      name="description"
+      content="Kurzanleitung zur Arbeitszeitdokumentation mit Lehrerzeit – für Lehrkräfte, zum Lesen und Ausdrucken."
+    />
+    <meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a19" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="icons/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="css/app.css" />
+    <style>
+      /* Der Leitfaden ist Fließtext, keine App-Oberfläche: etwas mehr Zeilenhöhe,
+         eine begrenzte Zeilenlänge und Überschriften, die eine Gliederung tragen. */
+      .doku { max-width: 44rem; line-height: 1.65; }
+      .doku h2 {
+        font-size: 1.35rem;
+        margin: 2.5rem 0 0.75rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--line);
+      }
+      .doku h2:first-of-type { border-top: 0; padding-top: 0; }
+      .doku h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; }
+      .doku p, .doku li { font-size: 1rem; }
+      .doku ul, .doku ol { padding-left: 1.3rem; }
+      .doku li { margin-bottom: 0.35rem; }
+      .doku table { margin: 0.75rem 0 1.25rem; }
+      .doku th, .doku td { vertical-align: top; }
+      .doku code {
+        background: var(--surface-2);
+        border-radius: 4px;
+        padding: 0.1em 0.35em;
+        font-size: 0.9em;
+      }
+      .lead { font-size: 1.1rem; color: var(--text-secondary); }
+      .schritt {
+        display: grid;
+        grid-template-columns: 2.2rem 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        align-items: start;
+      }
+      .schritt-nr {
+        display: grid;
+        place-items: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 999px;
+        background: var(--accent);
+        color: var(--accent-ink);
+        font-weight: 650;
+      }
+      .schritt p { margin: 0.15rem 0 0; }
+      .schritt strong { display: block; }
+      .inhalt-liste { columns: 2; column-gap: 2rem; font-size: 0.95rem; }
+      @media (max-width: 560px) { .inhalt-liste { columns: 1; } }
+      .frage { font-weight: 600; margin-bottom: 0.15rem; }
+      .frage + p { margin-bottom: 1rem; }
+
+      @media print {
+        body { display: block; }
+        .kopf, .nav, .drucken { display: none !important; }
+        main { display: block !important; padding: 0; max-width: none; }
+        .doku { max-width: none; }
+        .karte { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+        .doku h2 { break-after: avoid; }
+        .hinweis { border: 1px solid #ccc; }
+        a { color: inherit; text-decoration: none; }
+        @page { margin: 18mm; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="kopf">
+      <img src="icons/icon-192.png" alt="" width="32" height="32" style="border-radius: 8px" />
+      <div class="kopf-titel">
+        <strong>Leitfaden</strong><span>Arbeitszeit dokumentieren mit Lehrerzeit</span>
+      </div>
+      <a class="btn klein" href="index.html">Zur App</a>
+    </header>
+
+    <main id="inhalt">
+      <div class="doku">
+        <p class="lead">
+          Diese Anleitung erklärt in zwanzig Minuten Lesezeit, was die App tut, wie du sie im Alltag
+          benutzt, ohne dass es lästig wird – und warum sich der Aufwand lohnt.
+        </p>
+
+        <div class="karte">
+          <h3 style="margin-top: 0">Auf dieser Seite</h3>
+          <ul class="inhalt-liste">
+            <li><a href="#warum">Warum überhaupt erfassen?</a></li>
+            <li><a href="#start">In fünf Minuten startklar</a></li>
+            <li><a href="#alltag">Der Alltag: drei Wege</a></li>
+            <li><a href="#kategorien">Was gehört in welche Kategorie?</a></li>
+            <li><a href="#ferien">Die Ferienfrage</a></li>
+            <li><a href="#teilzeit">Teilzeit</a></li>
+            <li><a href="#ermaessigung">Ermäßigungsstunden</a></li>
+            <li><a href="#auswertung">Auswertung und Export</a></li>
+            <li><a href="#kollegium">Anonym zum Gesamtbild beitragen</a></li>
+            <li><a href="#daten">Deine Daten</a></li>
+            <li><a href="#fragen">Häufige Fragen</a></li>
+            <li><a href="#notfall">Wenn etwas schiefgeht</a></li>
+          </ul>
+          <div class="btn-reihe drucken" style="margin-top: 0.5rem">
+            <button class="btn klein" onclick="window.print()">Leitfaden drucken</button>
+          </div>
+        </div>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="warum">Warum überhaupt erfassen?</h2>
+
+        <p>
+          Über die Arbeitszeit von Lehrkräften wird seit Jahren diskutiert – meist ohne Zahlen. Wer
+          sagt, es sei zu viel, bekommt zu hören, das sei ein Gefühl. Wer dokumentiert, hat Belege.
+        </p>
+        <p>
+          Genau das ist der Zweck: <strong>sichtbar machen, was ohnehin geleistet wird.</strong>
+          Vorbereitung am Sonntagabend, der Korrekturstapel in den Herbstferien, das Elterngespräch
+          nach der sechsten Stunde, die halbe Nacht vor dem Elternabend – all das taucht in keiner
+          Statistik auf. Die Erfassung ändert das.
+        </p>
+        <p>
+          Die App ist dem Vorbild der „Lehrzeit-App“ nachempfunden, die die GEW Hessen ihren
+          Mitgliedern zur Verfügung stellt, aber auf schleswig-holsteinisches Recht angepasst und
+          um einige Funktionen erweitert.
+        </p>
+
+        <div class="hinweis">
+          <strong>Freiwillig, und zwar wirklich.</strong> Es gibt keine Pflicht mitzumachen, niemand
+          außer dir sieht deine Daten, und du kannst jederzeit aufhören. Eine Erfassung, zu der
+          jemand gedrängt wird, wäre das Gegenteil dessen, was sie erreichen soll.
+        </div>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="start">In fünf Minuten startklar</h2>
+
+        <div class="schritt">
+          <span class="schritt-nr">1</span>
+          <div>
+            <strong>App öffnen und zum Startbildschirm hinzufügen</strong>
+            <p>
+              Die Adresse im Browser öffnen. Auf dem Telefon dann: Teilen-Symbol antippen →
+              „Zum Home-Bildschirm“ (iPhone) bzw. Menü → „App installieren“ (Android). Danach
+              startet sie wie eine normale App und funktioniert auch offline.
+            </p>
+            <p>
+              <strong>Auf dem iPhone ist dieser Schritt wichtig:</strong> Safari löscht Daten von
+              Websites, die sieben Tage lang nicht geöffnet wurden. In den Ferien ist das schnell
+              erreicht. Zum Startbildschirm hinzugefügt, passiert das nicht.
+            </p>
+          </div>
+        </div>
+
+        <div class="schritt">
+          <span class="schritt-nr">2</span>
+          <div>
+            <strong>Drei Angaben beim ersten Start</strong>
+            <p>
+              Schulform, deine bewilligten Unterrichtsstunden und – optional – dein Name für
+              Ausdrucke. Das Häkchen „30 Urlaubstage in die Ferien legen“ bitte gesetzt lassen,
+              sonst stimmt der Saldo nicht (warum, steht unter
+              <a href="#ferien">Die Ferienfrage</a>).
+            </p>
+          </div>
+        </div>
+
+        <div class="schritt">
+          <span class="schritt-nr">3</span>
+          <div>
+            <strong>Stundenplan eintragen</strong>
+            <p>
+              Unter <em>Plan</em> das Raster ausfüllen – Fach oder Klasse genügt, leere Felder sind
+              Freistunden. Das sind einmalig fünf Minuten und spart danach jeden Tag Zeit: Der
+              Unterricht eines Tages lässt sich mit einem einzigen Tipp buchen.
+            </p>
+          </div>
+        </div>
+
+        <div class="schritt">
+          <span class="schritt-nr">4</span>
+          <div>
+            <strong>Einstellungen prüfen</strong>
+            <p>
+              Unter <em>Mehr</em>: Teilzeit eintragen, falls zutreffend, und Ermäßigungsstunden
+              erfassen, falls du eine Funktionsaufgabe hast. Beides steht in deinem Bescheid.
+            </p>
+          </div>
+        </div>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="alltag">Der Alltag: drei Wege</h2>
+
+        <p>
+          Es gibt drei Arten zu erfassen, weil nicht jeder Weg zu jeder Situation passt. Du musst
+          dich nicht entscheiden – du kannst alle drei mischen.
+        </p>
+
+        <h3>Der Stundenplan-Klick</h3>
+        <p>
+          In der Tagesansicht steht oben, welche Stunden heute laut Plan anstehen. Ein Tipp auf
+          <em>Mit einem Klick übernehmen</em> bucht sie als Unterricht. Zwei Sekunden pro Tag.
+        </p>
+        <p>
+          <strong>Wichtig:</strong> Das bucht nur die reine Unterrichtszeit. Vorbereitung,
+          Korrekturen, Aufsichten und Gespräche musst du zusätzlich erfassen – sonst zeigt deine
+          Dokumentation weniger Arbeit, als du tatsächlich geleistet hast.
+        </p>
+
+        <h3>Der Timer</h3>
+        <p>
+          Für alles, was du ohnehin am Rechner erledigst: Kategorie wählen, <em>Timer starten</em>,
+          am Ende stoppen. Der Timer läuft weiter, auch wenn du die App schließt oder das Gerät
+          weglegst. Ideal für Korrekturen und längere Vorbereitungsblöcke.
+        </p>
+
+        <h3>Das Nachtragen</h3>
+        <p>
+          Ehrlich gesagt: Kaum jemand stoppt jede Tätigkeit mit. Deshalb gibt es zwei
+          Nachtrage-Wege:
+        </p>
+        <ul>
+          <li>
+            <strong>Schnellknöpfe</strong> in der Tagesansicht: Kategorie antippen, dann
+            <code>+30 min</code> oder <code>+1:00 h</code>. Drei Sekunden.
+          </li>
+          <li>
+            <strong>Wochenmatrix</strong> unter <em>Woche</em>: eine Tabelle aus Kategorien und
+            Wochentagen. Dauer eintragen als <code>1:30</code>, <code>90</code> oder
+            <code>1,5</code> – alle drei Schreibweisen versteht die App. Eine ganze Woche in einer
+            Minute.
+          </li>
+        </ul>
+
+        <div class="hinweis">
+          <strong>Der praktische Rat:</strong> Nimm dir freitags fünf Minuten für die Wochenmatrix,
+          statt jeden Tag präzise mitzustoppen. Eine Schätzung, die es in die Dokumentation
+          schafft, ist mehr wert als eine sekundengenaue Messung, die du nach zwei Wochen aufgibst.
+        </div>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="kategorien">Was gehört in welche Kategorie?</h2>
+
+        <p>
+          Die neun Kategorien orientieren sich an der Systematik, die die Rechtsprechung zur
+          Lehrkraft-Arbeitszeit zugrunde legt. Im Zweifel gilt: lieber grob richtig einordnen als
+          gar nicht erfassen.
+        </p>
+
+        <div class="tabelle-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Kategorie</th>
+                <th>Typische Beispiele</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Unterricht</th>
+                <td>gehaltener Unterricht, Doppelsteckung, Vertretungsstunden</td>
+              </tr>
+              <tr>
+                <th scope="row">Vor- und Nachbereitung</th>
+                <td>
+                  Stunden planen, Material erstellen und kopieren, Reihenplanung, Raum und Medien
+                  vorbereiten, Differenzierungsmaterial
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Korrekturen &amp; Leistungsbewertung</th>
+                <td>
+                  Klassenarbeiten, Tests, Hefte, Lernentwicklungsberichte, Zeugnisse, Gutachten,
+                  Notenkonferenzen vorbereiten
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Kommunikation</th>
+                <td>
+                  Elterngespräche und -mails, Gespräche mit Schülerinnen und Schülern, Absprachen
+                  im Kollegium, Jugendamt, Schulsozialarbeit, externe Partner
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Konferenzen &amp; Arbeitsorganisation</th>
+                <td>
+                  Dienstversammlungen, Fach- und Klassenkonferenzen, Teamsitzungen, Klassenbuch und
+                  Dokumentation, Vertretungsplanung, Verwaltungskram
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Aufsicht &amp; Vertretungsbereitschaft</th>
+                <td>Pausen- und Busaufsicht, Klausuraufsicht, Springstunden mit Bereitschaft</td>
+              </tr>
+              <tr>
+                <th scope="row">Fort- und Weiterbildung</th>
+                <td>
+                  Fortbildungen, Studientage, Fachliteratur, Einarbeitung in neue Lehrpläne oder
+                  Software
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Fahrten &amp; Schulveranstaltungen</th>
+                <td>
+                  Klassenfahrten, Wandertage, Praktikumsbesuche, Schulfeste, Tag der offenen Tür,
+                  Projektwochen
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Funktions- und Sonderaufgaben</th>
+                <td>
+                  Fachleitung, Klassenleitung, Sicherheitsbeauftragung, Sammlungspflege, Personalrat,
+                  Schulentwicklung, Ausbildung von Lehrkräften im Vorbereitungsdienst
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          <strong>Klassenfahrten:</strong> Eine Klassenfahrt ist Dienst rund um die Uhr, aber
+          niemand erfasst 24 Stunden. Üblich und vertretbar ist, den tatsächlichen Betreuungsumfang
+          anzusetzen – meist deutlich mehr als ein normaler Arbeitstag. Trag ein, was du für
+          ehrlich hältst, und notiere die Begründung im Notizfeld.
+        </p>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="ferien">Die Ferienfrage</h2>
+
+        <p>
+          Das ist der Punkt, der beim ersten Blick irritiert – und zugleich der wichtigste.
+        </p>
+        <p>
+          <strong>Die App rechnet auch in den Ferien mit Soll-Arbeitszeit.</strong> Das ist kein
+          Fehler. Ferien sind keine Urlaubszeit. Dein Erholungsurlaub beträgt 30 Werktage im Jahr –
+          das sind sechs Wochen. Die Schulferien umfassen aber rund zwölf Wochen. Die übrigen Tage
+          sind ganz normale Arbeitstage, an denen Arbeitszeit zu leisten ist.
+        </p>
+
+        <div class="hinweis">
+          <strong>Konkret für 2026/2027 bei Vollzeit:</strong> 1836:48 Stunden Jahresarbeitszeit,
+          verteilt auf 224 Arbeitstage – <strong>davon 30 Tage in der unterrichtsfreien Zeit</strong>.
+          Genau diese 30 Tage machen sichtbar, wie viel Arbeit tatsächlich in die Ferien verlagert
+          wird.
+        </div>
+
+        <p>
+          Deshalb ist es wichtig, die Urlaubstage einzutragen. Die App macht das auf Wunsch
+          automatisch (Sommerferien zuerst). Einzelne Tage kannst du in der Tagesansicht jederzeit
+          anders setzen – etwa wenn du deinen Urlaub anders legst oder krank warst.
+        </p>
+        <p>
+          Und ja: Wenn du in den Ferien wirklich nichts arbeitest, entstehen Minusstunden. Das ist
+          rechnerisch korrekt und kein Vorwurf. Interessant wird die Zahl im Jahresverlauf, nicht
+          in der einzelnen Woche.
+        </p>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="teilzeit">Teilzeit</h2>
+
+        <p>
+          Unter <em>Mehr → Beschäftigungsumfang</em> auf <em>Teilzeit</em> stellen. Du kannst deinen
+          Umfang so eintragen, wie er in deinem Bescheid steht – umrechnen musst du nichts:
+        </p>
+        <ul>
+          <li><strong>als Unterrichtsstunden</strong> – zum Beispiel 21 von 27</li>
+          <li><strong>als Bruchteil in Prozent</strong> – 1/2 = 50, 3/4 = 75, 2/3 = 66,7</li>
+          <li>
+            <strong>als Wochenstunden der Arbeitszeit</strong> – etwa 30,75 von 41, wie es bei
+            Tarifbeschäftigten nach TV-L üblich ist
+          </li>
+        </ul>
+
+        <div class="hinweis">
+          <strong>Teilzeit gilt auch außerhalb des Unterrichts.</strong> Konferenzen, Aufsichten,
+          Korrekturen und Elterngespräche dürfen nur im Umfang der bewilligten Teilzeit verlangt
+          werden – nicht in vollem Umfang. Das steht oft auf dem Papier und sieht in der Praxis
+          anders aus. Deine Erfassung ist der Beleg: Der Saldo vergleicht mit deinem anteiligen
+          Soll, nie mit dem einer Vollzeitkraft.
+        </div>
+
+        <p>
+          Noch ein Hinweis zur Rechtslage: Bei einer Teilzeit unterhalb von drei Vierteln werden
+          Alters- und Schwerbehindertenermäßigung nur zur Hälfte gewährt, unterhalb der Hälfte
+          entfällt die Altersermäßigung ganz. Die App rechnet das nicht automatisch – trag die
+          Stunden ein, die dir tatsächlich bewilligt wurden.
+        </p>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="ermaessigung">Ermäßigungsstunden</h2>
+
+        <p>
+          Wenn du eine Funktionsaufgabe hast – Sicherheitsbeauftragung, Fachkonferenzleitung,
+          Medienbetreuung, Personalrat, Sammlungspflege –, bekommst du dafür Stunden vom Unterricht
+          erlassen. Diese trägst du unter <em>Mehr → Ermäßigungs- und Anrechnungsstunden</em> ein.
+          Es gibt Vorlagen zum Anklicken; die Stundenzahl steht in deinem Bescheid.
+        </p>
+
+        <div class="hinweis">
+          <strong>Wichtig zu verstehen:</strong> Ermäßigungsstunden senken deine
+          <em>Unterrichtsverpflichtung</em>, nicht deine <em>Arbeitszeit</em>. Wer zwei Stunden
+          weniger unterrichtet, arbeitet keine Minute weniger – die Zeit ist für die Aufgabe
+          vorgesehen. Deine Soll-Arbeitszeit bleibt deshalb unverändert.
+        </div>
+
+        <p>
+          Und hier wird es interessant. Die App rechnet aus, was eine Anrechnungsstunde an Zeit
+          wert ist: 41 Wochenstunden geteilt durch 27 Pflichtstunden ergibt
+          <strong>1:31 Stunden pro Woche</strong> – nicht 45 Minuten.
+        </p>
+        <p>
+          Wenn du beim Erfassen über <em>Genau erfassen</em> deine Einträge der Aufgabe zuordnest,
+          stellt die Auswertung beides gegenüber:
+        </p>
+
+        <div class="tabelle-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Aufgabe</th>
+                <th class="zahl">Std./Woche</th>
+                <th class="zahl">entspricht</th>
+                <th class="zahl">erfasst</th>
+                <th class="zahl">Differenz</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Sicherheitsbeauftragte:r</th>
+                <td class="zahl">1</td>
+                <td class="zahl">1:31 h</td>
+                <td class="zahl">3:00 h</td>
+                <td class="zahl saldo-plus">+1:29 h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Aus „die eine Stunde reicht hinten und vorne nicht“ wird damit eine Zahl, mit der man in
+          ein Gespräch über die Verteilung der Anrechnungsstunden gehen kann.
+        </p>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="auswertung">Auswertung und Export</h2>
+
+        <p>Unter <em>Auswertung</em> wählst du einen Zeitraum und siehst:</p>
+        <ul>
+          <li>Soll-Arbeitszeit, tatsächlich geleistete Zeit und den Saldo</li>
+          <li>wofür die Zeit draufgeht – die Kategorien nach Größe sortiert</li>
+          <li>den Wochenverlauf im Vergleich zur Soll-Zeit</li>
+          <li>einen Hinweis, an wie vielen Arbeitstagen noch nichts erfasst ist</li>
+        </ul>
+
+        <p>Drei Exporte stehen bereit, alle werden auf deinem Gerät erzeugt:</p>
+        <ul>
+          <li>
+            <strong>Excel-Datei</strong> mit fünf Blättern: Zusammenfassung, Kategorien, Tage,
+            Wochen und alle Einzeleinträge
+          </li>
+          <li><strong>CSV</strong> für die Weiterverarbeitung</li>
+          <li>
+            <strong>Druckbericht</strong> mit Diagrammen, Erläuterung der Berechnung und
+            Unterschriftszeile – im Druckdialog „Als PDF sichern“ wählen. Das ist die Fassung, die
+            man einer Überlastungsanzeige beilegt oder der Schulleitung vorlegt.
+          </li>
+        </ul>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="kollegium">Anonym zum Gesamtbild beitragen</h2>
+
+        <p>
+          Eine einzelne Dokumentation ist ein Einzelfall. Zwanzig Dokumentationen sind ein Befund.
+          Deshalb gibt es einen zusätzlichen, <strong>ausdrücklich freiwilligen</strong> Export.
+        </p>
+
+        <p>Die anonyme Kennzahlen-Datei enthält:</p>
+        <ul>
+          <li>Beschäftigungsumfang in Prozent, Schulform, Schuljahr und Zeitraum</li>
+          <li>Summen der Soll- und Ist-Stunden sowie den Saldo</li>
+          <li>Summen je Kategorie und je Kalenderwoche</li>
+          <li>ein bei jedem Export neu gewürfeltes Pseudonym</li>
+        </ul>
+
+        <p>
+          Sie enthält <strong>nicht</strong>: deinen Namen, deine Fächer, deine Klassen, deine
+          Notizen, einzelne Einträge, einzelne Tage – und auch nicht die Liste deiner
+          Funktionsaufgaben. „Sicherheitsbeauftragte:r“ gibt es an einer Schule meistens genau
+          einmal; das wäre ein Name.
+        </p>
+        <p>
+          Diese Dateien werden im Auswertungswerkzeug zusammengeführt. Es zeigt erst ab etwa fünf
+          Beiträgen ein belastbares Bild und warnt darunter ausdrücklich – bei kleinen Gruppen kann
+          schon der Beschäftigungsumfang jemanden erkennbar machen.
+        </p>
+
+        <div class="hinweis">
+          <strong>Vor einer Gesamtauswertung:</strong> mit dem Personalrat sprechen. Die
+          individuelle Erfassung ist Privatsache, eine Auswertung des Kollegiums ist es nicht mehr.
+        </div>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="daten">Deine Daten</h2>
+
+        <p>
+          <strong>Es gibt keinen Server.</strong> Kein Konto, keine Anmeldung, kein Tracking, keine
+          Cookies. Alles liegt im Speicher deines Browsers, auf deinem Gerät. Die Schulleitung hat
+          keinen Zugriff. Selbst wenn sie wollte – es gibt nichts, worauf sie zugreifen könnte.
+        </p>
+        <p>
+          Der Preis dafür: Es gibt auch keine automatische Sicherung. Wer den Browser wechselt, das
+          Gerät tauscht oder die Browserdaten löscht, verliert die Erfassung.
+        </p>
+
+        <div class="hinweis warnung">
+          <strong>Mach ein Backup.</strong> Unter <em>Mehr → Daten → Backup exportieren</em>
+          entsteht eine Datei, die alles enthält. Einmal pro Halbjahr genügt – oder immer dann,
+          wenn du gerade an einem Zeugnisstapel gesessen hast, den du ungern noch einmal
+          nachtragen würdest.
+        </div>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="fragen">Häufige Fragen</h2>
+
+        <p class="frage">Muss ich mitmachen?</p>
+        <p>Nein. Die Teilnahme ist freiwillig, jederzeit beendbar und für niemanden einsehbar.</p>
+
+        <p class="frage">Kann die Schulleitung meine Daten sehen?</p>
+        <p>
+          Nein. Es gibt keinen Server und keine Übertragung. Etwas verlässt dein Gerät nur, wenn du
+          selbst eine Datei exportierst und weitergibst.
+        </p>
+
+        <p class="frage">Was bringt mir das konkret?</p>
+        <p>
+          Erstens Klarheit für dich selbst – die meisten unterschätzen, wie viel Zeit Korrekturen
+          und Kommunikation fressen. Zweitens Belege: für ein Gespräch über
+          Anrechnungsstunden, für eine Überlastungsanzeige, für die Klassenzuteilung im nächsten
+          Jahr. Drittens, wenn viele mitmachen, eine Zahl für die Diskussion über
+          Lehrkräftearbeitszeit insgesamt.
+        </p>
+
+        <p class="frage">Ist das nicht ein Riesenaufwand?</p>
+        <p>
+          Mit hinterlegtem Stundenplan sind es realistisch zwei bis drei Minuten am Tag oder fünf
+          Minuten pro Woche, wenn du freitags nachträgst. Der einmalige Einstieg dauert etwa eine
+          Viertelstunde.
+        </p>
+
+        <p class="frage">Ich habe drei Tage vergessen zu erfassen. Schlimm?</p>
+        <p>
+          Nein. Trag nach, was du noch weißt – die Wochenansicht ist genau dafür da. Eine Schätzung
+          im Nachhinein ist besser als eine Lücke. Die Auswertung weist ohnehin aus, an wie vielen
+          Tagen nichts erfasst ist, und weist darauf hin, dass der Saldo dann eher zu niedrig als
+          zu hoch ist.
+        </p>
+
+        <p class="frage">Zählt die Fahrt zur Schule?</p>
+        <p>
+          Nein, der Weg zur Dienststelle ist keine Arbeitszeit. Dienstfahrten während des Dienstes
+          – Praktikumsbesuche, Fahrt zu einer Fortbildung, Klassenfahrt – dagegen schon.
+        </p>
+
+        <p class="frage">Wie ist das mit den Pausen?</p>
+        <p>
+          Pausen, in denen du Aufsicht führst, sind Arbeitszeit. Eine echte Pause ohne Aufgaben
+          nicht. Realistisch betrachtet: Die meisten Pausen im Schulalltag sind keine.
+        </p>
+
+        <p class="frage">Was ist mit Zeit, die ich für die Schule denke, ohne am Schreibtisch zu sitzen?</p>
+        <p>
+          Grübeln zählt nicht, konkrete Vorbereitung schon – auch wenn sie beim Spazierengehen
+          stattfindet. Sei im Zweifel eher zurückhaltend: Eine Dokumentation, die jeder Prüfung
+          standhält, ist mehr wert als eine großzügige.
+        </p>
+
+        <p class="frage">Neues Schuljahr – was muss ich tun?</p>
+        <p>
+          Unter <em>Mehr</em> das Schuljahr umstellen, die Ferientermine prüfen und die Urlaubstage
+          neu verteilen lassen. Die App erinnert dich mit einem Hinweis daran. Danach den
+          Stundenplan aktualisieren.
+        </p>
+
+        <p class="frage">Kann ich die App auf zwei Geräten benutzen?</p>
+        <p>
+          Nur mit Backup-Export und -Import; eine automatische Synchronisierung gäbe es nur mit
+          einem Server – und der wäre genau das, was hier bewusst fehlt. In der Praxis fährt man am
+          besten, wenn man sich auf ein Gerät festlegt.
+        </p>
+
+        <!-- ---------------------------------------------------------------- -->
+        <h2 id="notfall">Wenn etwas schiefgeht</h2>
+
+        <div class="tabelle-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Problem</th>
+                <th>Lösung</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Daten sind weg</th>
+                <td>
+                  Backup einspielen unter <em>Mehr → Daten</em>. Ohne Backup lassen sie sich nicht
+                  wiederherstellen – deshalb der Rat weiter oben.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Neues Handy</th>
+                <td>
+                  Auf dem alten Gerät Backup exportieren, Datei übertragen (Mail an dich selbst
+                  genügt), auf dem neuen einspielen.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Saldo sieht falsch aus</th>
+                <td>
+                  Meist fehlen die Urlaubstage. Unter <em>Mehr → Erholungsurlaub eintragen</em>
+                  automatisch verteilen lassen.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Ein Eintrag lässt sich in der Wochenmatrix nicht ändern</th>
+                <td>
+                  Dann gibt es für diesen Tag mehrere Einträge oder einen mit Notiz und Uhrzeit.
+                  Die Zelle ist dann gesperrt, damit nichts verloren geht – in der Tagesansicht
+                  bearbeiten.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Falsche Ferientermine</th>
+                <td>
+                  Unter <em>Mehr → Schuljahr und Ferien</em> anpassen. Auf den Inseln und Halligen
+                  gelten abweichende Termine.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hinweis">
+          <strong>Zum Schluss:</strong> Diese App ist kein Kontrollinstrument und keine
+          Rechtsberatung. Sie ist ein Werkzeug, um eine seit Jahren geführte Debatte mit Zahlen zu
+          unterfüttern. Was daraus folgt, entscheidest du – und das Kollegium gemeinsam.
+        </div>
+
+        <p style="margin-top: 2rem">
+          <a class="btn primaer" href="index.html">Zur App</a>
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

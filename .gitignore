@@ -1,0 +1,9 @@
+# Der Generator der Präsentation braucht pptxgenjs. Die App selbst hat keine
+# Abhängigkeiten - deshalb gehören diese Dateien nicht ins Repository.
+node_modules/
+package-lock.json
+package.json
+
+# Zwischenprodukte der Präsentationserstellung
+*.pdf
+slide-*.jpg

@@ -14,6 +14,7 @@ const HUELLE = [
   './',
   'index.html',
   'auswertung.html',
+  'leitfaden.html',
   'manifest.webmanifest',
   'css/app.css',
   'js/app.js',
