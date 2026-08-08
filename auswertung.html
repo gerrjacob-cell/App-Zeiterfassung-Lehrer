@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Auswertung des Kollegiums &middot; Lehrerzeit</title>
+    <meta
+      name="description"
+      content="Führt anonyme Kennzahlen-Dateien mehrerer Lehrkräfte zu einer Gesamtauswertung zusammen – vollständig im Browser."
+    />
+    <meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a19" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="icons/icon-192.png" sizes="192x192" />
+    <link rel="stylesheet" href="css/app.css" />
+    <style>
+      main { padding-bottom: 3rem; }
+      .ablage {
+        border: 2px dashed var(--line-strong);
+        border-radius: var(--radius);
+        padding: 2rem 1rem;
+        text-align: center;
+        background: var(--surface-1);
+        margin-bottom: 1rem;
+      }
+      .ablage.aktiv { border-color: var(--accent); background: var(--surface-2); }
+      @media print {
+        main { display: block !important; }
+        .kopf, .ablage, .btn-reihe, .chip-reihe { display: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="kopf">
+      <img src="icons/icon-192.png" alt="" width="32" height="32" style="border-radius: 8px" />
+      <div class="kopf-titel">
+        <strong>Auswertung des Kollegiums</strong><span>anonyme Kennzahlen zusammenführen</span>
+      </div>
+      <a class="btn klein" href="index.html">Zur App</a>
+    </header>
+
+    <main id="inhalt">
+      <div class="hinweis">
+        <strong>So funktioniert es:</strong> Jede Lehrkraft exportiert in der App unter „Auswertung“
+        freiwillig eine anonyme Kennzahlen-Datei. Diese Dateien werden hier eingelesen – im Browser,
+        ohne Upload. Es gibt keinen Server, der etwas sammeln könnte, und die Dateien enthalten
+        weder Namen noch Notizen noch einzelne Tage.
+      </div>
+
+      <div class="ablage" id="ablage">
+        <p><strong>Dateien hierher ziehen</strong></p>
+        <p class="feld-hinweis">oder auswählen – mehrere Dateien auf einmal sind möglich</p>
+        <label class="btn primaer" for="dateien" style="cursor: pointer">Dateien auswählen</label>
+        <input
+          type="file"
+          id="dateien"
+          accept="application/json,.json"
+          multiple
+          style="position: absolute; width: 1px; height: 1px; opacity: 0"
+        />
+      </div>
+
+      <div id="ausgabe"></div>
+
+      <div class="hinweis warnung">
+        <strong>Vor der Weitergabe bedenken:</strong> Eine Gesamtauswertung ist ein starkes Argument
+        – und zugleich eine Personaldatenverarbeitung, sobald sie die Schule verlässt. Sinnvoll ist
+        es, sie mit dem Personalrat abzustimmen, die Teilnahme freiwillig zu lassen und nur
+        verdichtete Werte zu zeigen.
+      </div>
+    </main>
+
+    <script type="module" src="js/kollegium.js"></script>
+  </body>
+</html>
