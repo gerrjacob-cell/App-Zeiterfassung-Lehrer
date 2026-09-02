@@ -12,11 +12,11 @@
     a { color: #2f66c4; text-decoration: none; }
     a:hover { color: #234f9b; }
     .zahl { font-variant-numeric: tabular-nums; }
-    .kaps { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+    .kaps { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
   </style>
 </helmet>
 
-<div style="width: 1180px; height: 980px; background: #f3f4f1; color: #16181c; overflow: hidden; display: flex; flex-direction: column;">
+<div style="width: 1180px; height: 1070px; background: #f3f4f1; color: #16181c; overflow: hidden; display: flex; flex-direction: column;">
 
   <!-- Kopfzeile -->
   <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; background: #ffffff; border-bottom: 1px solid #e4e5e0;">
@@ -28,16 +28,16 @@
       </div>
       <div style="display: flex; flex-direction: column; gap: 1px;">
         <div style="font-size: 16px; font-weight: 650; letter-spacing: -0.01em;">Lernerlevel Manager</div>
-        <div style="font-size: 12px; color: #79808a;">Prototyp mit fiktiven Daten</div>
+        <div style="font-size: 12px; color: #6b727c;">Prototyp mit fiktiven Daten</div>
       </div>
     </div>
     <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 1px;">
       <div style="font-size: 15px; font-weight: 600;">S. Cordes</div>
-      <div style="font-size: 12px; color: #79808a;">Klassenleitung</div>
+      <div style="font-size: 12px; color: #6b727c;">Klassenleitung</div>
     </div>
   </div>
 
-  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 18px; padding: 20px 28px 0;">
+  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 18px; padding: 20px 28px 22px;">
 
     <!-- Titelzeile -->
     <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
@@ -47,7 +47,7 @@
           <span>Lerngruppen</span>
         </div>
         <div style="font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">FLEX</div>
-        <div style="font-size: 14px; color: #79808a;">15 Schüler · Flexible Eingangsphase</div>
+        <div style="font-size: 14px; color: #6b727c;">15 Schüler · Flexible Eingangsphase</div>
       </div>
       <div style="display: flex; gap: 10px;">
         <div style="display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid #cbcdc7; background: #ffffff; font-size: 15px; font-weight: 600;">
@@ -90,39 +90,47 @@
       </div>
     </div>
 
+    <!-- Hinweis auf fällige Entscheidungen -->
+    <div style="display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 12px; background: #fdf3f2; border: 1px solid #edc4bf; color: #b03027;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5 2.8 20h18.4L12 4.5Z"></path><path d="M12 10v4.2"></path><path d="M12 17.2h.01"></path></svg>
+      <span style="font-size: 15px; font-weight: 650;">1 Entscheidung ist fällig</span>
+      <span style="font-size: 15px; font-weight: 600; text-decoration: underline;">anzeigen</span>
+    </div>
+
     <!-- Suche und Filter -->
     <div style="display: flex; align-items: center; gap: 12px;">
       <div style="flex-grow: 1; display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; background: #ffffff; border: 1px solid #cbcdc7; border-radius: 12px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#79808a" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6"></path></svg>
-        <span style="font-size: 15px; color: #79808a;">Namen suchen…</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b727c" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6"></path></svg>
+        <span style="font-size: 15px; color: #6b727c;">Namen suchen…</span>
       </div>
-      <span style="font-size: 13px; color: #79808a;" class="zahl">15 Schüler</span>
+      <span style="font-size: 13px; color: #6b727c;" class="zahl">15 Schüler</span>
     </div>
 
     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-      <div style="display: flex; align-items: center; height: 42px; padding: 0 16px; border-radius: 999px; background: {{accent}}; color: #ffffff; font-size: 14px; font-weight: 600;">Alle 15</div>
-      <div style="display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">
+      <div style="display: flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 999px; background: {{accent}}; color: #ffffff; font-size: 14px; font-weight: 600;">Alle 15</div>
+      <div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">
         <span style="width: 9px; height: 9px; border-radius: 50%; background: #1f7a4d;"></span><span>Normal 9</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">
+      <div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2f66c4" stroke-width="1.8" stroke-linecap="round"><path d="M2 17c4 0 5.5-7 10-7s6 7 10 7"></path><path d="M2 17v3M22 17v3M8.5 12.8V20M15.5 12.8V20"></path></svg>
         <span>Brücke 3</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">
+      <div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9a6212" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.6"></circle></svg>
         <span>Floß 2</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 999px; background: #fdf3f2; border: 1px solid #edc4bf; color: #b03027; font-size: 14px; font-weight: 600;">
+      <div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 999px; background: #fdf3f2; border: 1px solid #edc4bf; color: #b03027; font-size: 14px; font-weight: 600;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5 2.8 20h18.4L12 4.5Z"></path><path d="M12 10v4.2"></path><path d="M12 17.2h.01"></path></svg>
         <span>Entscheidung 1</span>
       </div>
     </div>
 
     <div style="display: flex; gap: 8px; margin-top: -8px;">
-      <div style="display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">Level 1 · 2</div>
-      <div style="display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">Level 2 · 6</div>
-      <div style="display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">Level 3 · 5</div>
-      <div style="display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">Level 4 · 2</div>
+      <div style="display: flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 999px; background: #eef0ec; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #16181c;">Alle Level</div>
+      <div style="display: flex; align-items: center; height: 44px; padding: 0 14px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">Level 1 · 2</div>
+      <div style="display: flex; align-items: center; height: 44px; padding: 0 14px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">Level 2 · 6</div>
+      <div style="display: flex; align-items: center; height: 44px; padding: 0 14px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">Level 3 · 5</div>
+      <div style="display: flex; align-items: center; height: 44px; padding: 0 14px; border-radius: 999px; background: #ffffff; border: 1px solid #d9dbd6; font-size: 14px; font-weight: 600; color: #4b535d;">Level 4 · 2</div>
     </div>
 
     <!-- Schülerliste -->
@@ -130,14 +138,14 @@
 
       <!-- Normal, schlanke Zeile -->
       <div style="display: flex; align-items: center; gap: 16px; padding: 14px 18px 14px 14px; background: #ffffff; border: 1px solid #e4e5e0; border-radius: 14px;">
-        <div style="width: 4px; height: 30px; border-radius: 999px; background: #b9c4bd;"></div>
+        <div style="width: 4px; height: 30px; border-radius: 999px; background: #b0c8b6;"></div>
         <div style="font-size: 18px; font-weight: 600;">Amelie Brandt</div>
         <div style="display: flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #eef1f4; color: #2f66c4; border: 1px solid #d8e1ef;" class="kaps">Level 3</div>
         <div style="display: flex; align-items: center; gap: 7px; font-size: 14px; color: #4b535d;">
           <span style="width: 9px; height: 9px; border-radius: 50%; background: #1f7a4d;"></span><span>Normal</span>
         </div>
         <div style="flex-grow: 1;"></div>
-        <div style="display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 12px; border: 1px dashed #cbcdc7; color: #79808a; font-size: 14px; font-weight: 600;">
+        <div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 12px; border: 1px dashed #cbcdc7; color: #6b727c; font-size: 14px; font-weight: 600;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
           <span>Verfahren starten</span>
         </div>
@@ -155,10 +163,10 @@
               <span>Floß aktiv</span>
             </span>
           </div>
-          <div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #79808a;">
+          <div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #6b727c;">
             <span class="zahl">seit 25.08. · 8 Tage</span>
             <span style="color: #dfe1dc;">|</span>
-            <span class="zahl">noch 4 Tage</span>
+            <span class="zahl">noch 5 Tage</span>
             <span style="color: #dfe1dc;">|</span>
             <span style="display: flex; align-items: center; gap: 10px; font-weight: 650;">
               <span style="display: flex; align-items: center; gap: 4px; color: #1f7a4d;" class="zahl">
@@ -174,15 +182,15 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #e8f3ec; border: 1px solid #c3ddcd; color: #1f7a4d;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #e8f3ec; border: 1px solid #b6d6c3; color: #1f7a4d;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 7"></path></svg>
             <span class="kaps">Erfüllt</span>
           </div>
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #f7eede; border: 1px solid #e5cfa5; color: #9a6212;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #f7eede; border: 1px solid #dfc394; color: #9a6212;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"></circle><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"></path></svg>
             <span class="kaps">Teilweise</span>
           </div>
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #fbeae8; border: 1px solid #eec8c3; color: #b03027;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #fbeae8; border: 1px solid #e8bcb6; color: #b03027;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
             <span class="kaps">Nicht</span>
           </div>
@@ -201,10 +209,10 @@
               <span>Entscheidung fällig · Floß</span>
             </span>
           </div>
-          <div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #79808a;">
+          <div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #6b727c;">
             <span class="zahl">seit 18.08. · 15 Tage</span>
             <span style="color: #dfe1dc;">|</span>
-            <span style="color: #b03027; font-weight: 600;" class="zahl">Frist seit 1 Tag erreicht</span>
+            <span style="color: #b03027; font-weight: 600;" class="zahl">Frist seit 1 Tag überschritten</span>
             <span style="color: #dfe1dc;">|</span>
             <span style="display: flex; align-items: center; gap: 10px; font-weight: 650;">
               <span style="display: flex; align-items: center; gap: 4px; color: #1f7a4d;" class="zahl">
@@ -220,18 +228,22 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 8px; height: 58px; padding: 0 18px; border-radius: 12px; background: #b03027; color: #ffffff; font-size: 15px; font-weight: 650;">
+          <div style="display: flex; align-items: center; gap: 9px; height: 58px; padding: 0 20px; border-radius: 12px; background: #b03027; color: #ffffff; font-size: 15px; font-weight: 650;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5 2.8 20h18.4L12 4.5Z"></path><path d="M12 10v4.2"></path><path d="M12 17.2h.01"></path></svg>
             <span>Entscheiden</span>
           </div>
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 62px; height: 58px; border-radius: 12px; background: #e8f3ec; border: 1px solid #c3ddcd; color: #1f7a4d;">
+          <div style="width: 1px; height: 44px; background: #e6d5d2;"></div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 82px; height: 58px; border-radius: 12px; background: #e8f3ec; border: 1px solid #b6d6c3; color: #1f7a4d;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 7"></path></svg>
+            <span class="kaps">Erfüllt</span>
           </div>
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 62px; height: 58px; border-radius: 12px; background: #f7eede; border: 1px solid #e5cfa5; color: #9a6212;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 82px; height: 58px; border-radius: 12px; background: #f7eede; border: 1px solid #dfc394; color: #9a6212;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"></circle><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"></path></svg>
+            <span class="kaps">Teilweise</span>
           </div>
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 62px; height: 58px; border-radius: 12px; background: #fbeae8; border: 1px solid #eec8c3; color: #b03027;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 82px; height: 58px; border-radius: 12px; background: #fbeae8; border: 1px solid #e8bcb6; color: #b03027;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+            <span class="kaps">Nicht</span>
           </div>
         </div>
       </div>
@@ -248,7 +260,7 @@
               <span>Brücke aktiv</span>
             </span>
           </div>
-          <div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #79808a;">
+          <div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #6b727c;">
             <span class="zahl">seit 27.08. · 6 Tage</span>
             <span style="color: #dfe1dc;">|</span>
             <span class="zahl">noch 5 Tage</span>
@@ -267,15 +279,15 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #e8f3ec; border: 1px solid #c3ddcd; color: #1f7a4d;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #e8f3ec; border: 1px solid #b6d6c3; color: #1f7a4d;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 7"></path></svg>
             <span class="kaps">Erfüllt</span>
           </div>
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #f7eede; border: 1px solid #e5cfa5; color: #9a6212;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #f7eede; border: 1px solid #dfc394; color: #9a6212;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"></circle><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"></path></svg>
             <span class="kaps">Teilweise</span>
           </div>
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #fbeae8; border: 1px solid #eec8c3; color: #b03027;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 92px; height: 58px; border-radius: 12px; background: #fbeae8; border: 1px solid #e8bcb6; color: #b03027;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
             <span class="kaps">Nicht</span>
           </div>
@@ -284,14 +296,14 @@
 
       <!-- Normal, schlanke Zeile -->
       <div style="display: flex; align-items: center; gap: 16px; padding: 14px 18px 14px 14px; background: #ffffff; border: 1px solid #e4e5e0; border-radius: 14px;">
-        <div style="width: 4px; height: 30px; border-radius: 999px; background: #b9c4bd;"></div>
+        <div style="width: 4px; height: 30px; border-radius: 999px; background: #b0c8b6;"></div>
         <div style="font-size: 18px; font-weight: 600;">Clara Dörfler</div>
         <div style="display: flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #f1ecf9; color: #6b46c1; border: 1px solid #ded2f2;" class="kaps">Level 4</div>
         <div style="display: flex; align-items: center; gap: 7px; font-size: 14px; color: #4b535d;">
           <span style="width: 9px; height: 9px; border-radius: 50%; background: #1f7a4d;"></span><span>Normal</span>
         </div>
         <div style="flex-grow: 1;"></div>
-        <div style="display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 12px; border: 1px dashed #cbcdc7; color: #79808a; font-size: 14px; font-weight: 600;">
+        <div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 12px; border: 1px dashed #cbcdc7; color: #6b727c; font-size: 14px; font-weight: 600;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
           <span>Verfahren starten</span>
         </div>
@@ -302,7 +314,7 @@
 </div>
 </x-dc>
 
-<script data-dc-script data-props='{"accent":{"editor":"color","default":"#2f66c4","options":["#2f66c4","#34558f","#17786b","#4a5568"]},"$preview":{"width":1180,"height":980}}'>
+<script data-dc-script data-props='{"accent":{"editor":"color","default":"#2f66c4","options":["#2f66c4","#34558f","#17786b","#4a5568"]},"$preview":{"width":1180,"height":1070}}'>
 class Component extends DCLogic {
   renderVals() {
     return { accent: this.props.accent ?? '#2f66c4' };

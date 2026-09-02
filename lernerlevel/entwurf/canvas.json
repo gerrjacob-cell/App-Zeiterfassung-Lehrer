@@ -13,7 +13,7 @@
       "x": 1300,
       "y": 0,
       "w": 1180,
-      "h": 980,
+      "h": 1070,
       "title": "2 · Dashboard einer Lerngruppe"
     },
     {
@@ -21,7 +21,7 @@
       "x": 0,
       "y": 1140,
       "w": 1180,
-      "h": 980,
+      "h": 1010,
       "title": "3 · Schülerprofil"
     },
     {
@@ -37,9 +37,9 @@
     {
       "id": "was-neu-ist",
       "x": 0,
-      "y": -200,
+      "y": -320,
       "w": 620,
-      "text": "Behutsame Politur, gleiche Struktur und Bedienung.\n\nNeu: gezeichnete Symbole statt Emoji (auf jedem Gerät gleich), ruhigere Statusfarben mit gleicher Sättigung, Kennzahlen als ein Streifen statt vier Kästen, schmale Zeilen für Schüler ohne Verfahren, Ziffern in Tabellenziffern.\n\nOben links über jedem Entwurf lässt sich die Akzentfarbe umstellen."
+      "text": "Behutsame Politur, gleiche Struktur und Bedienung.\n\nNeu: gezeichnete Symbole statt Emoji (auf jedem Gerät gleich und auch bei Rotgrünschwäche unterscheidbar), Statusfarben auf gleiche Sättigung gebracht, Kennzahlen als ein Streifen statt vier Kästen, schmale Zeilen für Schüler ohne Verfahren, Ziffern in Tabellenziffern, alle Tippflächen mindestens 44 px.\n\nÜber jedem Entwurf lässt sich die Akzentfarbe umstellen."
     }
   ],
   "launch": {
