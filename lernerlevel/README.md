@@ -5,7 +5,10 @@ Abstieg) und Brückenverfahren (möglicher Aufstieg). Sie ersetzt die physischen
 Karten – zunächst als voll bedienbarer Prototyp mit **ausschließlich fiktiven
 Daten**.
 
-Optimiert für iPads im Unterricht. Die häufigste Handlung braucht zwei Tipps:
+Optimiert für iPads im Unterricht, bedienbar auch auf dem Handy. Geprüft auf
+iPhone SE, iPhone 15 (hoch und quer), iPad mini, iPad Air (hoch und quer) und
+im Split View: keine Tippfläche unter 44 px, kein Querscrollen, die Hauptaktion
+im Formular immer sichtbar. Die häufigste Handlung braucht zwei Tipps:
 
 > Lerngruppe öffnen → Schüler in der Liste finden → 🟢 / 🟡 / 🔴 antippen
 

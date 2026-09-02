@@ -144,6 +144,29 @@ button {
   color: inherit;
 }
 
+/* Touchgeräte: kein Verzögern beim Tippen, kein graues Aufblitzen, kein
+   Auswahl-Menü beim Halten. Die Rückmeldung geben wir selbst über :active. */
+button,
+a,
+summary,
+.zeile,
+.kachel,
+.chip,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+.chip,
+summary {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .nur-tastatur {
   position: absolute;
   left: -9999px;
@@ -192,9 +215,11 @@ button {
   text-align: left;
 }
 
-.marke:hover,
-.konto:hover {
-  background: var(--flaeche-2);
+@media (hover: hover) {
+  .marke:hover,
+  .konto:hover {
+    background: var(--flaeche-2);
+  }
 }
 
 .marke-zeichen {
@@ -257,7 +282,8 @@ main {
 .seite {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 1.1rem max(1rem, env(safe-area-inset-left)) 4rem max(1rem, env(safe-area-inset-right));
+  padding: 1.1rem max(1rem, env(safe-area-inset-left)) calc(4rem + env(safe-area-inset-bottom))
+    max(1rem, env(safe-area-inset-right));
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
@@ -303,15 +329,17 @@ main {
 }
 
 .zurueck {
+  display: inline-flex;
+  align-items: center;
   background: none;
   border: 0;
   color: var(--akzent);
   font-size: 1rem;
   font-weight: 600;
-  padding: 0.35rem 0;
-  margin-bottom: 0.2rem;
+  padding: 0.35rem 0.5rem 0.35rem 0;
+  margin: 0 0 0.1rem -0.15rem;
   cursor: pointer;
-  min-height: 32px;
+  min-height: 44px;
 }
 
 .leer-hinweis {
@@ -406,9 +434,19 @@ main {
   font-weight: 550;
 }
 
-.zeile:hover .knopf.leise {
-  border-color: var(--linie-stark);
-  color: var(--text-2);
+@media (hover: hover) {
+  .zeile:hover .knopf.leise {
+    border-color: var(--linie-stark);
+    color: var(--text-2);
+  }
+}
+
+/* Ohne Mauszeiger gibt es kein Überfahren: der Knopf steht dauerhaft an. */
+@media (hover: none) {
+  .knopf.leise {
+    border-color: var(--linie-stark);
+    color: var(--text-2);
+  }
 }
 
 .knopf.gross {
@@ -420,15 +458,18 @@ main {
 }
 
 .text-knopf {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
   background: none;
   border: 0;
   color: var(--akzent);
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   padding: 0.5rem 0;
   cursor: pointer;
   text-align: left;
-  min-height: 40px;
+  min-height: 44px;
 }
 
 .ikonen-knopf {
@@ -442,8 +483,10 @@ main {
   color: var(--text-2);
 }
 
-.ikonen-knopf:hover {
-  background: var(--flaeche-2);
+@media (hover: hover) {
+  .ikonen-knopf:hover {
+    background: var(--flaeche-2);
+  }
 }
 
 .chip {
@@ -596,6 +639,9 @@ main {
 }
 
 .text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--akzent);
   font-weight: 600;
 }
@@ -733,8 +779,10 @@ main {
   transition: background 0.5s ease, border-color 0.2s ease;
 }
 
-.zeile:hover {
-  border-color: var(--linie-stark);
+@media (hover: hover) {
+  .zeile:hover {
+    border-color: var(--linie-stark);
+  }
 }
 
 .zeile-normal {
@@ -789,8 +837,10 @@ main {
   cursor: pointer;
 }
 
-.zeile-name:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .zeile-name:hover {
+    text-decoration: underline;
+  }
 }
 
 .zeile-infos {
@@ -1321,6 +1371,13 @@ main {
   color: var(--text-2);
 }
 
+.token-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--akzent);
+}
+
 /* --------------------------------------------------------------- Dialog --- */
 
 .dialog {
@@ -1333,6 +1390,16 @@ main {
   color: var(--text);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Auf iPhones wandert die Adressleiste beim Scrollen ein und aus; dvh rechnet
+   mit dem tatsächlich sichtbaren Bereich, vh nicht. */
+@supports (height: 100dvh) {
+  .dialog {
+    max-height: 88dvh;
+  }
 }
 
 .dialog::backdrop {
@@ -1350,9 +1417,11 @@ main {
 }
 
 .dialog-inhalt {
-  padding: 1.1rem 1.25rem 1.25rem;
+  padding: 1.1rem 1.25rem 0;
   overflow-y: auto;
-  max-height: calc(88vh - 70px);
+  overscroll-behavior: contain;
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -1372,11 +1441,31 @@ main {
 }
 
 .dialog-fuss {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
   display: flex;
   justify-content: flex-end;
   gap: 0.6rem;
   flex-wrap: wrap;
   margin-top: 0.4rem;
+  padding: 0.75rem 0 1.15rem;
+  background: var(--flaeche);
+  border-top: 1px solid var(--linie);
+}
+
+/* Auf schmalen Geräten sitzt die Hauptaktion über die volle Breite und unten,
+   also dort, wo der Daumen ist. */
+@media (max-width: 560px) {
+  .dialog-fuss {
+    flex-direction: column;
+  }
+
+  .dialog-fuss .knopf {
+    width: 100%;
+    /* Ohne feste Basis würde der große Knopf die Fußzeile aufblähen. */
+    flex: 0 0 auto;
+  }
 }
 
 .richtung {
@@ -1586,6 +1675,67 @@ textarea.eingabe {
 
   .historie-eintrag {
     grid-template-columns: 4.5rem 1.5rem 1fr;
+  }
+
+  /* Kategorien zweispaltig: sechs volle Zeilen wären auf dem Handy zu viel
+     Scrollen vor dem eigentlichen Ziel. */
+  .kategorien {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .kategorien .chip {
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    /* "Material/Organisation" ist ein Wort ohne Leerzeichen und würde sonst
+       aus der Spalte laufen. */
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* Handy im Querformat: sehr wenig Höhe. Kopfzeile mitscrollen lassen und die
+   Kennzahlen flach setzen, damit die Schülerliste noch ins Bild passt. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .kopf {
+    position: static;
+  }
+
+  .seite {
+    padding-top: 0.6rem;
+    gap: 0.55rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .seiten-kopf .unter {
+    display: none;
+  }
+
+  /* Die Zahlen stehen gleich darunter noch einmal auf den Filtern. Bei dieser
+     Höhe zählt jede Zeile, also bleibt der Streifen weg. */
+  .kennzahlen {
+    display: none;
+  }
+
+  .banner {
+    min-height: 44px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .rueckmeldung.gross .rm-knopf {
+    min-height: 68px;
+  }
+
+  .dialog {
+    max-height: 94vh;
   }
 }
 
