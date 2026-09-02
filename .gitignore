@@ -11,3 +11,7 @@ slide-*.jpg
 # Ausnahme: die Anleitung zum Lernerlevel Manager ist ein Ergebnis und wird
 # mitgeliefert, damit sie ohne Werkzeuge weitergegeben werden kann.
 !lernerlevel/anleitung.pdf
+
+# Die zusammengebaute Design-Leinwand ist ein Erzeugnis der Entwurfsdateien
+# (rund 2,5 MB) und wird bei Bedarf neu erzeugt.
+lernerlevel/entwurf/lernerlevel-oberflaeche.html

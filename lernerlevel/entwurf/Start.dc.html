@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #2f66c4; text-decoration: none; }
+    a:hover { color: #234f9b; }
+    .zahl { font-variant-numeric: tabular-nums; }
+  </style>
+</helmet>
+
+<div style="width: 1180px; height: 640px; background: #f3f4f1; color: #16181c; overflow: hidden; display: flex; flex-direction: column;">
+
+  <!-- Kopfzeile -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; background: #ffffff; border-bottom: 1px solid #e4e5e0;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 34px; height: 34px; border-radius: 10px; background: {{accent}}; display: flex; align-items: center; justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round">
+          <path d="M5 18v-5"></path><path d="M12 18V8"></path><path d="M19 18V5"></path>
+        </svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1px;">
+        <div style="font-size: 16px; font-weight: 650; letter-spacing: -0.01em;">Lernerlevel Manager</div>
+        <div style="font-size: 12px; color: #79808a;">Prototyp mit fiktiven Daten</div>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 1px;">
+      <div style="font-size: 15px; font-weight: 600;">S. Cordes</div>
+      <div style="font-size: 12px; color: #79808a;">Klassenleitung</div>
+    </div>
+  </div>
+
+  <!-- Seiteninhalt -->
+  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 22px; padding: 26px 28px;">
+
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #79808a;">Schuljahr 2026/27</div>
+        <div style="font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">Lerngruppen</div>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <div style="display: flex; align-items: center; height: 46px; padding: 0 18px; border-radius: 12px; border: 1px solid #cbcdc7; background: #ffffff; font-size: 15px; font-weight: 600;">Verwaltung</div>
+      </div>
+    </div>
+
+    <!-- Kacheln -->
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px;">
+
+      <!-- FLEX, mit fälliger Entscheidung -->
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 20px; background: #ffffff; border: 1px solid #e4e5e0; border-radius: 16px; box-shadow: 0 1px 2px rgba(20,22,26,0.04), 0 10px 24px -16px rgba(20,22,26,0.22); position: relative;">
+        <div style="position: absolute; top: 18px; right: 18px; display: flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px; background: #fbeae8; color: #b03027;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4.5 2.8 20h18.4L12 4.5Z"></path><path d="M12 10v4.2"></path><path d="M12 17.2h.01"></path>
+          </svg>
+          <span style="font-size: 12px; font-weight: 700;">1</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <div style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">FLEX</div>
+          <div style="font-size: 13px; color: #79808a;">Flexible Eingangsphase</div>
+        </div>
+        <div style="font-size: 14px; font-weight: 600; color: #4b535d;" class="zahl">15 Schüler</div>
+        <div style="height: 1px; background: #eceee9;"></div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2f66c4" stroke-width="1.8" stroke-linecap="round"><path d="M2 17c4 0 5.5-7 10-7s6 7 10 7"></path><path d="M2 17v3M22 17v3M8.5 12.8V20M15.5 12.8V20"></path></svg>
+            <span style="font-size: 20px; font-weight: 700;" class="zahl">3</span>
+            <span style="font-size: 14px; color: #4b535d;">Brücken</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9a6212" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.6"></circle></svg>
+            <span style="font-size: 20px; font-weight: 700;" class="zahl">2</span>
+            <span style="font-size: 14px; color: #4b535d;">Flöße</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #79808a;">Levelverteilung</div>
+          <div style="display: flex; gap: 3px; height: 9px;"><div style="flex-grow: 2; background: #5b6672; border-radius: 999px;"></div><div style="flex-grow: 6; background: #17786b; border-radius: 999px;"></div><div style="flex-grow: 5; background: #2f66c4; border-radius: 999px;"></div><div style="flex-grow: 2; background: #6b46c1; border-radius: 999px;"></div></div>
+        </div>
+      </div>
+
+      <!-- 7a -->
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 20px; background: #ffffff; border: 1px solid #e4e5e0; border-radius: 16px; box-shadow: 0 1px 2px rgba(20,22,26,0.04), 0 10px 24px -16px rgba(20,22,26,0.22); position: relative;">
+        <div style="position: absolute; top: 18px; right: 18px; display: flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px; background: #fbeae8; color: #b03027;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4.5 2.8 20h18.4L12 4.5Z"></path><path d="M12 10v4.2"></path><path d="M12 17.2h.01"></path>
+          </svg>
+          <span style="font-size: 12px; font-weight: 700;">1</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <div style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">7a</div>
+          <div style="font-size: 13px; color: #79808a;">Klassenstufe 7</div>
+        </div>
+        <div style="font-size: 14px; font-weight: 600; color: #4b535d;" class="zahl">12 Schüler</div>
+        <div style="height: 1px; background: #eceee9;"></div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2f66c4" stroke-width="1.8" stroke-linecap="round"><path d="M2 17c4 0 5.5-7 10-7s6 7 10 7"></path><path d="M2 17v3M22 17v3M8.5 12.8V20M15.5 12.8V20"></path></svg>
+            <span style="font-size: 20px; font-weight: 700;" class="zahl">1</span>
+            <span style="font-size: 14px; color: #4b535d;">Brücke</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9a6212" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.6"></circle></svg>
+            <span style="font-size: 20px; font-weight: 700;" class="zahl">0</span>
+            <span style="font-size: 14px; color: #4b535d;">Flöße</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #79808a;">Levelverteilung</div>
+          <div style="display: flex; gap: 3px; height: 9px;"><div style="flex-grow: 1; background: #5b6672; border-radius: 999px;"></div><div style="flex-grow: 5; background: #17786b; border-radius: 999px;"></div><div style="flex-grow: 4; background: #2f66c4; border-radius: 999px;"></div><div style="flex-grow: 2; background: #6b46c1; border-radius: 999px;"></div></div>
+        </div>
+      </div>
+
+      <!-- 7b -->
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 20px; background: #ffffff; border: 1px solid #e4e5e0; border-radius: 16px; box-shadow: 0 1px 2px rgba(20,22,26,0.04), 0 10px 24px -16px rgba(20,22,26,0.22);">
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <div style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">7b</div>
+          <div style="font-size: 13px; color: #79808a;">Klassenstufe 7</div>
+        </div>
+        <div style="font-size: 14px; font-weight: 600; color: #4b535d;" class="zahl">11 Schüler</div>
+        <div style="height: 1px; background: #eceee9;"></div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2f66c4" stroke-width="1.8" stroke-linecap="round"><path d="M2 17c4 0 5.5-7 10-7s6 7 10 7"></path><path d="M2 17v3M22 17v3M8.5 12.8V20M15.5 12.8V20"></path></svg>
+            <span style="font-size: 20px; font-weight: 700;" class="zahl">0</span>
+            <span style="font-size: 14px; color: #4b535d;">Brücken</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9a6212" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.6"></circle></svg>
+            <span style="font-size: 20px; font-weight: 700;" class="zahl">1</span>
+            <span style="font-size: 14px; color: #4b535d;">Floß</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #79808a;">Levelverteilung</div>
+          <div style="display: flex; gap: 3px; height: 9px;"><div style="flex-grow: 2; background: #5b6672; border-radius: 999px;"></div><div style="flex-grow: 5; background: #17786b; border-radius: 999px;"></div><div style="flex-grow: 3; background: #2f66c4; border-radius: 999px;"></div><div style="flex-grow: 1; background: #6b46c1; border-radius: 999px;"></div></div>
+        </div>
+      </div>
+
+      <!-- 8a -->
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 20px; background: #ffffff; border: 1px solid #e4e5e0; border-radius: 16px; box-shadow: 0 1px 2px rgba(20,22,26,0.04), 0 10px 24px -16px rgba(20,22,26,0.22);">
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <div style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">8a</div>
+          <div style="font-size: 13px; color: #79808a;">Klassenstufe 8</div>
+        </div>
+        <div style="font-size: 14px; font-weight: 600; color: #4b535d;" class="zahl">10 Schüler</div>
+        <div style="height: 1px; background: #eceee9;"></div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2f66c4" stroke-width="1.8" stroke-linecap="round"><path d="M2 17c4 0 5.5-7 10-7s6 7 10 7"></path><path d="M2 17v3M22 17v3M8.5 12.8V20M15.5 12.8V20"></path></svg>
+            <span style="font-size: 20px; font-weight: 700;" class="zahl">1</span>
+            <span style="font-size: 14px; color: #4b535d;">Brücke</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9a6212" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.6"></circle></svg>
+            <span style="font-size: 20px; font-weight: 700;" class="zahl">0</span>
+            <span style="font-size: 14px; color: #4b535d;">Flöße</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #79808a;">Levelverteilung</div>
+          <div style="display: flex; gap: 3px; height: 9px;"><div style="flex-grow: 1; background: #5b6672; border-radius: 999px;"></div><div style="flex-grow: 3; background: #17786b; border-radius: 999px;"></div><div style="flex-grow: 4; background: #2f66c4; border-radius: 999px;"></div><div style="flex-grow: 2; background: #6b46c1; border-radius: 999px;"></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="flex-grow: 1;"></div>
+
+    <div style="display: flex; align-items: center; gap: 8px; padding-top: 16px; border-top: 1px solid #e4e5e0; font-size: 13px; color: #79808a;">
+      <a href="#" style="font-weight: 600; color: {{accent}};">Anleitung für das Kollegium</a>
+      <span>·</span>
+      <span>Prototyp mit fiktiven Daten</span>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"accent":{"editor":"color","default":"#2f66c4","options":["#2f66c4","#34558f","#17786b","#4a5568"]},"$preview":{"width":1180,"height":640}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#2f66c4' };
+  }
+}
+</script>
+</body>
+</html>

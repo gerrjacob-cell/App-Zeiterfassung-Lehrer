@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #2f66c4; text-decoration: none; }
+    a:hover { color: #234f9b; }
+    .zahl { font-variant-numeric: tabular-nums; }
+    .kaps { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+  </style>
+</helmet>
+
+<div style="width: 1180px; height: 980px; background: #f3f4f1; color: #16181c; overflow: hidden; display: flex; flex-direction: column;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; background: #ffffff; border-bottom: 1px solid #e4e5e0;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 34px; height: 34px; border-radius: 10px; background: {{accent}}; display: flex; align-items: center; justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round">
+          <path d="M5 18v-5"></path><path d="M12 18V8"></path><path d="M19 18V5"></path>
+        </svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1px;">
+        <div style="font-size: 16px; font-weight: 650; letter-spacing: -0.01em;">Lernerlevel Manager</div>
+        <div style="font-size: 12px; color: #79808a;">Prototyp mit fiktiven Daten</div>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 1px;">
+      <div style="font-size: 15px; font-weight: 600;">S. Cordes</div>
+      <div style="font-size: 12px; color: #79808a;">Klassenleitung</div>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 18px; padding: 20px 28px 0;">
+
+    <!-- Titelzeile -->
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 6px; color: {{accent}}; font-size: 14px; font-weight: 600;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"></path></svg>
+        <span>FLEX</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span style="font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">Ben Cakir</span>
+        <span style="display: flex; align-items: center; height: 30px; padding: 0 13px; border-radius: 999px; background: #e8f2f0; color: #17786b; border: 1px solid #cfe4e0; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">Level 2</span>
+        <span style="display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 14px 0 11px; border-radius: 999px; background: #f7eede; color: #9a6212; font-size: 14px; font-weight: 650;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.6"></circle></svg>
+          <span>Floß aktiv</span>
+        </span>
+      </div>
+      <div style="font-size: 14px; color: #79808a;">Lerngruppen: FLEX</div>
+    </div>
+
+    <!-- Laufendes Verfahren -->
+    <div style="display: flex; background: #ffffff; border: 1px solid #ecdfc9; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 2px rgba(20,22,26,0.04), 0 10px 24px -16px rgba(20,22,26,0.22);">
+      <div style="width: 5px; background: #c08a2e;"></div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; padding: 20px 22px;">
+
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 9px; color: #9a6212;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.6"></circle><path d="M5.6 5.6l3.9 3.9M18.4 5.6l-3.9 3.9M18.4 18.4l-3.9-3.9M5.6 18.4l3.9-3.9"></path></svg>
+              <span style="font-size: 20px; font-weight: 650;">Floßverfahren</span>
+            </div>
+            <div style="font-size: 22px; font-weight: 600; line-height: 1.35; letter-spacing: -0.01em;">„Ich beginne selbstständig mit meinen Aufgaben.“</div>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0;">
+            <span style="font-size: 22px; font-weight: 700; color: #9a6212;" class="zahl">noch 4 Tage</span>
+            <span style="font-size: 13px; color: #79808a;" class="zahl">Frist 06.09.2026</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 18px; font-size: 14px; color: #4b535d; flex-wrap: wrap;">
+          <span>Selbstständigkeit</span>
+          <span style="color: #dfe1dc;">|</span>
+          <span class="zahl">Beginn 25.08.2026 · 8 Tage laufend</span>
+          <span style="color: #dfe1dc;">|</span>
+          <span style="display: flex; align-items: center; gap: 7px; color: #9a6212; font-weight: 600;">
+            <span>Gefährdet</span>
+            <span style="display: flex; align-items: center; gap: 5px;">
+              <span style="display: flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; background: #e8f2f0; color: #17786b;" class="kaps">Level 2</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 7l5 5-5 5"></path></svg>
+              <span style="display: flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; background: #eef0f2; color: #5b6672;" class="kaps">Level 1</span>
+            </span>
+          </span>
+        </div>
+
+        <!-- Bilanz als Balken -->
+        <div style="display: flex; flex-direction: column; gap: 9px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between;">
+            <span style="font-size: 14px; font-weight: 650; color: #4b535d;">9 Rückmeldungen</span>
+            <span style="font-size: 14px; color: #79808a;" class="zahl">Zielerreichung 78 %</span>
+          </div>
+          <div style="display: flex; gap: 3px; height: 12px;">
+            <div style="flex-grow: 6; background: #1f7a4d; border-radius: 999px;"></div>
+            <div style="flex-grow: 2; background: #d69b39; border-radius: 999px;"></div>
+            <div style="flex-grow: 1; background: #b03027; border-radius: 999px;"></div>
+          </div>
+          <div style="display: flex; gap: 22px; font-size: 14px; font-weight: 650;">
+            <span style="display: flex; align-items: center; gap: 7px; color: #1f7a4d;" class="zahl">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 7"></path></svg>
+              <span>6 erfüllt</span>
+            </span>
+            <span style="display: flex; align-items: center; gap: 7px; color: #9a6212;" class="zahl">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"></circle><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"></path></svg>
+              <span>2 teilweise</span>
+            </span>
+            <span style="display: flex; align-items: center; gap: 7px; color: #b03027;" class="zahl">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+              <span>1 nicht erfüllt</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Die drei großen Knöpfe -->
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 108px; border-radius: 14px; background: #e8f3ec; border: 1px solid #b6d6c3; color: #1f7a4d;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 7"></path></svg>
+            <span style="font-size: 15px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">Erfüllt</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 108px; border-radius: 14px; background: #f7eede; border: 1px solid #dfc394; color: #9a6212;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8"></circle><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"></path></svg>
+            <span style="font-size: 15px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">Teilweise</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 108px; border-radius: 14px; background: #fbeae8; border: 1px solid #e8bcb6; color: #b03027;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+            <span style="font-size: 15px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">Nicht erfüllt</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 7px; color: {{accent}}; font-size: 14px; font-weight: 600;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+          <span>Bemerkung ergänzen (optional)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historie -->
+    <div style="display: flex; flex-direction: column; gap: 14px; padding: 20px 22px; background: #ffffff; border: 1px solid #e4e5e0; border-radius: 16px;">
+      <div style="display: flex; align-items: baseline; justify-content: space-between;">
+        <span style="font-size: 20px; font-weight: 650;">Historie</span>
+        <span style="font-size: 13px; color: #79808a;">Einträge werden nie überschrieben</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0;">
+
+        <div style="display: grid; grid-template-columns: 92px 28px 1fr; align-items: start; gap: 12px; padding: 11px 0; border-top: 1px solid #f0f1ee;">
+          <span style="font-size: 13px; color: #79808a; padding-top: 2px;" class="zahl">02.09.2026</span>
+          <span style="color: #1f7a4d; padding-top: 1px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 7"></path></svg></span>
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 15px; font-weight: 600;">Ziel erfüllt</span>
+            <span style="font-size: 13px; color: #79808a;" class="zahl">02.09.2026, 09:20 Uhr · K. Ahrens</span>
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 92px 28px 1fr; align-items: start; gap: 12px; padding: 11px 0; border-top: 1px solid #f0f1ee;">
+          <span style="font-size: 13px; color: #79808a; padding-top: 2px;" class="zahl">31.08.2026</span>
+          <span style="color: #b03027; padding-top: 1px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></span>
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 15px; font-weight: 600;">Ziel nicht erfüllt</span>
+            <span style="font-size: 14px; color: #4b535d; font-style: italic;">Heute gar nicht angefangen.</span>
+            <span style="font-size: 13px; color: #79808a;" class="zahl">31.08.2026, 11:20 Uhr · K. Ahrens</span>
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 92px 28px 1fr; align-items: start; gap: 12px; padding: 11px 0; border-top: 1px solid #f0f1ee;">
+          <span style="font-size: 13px; color: #79808a; padding-top: 2px;" class="zahl">30.08.2026</span>
+          <span style="color: #9a6212; padding-top: 1px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"></circle><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"></path></svg></span>
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 15px; font-weight: 600;">Ziel teilweise erfüllt</span>
+            <span style="font-size: 13px; color: #79808a;" class="zahl">30.08.2026, 10:20 Uhr · K. Ahrens</span>
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 92px 28px 1fr; align-items: start; gap: 12px; padding: 11px 0; border-top: 1px solid #f0f1ee;">
+          <span style="font-size: 13px; color: #79808a; padding-top: 2px;" class="zahl">25.08.2026</span>
+          <span style="color: #9a6212; padding-top: 1px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.6"></circle></svg></span>
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 15px; font-weight: 600;">Floß gestartet</span>
+            <span style="font-size: 14px; color: #4b535d;">Gefährdet: Level 2 → 1. Frist: 06.09.2026.</span>
+            <span style="font-size: 13px; color: #79808a;" class="zahl">25.08.2026, 08:05 Uhr · K. Ahrens</span>
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"accent":{"editor":"color","default":"#2f66c4","options":["#2f66c4","#34558f","#17786b","#4a5568"]},"$preview":{"width":1180,"height":980}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#2f66c4' };
+  }
+}
+</script>
+</body>
+</html>
