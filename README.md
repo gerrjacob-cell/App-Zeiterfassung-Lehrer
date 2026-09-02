@@ -11,6 +11,12 @@ sichtbar und belegbar machen), dieselbe Kategorien-Systematik, dieselbe
 Datenhaltung beim Nutzenden. Sie ist unabhängig davon entstanden, an
 schleswig-holsteinisches Recht angepasst und in einigen Punkten erweitert.
 
+> **Zweite App in diesem Repository:** der
+> [**Lernerlevel Manager**](lernerlevel/) im Ordner `lernerlevel/` – Level 1–4,
+> Floß- und Brückenverfahren für Lerngruppen, für den Einsatz auf iPads.
+> Eigenständig, gleiche Technik (statische Dateien, kein Build), derzeit
+> Prototyp mit fiktiven Daten.
+
 ---
 
 ## Was die App tut
