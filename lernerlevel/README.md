@@ -38,6 +38,31 @@ node werkzeug/bilder-machen.mjs # Bilder in bilder/ neu erzeugen
 node werkzeug/pdf-bauen.mjs     # anleitung.pdf neu setzen
 ```
 
+## Auf dem Handy oder iPad testen
+
+Die App ist eine Sammlung statischer Dateien, es gibt nichts zu installieren.
+Drei Wege, je nachdem wie dauerhaft es sein soll.
+
+**Über GitHub Pages (dauerhafter Link, auch für Kollegen):**
+
+1. Im Repository: *Settings* → *Pages*
+2. Source: *Deploy from a branch*, Branch `claude/lernerlevel-manager-app-ja7ebq`,
+   Ordner `/ (root)`, speichern
+3. Nach ein bis zwei Minuten erreichbar unter
+   `https://gerrjacob-cell.github.io/App-Zeiterfassung-Lehrer/lernerlevel/`
+4. Auf dem Gerät im Browser öffnen → Teilen → *Zum Home-Bildschirm*
+
+Danach liegt die App mit eigenem Symbol auf dem Startbildschirm, startet ohne
+Browserleiste und läuft auch ohne Netz.
+
+**Im eigenen WLAN, ohne etwas zu veröffentlichen:** auf dem Rechner
+`python3 -m http.server 8123` im Ordner `lernerlevel/` starten und am Handy
+`http://<IP-des-Rechners>:8123` aufrufen. Praktisch zum schnellen
+Ausprobieren, aber ohne HTTPS und nur solange der Rechner läuft.
+
+**Ohne GitHub:** den Ordner `lernerlevel/` bei Netlify Drop auf die Seite
+ziehen. Sofort online mit HTTPS, kein Konto nötig.
+
 ## Was funktioniert
 
 | Bereich | Stand |
@@ -57,6 +82,7 @@ node werkzeug/pdf-bauen.mjs     # anleitung.pdf neu setzen
 | Protokoll aller Änderungen | ✅ |
 | Datenexport (JSON), Zurücksetzen, Löschen | ✅ |
 | Dauerhafte, zufällige Schüler-IDs und geschützte QR-Route | ✅ (Grafik folgt) |
+| Installierbar auf dem Startbildschirm, läuft offline | ✅ |
 | Anmeldung, Server, Datenbank, IServ | ⬜ siehe [ARCHITEKTUR.md](ARCHITEKTUR.md) |
 
 ## Daten

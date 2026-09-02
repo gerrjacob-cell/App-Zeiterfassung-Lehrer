@@ -204,6 +204,17 @@ async function start() {
   zeichnen();
 }
 
+/**
+ * Service Worker anmelden. Er macht die App offline lauffähig und sorgt
+ * dafür, dass dieser Ordner nicht vom Service Worker der Nachbar-App
+ * beantwortet wird. Fehlschläge sind egal: die App läuft auch ohne.
+ */
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
 start().catch((err) => {
   console.error(err);
   document.getElementById('inhalt').textContent =

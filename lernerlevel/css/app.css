@@ -1518,13 +1518,72 @@ textarea.eingabe {
   }
 }
 
+/* --------------------------------------------------------------- Handy --- */
+
+/* Gebaut ist die App fürs iPad. Auf dem Handy bleibt alles bedienbar, nur
+   enger: der Kopf schrumpft, die Kennzahlen werden flacher, und die
+   Filterreihen scrollen seitlich, statt über fünf Zeilen zu laufen. */
 @media (max-width: 560px) {
   h1 {
     font-size: 1.6rem;
   }
+
+  .marke-unter,
+  .konto-rolle {
+    display: none;
+  }
+
+  .marke-text strong {
+    font-size: 0.98rem;
+  }
+
+  .kennzahlen {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .kennzahl {
+    padding: 0.5rem 0.7rem;
+  }
+
+  .kennzahl-wert {
+    font-size: 1.4rem;
+  }
+
+  .kennzahl-text {
+    font-size: 0.8rem;
+  }
+
+  .filter-reihe {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-left: 1rem;
+    padding-bottom: 0.15rem;
+  }
+
+  .filter-reihe::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-reihe .chip {
+    flex: 0 0 auto;
+  }
+
   .rm-knopf {
     min-width: 62px;
+    flex: 1 1 0;
   }
+
+  .zeile-aktionen {
+    width: 100%;
+  }
+
+  .zeile-aktionen .rueckmeldung {
+    flex-grow: 1;
+  }
+
   .historie-eintrag {
     grid-template-columns: 4.5rem 1.5rem 1fr;
   }
