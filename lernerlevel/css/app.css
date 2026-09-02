@@ -587,6 +587,19 @@ main {
   color: var(--warnung);
 }
 
+.seiten-fuss {
+  margin-top: 0.5rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--linie);
+  color: var(--text-3);
+  font-size: 0.9rem;
+}
+
+.text-link {
+  color: var(--akzent);
+  font-weight: 600;
+}
+
 /* ------------------------------------------------------------ Kennzahlen --- */
 
 .kennzahlen {

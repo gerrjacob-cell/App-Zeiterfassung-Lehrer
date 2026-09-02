@@ -22,6 +22,10 @@ python3 -m http.server 8123
 Alternativ auf jeden Webspace oder GitHub Pages legen und den Ordner aufrufen.
 Auf dem iPad über Safari → Teilen → „Zum Home-Bildschirm“ ablegen.
 
+Für das Kollegium liegt eine Kurzanleitung bei: **[`anleitung.html`](anleitung.html)**
+(in der App unten auf der Startseite verlinkt, im Browser lesbar und über den
+Knopf „Anleitung drucken“ als Handout druckbar).
+
 ## Was funktioniert
 
 | Bereich | Stand |

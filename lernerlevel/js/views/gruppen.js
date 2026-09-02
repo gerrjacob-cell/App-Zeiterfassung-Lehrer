@@ -71,7 +71,12 @@ export function gruppenView(ctx) {
       : null,
   ]);
 
-  return h('div', { class: 'seite' }, [kopf, gitter]);
+  const fuss = h('p', { class: 'seiten-fuss' }, [
+    h('a', { class: 'text-link', href: 'anleitung.html', text: 'Anleitung für das Kollegium' }),
+    h('span', { class: 'hinweis', text: ' · Prototyp mit fiktiven Daten' }),
+  ]);
+
+  return h('div', { class: 'seite' }, [kopf, gitter, fuss]);
 }
 
 function zahl(ikone, text, wert, klasse) {

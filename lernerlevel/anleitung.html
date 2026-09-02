@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Anleitung &middot; Lernerlevel Manager</title>
+    <meta
+      name="description"
+      content="Kurzanleitung zum Lernerlevel Manager für das Kollegium. Zum Lesen am iPad und zum Ausdrucken."
+    />
+    <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#131313" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232d6cd4'/%3E%3Crect x='8' y='16' width='5' height='9' rx='1.5' fill='white'/%3E%3Crect x='14' y='11' width='5' height='14' rx='1.5' fill='white' opacity='.85'/%3E%3Crect x='20' y='6' width='5' height='19' rx='1.5' fill='white' opacity='.7'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="css/app.css" />
+    <style>
+      /* Die Anleitung ist Fließtext, keine App-Oberfläche: begrenzte Zeilenlänge,
+         mehr Zeilenhöhe, Überschriften, die eine Gliederung tragen. */
+      .kopf .marke {
+        cursor: default;
+      }
+      .doku {
+        max-width: 46rem;
+        line-height: 1.65;
+      }
+      .doku h2 {
+        font-size: 1.35rem;
+        scroll-margin-top: 5.5rem;
+        margin: 2.4rem 0 0.7rem;
+        padding-top: 1.2rem;
+        border-top: 1px solid var(--linie);
+      }
+      .doku h2:first-of-type {
+        border-top: 0;
+        padding-top: 0;
+      }
+      .doku h3 {
+        font-size: 1.05rem;
+        margin: 1.4rem 0 0.35rem;
+      }
+      .doku p,
+      .doku li {
+        font-size: 1rem;
+      }
+      .doku ul,
+      .doku ol {
+        padding-left: 1.3rem;
+        margin: 0.4rem 0 0.9rem;
+      }
+      .doku li {
+        margin-bottom: 0.35rem;
+      }
+      /* Die App setzt p { margin: 0 } - im Fließtext braucht es wieder Abstand. */
+      .doku > p,
+      .doku > .achtung,
+      .doku > .tafel,
+      .doku > table,
+      .doku > ul {
+        margin-bottom: 1rem;
+      }
+      .doku h1 {
+        margin-bottom: 0.6rem;
+      }
+      .lead {
+        font-size: 1.1rem;
+        color: var(--text-2);
+        margin-bottom: 1.4rem;
+      }
+      .inhalt-liste {
+        columns: 2;
+        column-gap: 2rem;
+        font-size: 0.95rem;
+        padding-left: 1.1rem;
+      }
+      @media (max-width: 620px) {
+        .inhalt-liste {
+          columns: 1;
+        }
+      }
+      .doku a {
+        color: var(--akzent);
+      }
+      .schritt {
+        display: grid;
+        grid-template-columns: 2.2rem 1fr;
+        gap: 0.8rem;
+        margin-bottom: 0.9rem;
+        align-items: start;
+      }
+      .schritt-nr {
+        display: grid;
+        place-items: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 999px;
+        background: var(--akzent);
+        color: var(--akzent-schrift);
+        font-weight: 650;
+      }
+      .schritt p {
+        margin: 0.15rem 0 0;
+      }
+      .schritt strong {
+        display: block;
+      }
+      .doku table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.6rem 0 1.2rem;
+        font-size: 0.95rem;
+      }
+      .doku th,
+      .doku td {
+        text-align: left;
+        vertical-align: top;
+        padding: 0.5rem 0.6rem;
+        border-bottom: 1px solid var(--linie);
+      }
+      .doku th {
+        color: var(--text-2);
+        font-weight: 650;
+      }
+      .frage {
+        font-weight: 650;
+        margin-bottom: 0.15rem;
+      }
+      .frage + p {
+        margin-bottom: 1rem;
+      }
+      .achtung {
+        border: 1px solid var(--warnung);
+        background: var(--warnung-flaeche);
+        border-radius: var(--radius-klein);
+        padding: 0.9rem 1.1rem;
+      }
+      .achtung strong {
+        color: var(--warnung);
+      }
+
+      @media print {
+        .kopf,
+        .drucken {
+          display: none !important;
+        }
+        .seite {
+          padding: 0;
+        }
+        .doku {
+          max-width: none;
+        }
+        .tafel {
+          box-shadow: none;
+          border: 1px solid #ccc;
+          break-inside: avoid;
+        }
+        .doku h2 {
+          break-after: avoid;
+        }
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+        @page {
+          margin: 18mm;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="kopf">
+      <span class="marke">
+        <span class="marke-zeichen" aria-hidden="true">▚</span>
+        <span class="marke-text">
+          <strong>Anleitung</strong>
+          <span class="marke-unter">Lernerlevel Manager</span>
+        </span>
+      </span>
+      <a class="knopf" href="index.html">Zur App</a>
+    </header>
+
+    <main class="seite">
+      <div class="doku">
+        <h1>Lernerlevel Manager</h1>
+        <p class="lead">
+          Die App macht das, was bisher die Karten gemacht haben: sie zeigt für jede Lerngruppe, wer
+          auf welchem Level steht, wer gerade ein Floß oder eine Brücke laufen hat und wo eine
+          Entscheidung ansteht. Zum Lesen brauchst du zehn Minuten, zum Bedienen zwei Tipps.
+        </p>
+
+        <div class="achtung">
+          <p>
+            <strong>Testbetrieb.</strong> Die App läuft noch als Prototyp mit erfundenen Namen. Trag
+            bitte keine echten Schülerdaten ein, solange die Datenschutzfreigabe nicht da ist. Alles,
+            was du eingibst, bleibt auf deinem Gerät, wird also auch nicht bei mir sichtbar.
+          </p>
+        </div>
+
+        <section class="tafel">
+          <h3 style="margin-top: 0">Auf dieser Seite</h3>
+          <ul class="inhalt-liste">
+            <li><a href="#start">Loslegen</a></li>
+            <li><a href="#alltag">Der Alltag: Rückmeldung geben</a></li>
+            <li><a href="#finden">Schüler finden</a></li>
+            <li><a href="#profil">Das Schülerprofil</a></li>
+            <li><a href="#floss">Floß starten</a></li>
+            <li><a href="#bruecke">Brücke starten</a></li>
+            <li><a href="#entscheidung">Wenn die Frist erreicht ist</a></li>
+            <li><a href="#historie">Historie und Korrekturen</a></li>
+            <li><a href="#statistik">Statistik</a></li>
+            <li><a href="#verwaltung">Verwaltung</a></li>
+            <li><a href="#rollen">Wer darf was</a></li>
+            <li><a href="#qr">QR-Codes</a></li>
+            <li><a href="#daten">Deine Daten</a></li>
+            <li><a href="#fragen">Häufige Fragen</a></li>
+          </ul>
+          <div class="knopf-reihe drucken">
+            <button class="knopf" type="button" onclick="window.print()">Anleitung drucken</button>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="start">Loslegen</h2>
+
+        <p>
+          Es gibt nichts zu installieren. Du öffnest die Adresse im Safari, tippst auf Teilen und
+          legst sie über „Zum Home-Bildschirm“ ab. Danach startet die App wie jede andere, auch ohne
+          Netz.
+        </p>
+
+        <div class="schritt">
+          <span class="schritt-nr">1</span>
+          <div>
+            <strong>Konto prüfen</strong>
+            <p>
+              Oben rechts steht, als wer du gerade unterwegs bist. Im Prototyp kannst du dort das
+              Konto wechseln und ausprobieren, was eine Lehrkraft sieht und was die Klassenleitung
+              zusätzlich darf. Später steht an dieser Stelle die richtige Anmeldung.
+            </p>
+          </div>
+        </div>
+        <div class="schritt">
+          <span class="schritt-nr">2</span>
+          <div>
+            <strong>Lerngruppe wählen</strong>
+            <p>
+              Die Startseite zeigt deine Lerngruppen als Kacheln. Auf jeder Kachel stehen schon die
+              Zahlen, die vor dem Öffnen interessieren: wie viele Schüler, wie viele Brücken, wie
+              viele Flöße und wie viele Entscheidungen anstehen. Eine Kachel mit rotem Rand heißt:
+              da wartet etwas auf dich.
+            </p>
+          </div>
+        </div>
+        <div class="schritt">
+          <span class="schritt-nr">3</span>
+          <div>
+            <strong>Dashboard lesen</strong>
+            <p>
+              Oben die Zusammenfassung, darunter alle Schüler der Gruppe. Wer ein laufendes Verfahren
+              hat, bekommt eine ausführlichere Zeile mit Beginn, Frist und den bisherigen
+              Rückmeldungen. Wer normal läuft, steht in einer schmalen Zeile.
+            </p>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="alltag">Der Alltag: Rückmeldung geben</h2>
+
+        <p>
+          Das ist die Handlung, die du hundertmal machst, und sie ist der Grund für den ganzen
+          Aufbau der App:
+        </p>
+
+        <p>
+          <strong>Lerngruppe öffnen → Schüler in der Liste finden → 🟢, 🟡 oder 🔴 antippen.</strong>
+        </p>
+
+        <p>
+          Fertig. Kein Öffnen des Profils, keine Rückfrage, kein Speichern-Knopf. Die Zeile blitzt
+          kurz auf, die Zahlen oben aktualisieren sich, und unten erscheint für ein paar Sekunden
+          ein Hinweis mit „Rückgängig“. Wenn du daneben getippt hast, tippst du dort drauf und es ist
+          weg.
+        </p>
+
+        <p>
+          Gespeichert werden Schüler, Datum, Uhrzeit, Bewertung und dein Name. Eine Bemerkung kannst
+          du ergänzen, musst du aber nie. Im Profil gibt es dafür ein Feld unter den großen Knöpfen.
+        </p>
+
+        <p>
+          Die Knöpfe erscheinen nur bei Schülern mit laufendem Floß oder laufender Brücke. Bei allen
+          anderen steht an der Stelle „Verfahren starten“.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="finden">Schüler finden</h2>
+
+        <p>
+          Über der Liste liegen zwei Reihen Filter. Die obere filtert nach Status: Alle, Normal,
+          🌉 Brücke, 🛟 Floß, ⚠️ Entscheidung. Die untere nach Level 1 bis 4. Beide lassen sich
+          kombinieren, ein zweiter Tipp auf denselben Filter hebt ihn wieder auf. Daneben liegt die
+          Suche, die auf Vor- und Nachnamen reagiert.
+        </p>
+
+        <p>
+          Wenn eine Entscheidung fällig ist, erscheint über der Liste ein roter Balken. Ein Tipp
+          darauf filtert direkt auf die betroffenen Schüler.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="profil">Das Schülerprofil</h2>
+
+        <p>
+          Ein Tipp auf den Namen öffnet das Profil. Oben stehen Level und Status, darunter das
+          laufende Verfahren mit Ziel, Beginn, Frist und Bilanz. Dann kommen die drei großen Knöpfe,
+          die dasselbe tun wie die kleinen in der Liste, nur mit Platz für eine Bemerkung.
+        </p>
+
+        <p>
+          Unter „Rückmeldungen dieses Verfahrens“ klappst du auf, was bisher zusammengekommen ist,
+          mit Datum, Uhrzeit und Kürzel. Ganz unten steht die Historie.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="floss">Floß starten</h2>
+
+        <p>
+          Ein Floß heißt: Der Schüler steht kurz vor einem Levelabstieg. Du startest es im Profil
+          über „🛟 FLOSS STARTEN“ oder direkt aus der Liste über „Verfahren starten“.
+        </p>
+
+        <p>
+          Die App zeigt dir das aktuelle Level und was gefährdet ist, etwa „Level 3 → 2“. Dann wählst
+          du eine Kategorie: Arbeitsverhalten, Selbstständigkeit, Zuverlässigkeit, Sozialverhalten,
+          Material/Organisation oder individuelle Vereinbarung. Zu jeder Kategorie stehen fertige
+          Zielsätze bereit. Einer davon reicht meistens, du kannst aber jederzeit eigenen Text
+          schreiben.
+        </p>
+
+        <p>
+          Der Beginn steht auf heute, die Frist auf zwei Wochen. Beides ist frei änderbar, für die
+          Frist gibt es die Schnellwahl 1, 2, 3 oder 4 Wochen. Nach dem Start taucht der Schüler
+          sofort mit „Floß aktiv“ im Dashboard auf.
+        </p>
+
+        <p class="hinweis">
+          Bei Level 1 ist der Knopf grau. Tiefer geht es nicht, deshalb gibt es dort kein Floß.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="bruecke">Brücke starten</h2>
+
+        <p>
+          Eine Brücke heißt: Der Schüler steht kurz vor einem Levelaufstieg. Der Ablauf ist derselbe
+          wie beim Floß, die App zeigt statt der Gefährdung den möglichen Aufstieg, etwa
+          „Level 2 → 3“. Bei Level 4 ist der Knopf grau, weil es darüber nichts mehr gibt.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="entscheidung">Wenn die Frist erreicht ist</h2>
+
+        <p>
+          Am Tag der Frist wechselt der Schüler automatisch auf „⚠️ Entscheidung fällig“. Das musst
+          du nicht anstoßen und kannst es auch nicht verpassen: Der Status rechnet sich aus der
+          Frist und dem heutigen Datum, er steht also auch dann da, wenn zwei Wochen niemand die App
+          geöffnet hat.
+        </p>
+
+        <p>Entschieden wird von der Klassenleitung, im Profil oder über den Knopf in der Liste:</p>
+
+        <ul>
+          <li>Bei einer Brücke: ⬆️ Levelaufstieg oder ↩️ Level beibehalten.</li>
+          <li>Bei einem Floß: ✅ Level gehalten oder ⬇️ Levelabstieg.</li>
+        </ul>
+
+        <p>
+          Vor dem Abschluss zeigt die App die Bilanz der Rückmeldungen und fragt einmal nach. Beim
+          Levelwechsel setzt sie danach das neue Level und schiebt das Verfahren in die Historie.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="historie">Historie und Korrekturen</h2>
+
+        <p>
+          Jeder Schüler hat eine Historie, in der jeder Start, jede Rückmeldung, jeder Abschluss und
+          jeder Levelwechsel mit Datum, Uhrzeit und Person steht. Diese Liste wird nie überschrieben.
+        </p>
+
+        <p>
+          Falsche Einträge löscht die App deshalb nicht. Die Klassenleitung tippt in der
+          Rückmeldungsliste auf „korrigieren“, gibt einen Grund an und nimmt den Eintrag damit
+          zurück. Der alte
+          Eintrag bleibt durchgestrichen stehen, die Korrektur kommt als eigener Eintrag dazu. Das
+          ist Absicht: Wenn wir mit den Daten später ein Gespräch mit Eltern führen, muss
+          nachvollziehbar sein, was wann passiert ist.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="statistik">Statistik</h2>
+
+        <p>
+          Der Knopf „Statistik“ im Dashboard klappt eine kurze Übersicht auf: Levelverteilung der
+          Lerngruppe als Balken und die Zahl der laufenden Brücken, Flöße und fälligen
+          Entscheidungen. Mehr nicht, weil mehr im Alltag niemand liest.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="verwaltung">Verwaltung</h2>
+
+        <p>
+          Die Verwaltung ist der Klassenleitung vorbehalten. Dort legst du Schüler und Lerngruppen an,
+          bearbeitest sie, ordnest Schüler mehreren Lerngruppen zu und setzt das aktuelle Level.
+        </p>
+
+        <p>
+          Ein Schüler hat dabei immer nur einen Datensatz, auch wenn er in FLEX und in der 7a steht.
+          Wer die Lerngruppe wechselt, nimmt seine Historie mit. Wer die Schule verlässt, wird
+          archiviert statt gelöscht, damit laufende und alte Verfahren nachvollziehbar bleiben.
+        </p>
+
+        <p>
+          Unter „Daten“ liegen der Export als JSON-Datei, das Zurücksetzen auf die Demodaten und das
+          Löschen. Unter „Protokoll“ steht, wer wann was geändert hat.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="rollen">Wer darf was</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Handlung</th>
+              <th>Lehrkraft</th>
+              <th>Klassenleitung</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Eigene Lerngruppen und Schüler ansehen</td>
+              <td>ja</td>
+              <td>ja, alle</td>
+            </tr>
+            <tr>
+              <td>🟢 🟡 🔴 Rückmeldung geben</td>
+              <td>ja</td>
+              <td>ja</td>
+            </tr>
+            <tr>
+              <td>Floß oder Brücke starten</td>
+              <td>ja</td>
+              <td>ja</td>
+            </tr>
+            <tr>
+              <td>Historie ansehen</td>
+              <td>ja</td>
+              <td>ja</td>
+            </tr>
+            <tr>
+              <td>Verfahren abschließen, Level ändern</td>
+              <td>nein</td>
+              <td>ja</td>
+            </tr>
+            <tr>
+              <td>Rückmeldungen korrigieren</td>
+              <td>nur die eigene, direkt danach über „Rückgängig“</td>
+              <td>ja, mit Begründung</td>
+            </tr>
+            <tr>
+              <td>Schüler und Lerngruppen verwalten, Protokoll lesen</td>
+              <td>nein</td>
+              <td>ja</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="qr">QR-Codes</h2>
+
+        <p>
+          Geplant ist ein Aufkleber pro Schüler, den du scannst, statt in der Liste zu suchen. Jeder
+          Schüler hat dafür schon eine feste Zufallsnummer, die sich nie ändert, auch nicht beim
+          Levelwechsel. Ein einmal gedruckter Code bleibt also gültig.
+        </p>
+
+        <p>
+          Im Code steht nur eine Internetadresse mit dieser Nummer. Kein Name, kein Level, kein
+          Status, keine Klasse. Wer den Aufkleber findet und scannt, landet bei der Anmeldung und
+          sieht ohne Berechtigung nichts. Die Grafik selbst fehlt noch, im Profil steht bisher nur
+          die Adresse.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="daten">Deine Daten</h2>
+
+        <p>
+          Im Prototyp speichert die App ausschließlich im Browser des Geräts, auf dem du sie
+          benutzt. Es gibt keinen Server und kein Konto. Das heißt auch: Deine Eingaben tauchen auf
+          keinem zweiten iPad auf, und wenn du die Websitedaten in Safari löschst, sind sie weg.
+        </p>
+
+        <p>
+          Für den echten Betrieb braucht es einen Server in Deutschland, eine Anmeldung und die
+          Freigabe durch Schulleitung und Datenschutzbeauftragte. Es geht um Verhaltensbewertungen
+          von Minderjährigen, das klären wir vorher und nicht nebenbei. Bis dahin gilt der Kasten
+          ganz oben: erfundene Namen zum Ausprobieren.
+        </p>
+
+        <p>
+          Was die App bewusst nicht speichert: Geburtsdatum, Adresse, Noten, Fehlzeiten. Sie braucht
+          Name, Level, Lerngruppe, Ziel, Frist und die Rückmeldungen.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="fragen">Häufige Fragen</h2>
+
+        <p class="frage">Ich habe bei der falschen Person getippt.</p>
+        <p>
+          Solange der Hinweis unten noch steht, auf „Rückgängig“ tippen. Danach macht es die
+          Klassenleitung im Profil über „korrigieren“.
+        </p>
+
+        <p class="frage">Muss ich jeden Tag eine Rückmeldung geben?</p>
+        <p>
+          Nein. Die App zählt, was da ist, und rechnet daraus die Quote. Eine Lücke ist keine
+          schlechte Bewertung.
+        </p>
+
+        <p class="frage">Kann ich zwei Verfahren gleichzeitig laufen lassen?</p>
+        <p>
+          Nein, pro Schüler läuft ein Verfahren. Ein zweites Ziel nebenher würde die Entscheidung am
+          Ende nur unklar machen.
+        </p>
+
+        <p class="frage">Was passiert, wenn ich die Frist überziehe?</p>
+        <p>
+          Nichts Schlimmes. Der Schüler steht weiter auf „Entscheidung fällig“, und in der Zeile
+          steht, seit wann. Rückmeldungen kannst du weiter geben.
+        </p>
+
+        <p class="frage">Warum sehe ich die 7b nicht?</p>
+        <p>
+          Weil dir nur deine eigenen Lerngruppen zugeordnet sind. Die Klassenleitung sieht alle.
+        </p>
+
+        <p class="frage">Funktioniert das auch am Rechner?</p>
+        <p>
+          Ja, die App läuft in jedem Browser. Gebaut ist sie für das iPad im Hoch- und im Querformat.
+        </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="feedback">Rückmeldung an mich</h2>
+
+        <p>
+          Probier die App in Ruhe aus und sag mir, wo du hängen bleibst. Am meisten hilft mir: An
+          welcher Stelle hast du gesucht, statt zu tippen? Was fehlt dir im Unterricht wirklich? Wenn
+          etwas zu viele Schritte braucht, ist das ein Fehler der App und nicht deiner.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
