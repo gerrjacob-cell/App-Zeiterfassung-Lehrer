@@ -7,3 +7,7 @@ package.json
 # Zwischenprodukte der Präsentationserstellung
 *.pdf
 slide-*.jpg
+
+# Ausnahme: die Anleitung zum Lernerlevel Manager ist ein Ergebnis und wird
+# mitgeliefert, damit sie ohne Werkzeuge weitergegeben werden kann.
+!lernerlevel/anleitung.pdf

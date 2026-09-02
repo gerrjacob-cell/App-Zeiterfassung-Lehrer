@@ -22,9 +22,21 @@ python3 -m http.server 8123
 Alternativ auf jeden Webspace oder GitHub Pages legen und den Ordner aufrufen.
 Auf dem iPad über Safari → Teilen → „Zum Home-Bildschirm“ ablegen.
 
-Für das Kollegium liegt eine Kurzanleitung bei: **[`anleitung.html`](anleitung.html)**
-(in der App unten auf der Startseite verlinkt, im Browser lesbar und über den
-Knopf „Anleitung drucken“ als Handout druckbar).
+Für das Kollegium liegt eine Kurzanleitung bei, als Seite und als Handout:
+
+* **[`anleitung.html`](anleitung.html)** – im Browser lesbar, in der App unten
+  auf der Startseite verlinkt, über den Knopf „Anleitung drucken“ druckbar.
+* **[`anleitung.pdf`](anleitung.pdf)** – 9 Seiten A4 mit Bildschirmfotos,
+  Seitenzahlen und Spickzettel, zum Weitergeben und Ausdrucken.
+
+Beides hat dieselbe Quelle. Nach einer Änderung an `anleitung.html`:
+
+```bash
+npm install playwright          # einmalig
+python3 -m http.server 8123     # für die Bildschirmfotos
+node werkzeug/bilder-machen.mjs # Bilder in bilder/ neu erzeugen
+node werkzeug/pdf-bauen.mjs     # anleitung.pdf neu setzen
+```
 
 ## Was funktioniert
 

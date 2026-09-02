@@ -51,6 +51,46 @@
       .doku li {
         margin-bottom: 0.35rem;
       }
+      .titel {
+        background: var(--akzent);
+        color: #fff;
+        border-radius: var(--radius);
+        padding: 1.6rem 1.8rem;
+        margin-bottom: 1.4rem;
+      }
+      .titel h1 {
+        color: #fff;
+        font-size: 2.1rem;
+        margin: 0.2rem 0 0.3rem;
+      }
+      .titel-oben,
+      .titel-unter {
+        font-size: 0.95rem;
+        opacity: 0.88;
+        letter-spacing: 0.02em;
+      }
+      .titel-oben {
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.78rem;
+      }
+
+      figure {
+        margin: 1.2rem 0 1.4rem;
+      }
+      figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border: 1px solid var(--linie);
+        border-radius: var(--radius-klein);
+      }
+      figcaption {
+        margin-top: 0.45rem;
+        font-size: 0.88rem;
+        color: var(--text-3);
+      }
+
       /* Die App setzt p { margin: 0 } - im Fließtext braucht es wieder Abstand. */
       .doku > p,
       .doku > .achtung,
@@ -121,6 +161,13 @@
         color: var(--text-2);
         font-weight: 650;
       }
+      .spick ul {
+        margin: 0;
+        padding-left: 1.2rem;
+      }
+      .spick li {
+        margin-bottom: 0.5rem;
+      }
       .frage {
         font-weight: 650;
         margin-bottom: 0.15rem;
@@ -139,9 +186,58 @@
       }
 
       @media print {
+        /* Auch aus dem dunklen Modus heraus druckt die Anleitung hell. */
+        :root {
+          color-scheme: light;
+          --plane: #ffffff;
+          --flaeche: #ffffff;
+          --flaeche-2: #f5f6f4;
+          --flaeche-3: #ebedea;
+          --text: #14161a;
+          --text-2: #454d57;
+          --text-3: #5f666f;
+          --linie: #d7d9d5;
+          --linie-stark: #b9bdb8;
+          --akzent: #1f52a8;
+          --warnung: #a3211b;
+          --warnung-flaeche: #fbeceb;
+        }
+        body {
+          background: #fff;
+        }
         .kopf,
         .drucken {
           display: none !important;
+        }
+        figure,
+        .schritt,
+        .achtung,
+        .frage,
+        tr {
+          break-inside: avoid;
+        }
+        /* Bildschirmfotos so hoch begrenzen, dass sie auf eine Seite passen und
+           keine halbleeren Seiten erzwingen. */
+        figure img {
+          max-height: 116mm;
+          width: auto;
+          max-width: 100%;
+          margin: 0 auto;
+        }
+        figcaption {
+          text-align: center;
+        }
+        p,
+        li {
+          orphans: 3;
+          widows: 3;
+        }
+        thead {
+          display: table-header-group;
+        }
+        .titel,
+        .frage {
+          break-after: avoid;
         }
         .seite {
           padding: 0;
@@ -162,7 +258,7 @@
           text-decoration: none;
         }
         @page {
-          margin: 18mm;
+          margin: 16mm 16mm 18mm;
         }
       }
     </style>
@@ -181,7 +277,11 @@
 
     <main class="seite">
       <div class="doku">
-        <h1>Lernerlevel Manager</h1>
+        <div class="titel">
+          <p class="titel-oben">Anleitung für das Kollegium</p>
+          <h1>Lernerlevel Manager</h1>
+          <p class="titel-unter">Lernerlevel, Floß und Brücke auf dem iPad · Stand September 2026</p>
+        </div>
         <p class="lead">
           Die App macht das, was bisher die Karten gemacht haben: sie zeigt für jede Lerngruppe, wer
           auf welchem Level steht, wer gerade ein Floß oder eine Brücke laufen hat und wo eine
@@ -213,6 +313,7 @@
             <li><a href="#qr">QR-Codes</a></li>
             <li><a href="#daten">Deine Daten</a></li>
             <li><a href="#fragen">Häufige Fragen</a></li>
+            <li><a href="#spick">Spickzettel</a></li>
           </ul>
           <div class="knopf-reihe drucken">
             <button class="knopf" type="button" onclick="window.print()">Anleitung drucken</button>
@@ -282,6 +383,18 @@
           weg.
         </p>
 
+        <figure>
+          <img
+            src="bilder/dashboard.png"
+            alt="Dashboard der Lerngruppe FLEX mit Zusammenfassung, Filtern und Schülerliste"
+          />
+          <figcaption>
+            Das Dashboard der Lerngruppe. Oben die Zahlen und die Filter, darunter die Schüler. Bei
+            Ben Cakir läuft ein Floß, deshalb stehen rechts die drei Knöpfe. Wer normal läuft, hat
+            dort „Verfahren starten“.
+          </figcaption>
+        </figure>
+
         <p>
           Gespeichert werden Schüler, Datum, Uhrzeit, Bewertung und dein Name. Eine Bemerkung kannst
           du ergänzen, musst du aber nie. Im Profil gibt es dafür ein Feld unter den großen Knöpfen.
@@ -316,6 +429,17 @@
           die dasselbe tun wie die kleinen in der Liste, nur mit Platz für eine Bemerkung.
         </p>
 
+        <figure>
+          <img
+            src="bilder/profil.png"
+            alt="Schülerprofil mit laufendem Floß, Ziel, Frist, Bilanz und drei großen Knöpfen"
+          />
+          <figcaption>
+            Das Profil eines Schülers mit laufendem Floß. Ziel, Frist und Bilanz auf einen Blick,
+            darunter die drei großen Knöpfe.
+          </figcaption>
+        </figure>
+
         <p>
           Unter „Rückmeldungen dieses Verfahrens“ klappst du auf, was bisher zusammengekommen ist,
           mit Datum, Uhrzeit und Kürzel. Ganz unten steht die Historie.
@@ -336,6 +460,16 @@
           Zielsätze bereit. Einer davon reicht meistens, du kannst aber jederzeit eigenen Text
           schreiben.
         </p>
+
+        <figure>
+          <img
+            src="bilder/floss-start.png"
+            alt="Formular zum Starten eines Floßverfahrens mit Kategorien, Zielvorschlägen, Beginn und Frist"
+          />
+          <figcaption>
+            Das Formular zum Start. Kategorie antippen, Zielsatz antippen, Frist antippen, starten.
+          </figcaption>
+        </figure>
 
         <p>
           Der Beginn steht auf heute, die Frist auf zwei Wochen. Beides ist frei änderbar, für die
@@ -546,6 +680,20 @@
         <p>
           Ja, die App läuft in jedem Browser. Gebaut ist sie für das iPad im Hoch- und im Querformat.
         </p>
+
+        <!-- ------------------------------------------------------------- -->
+        <h2 id="spick">Spickzettel</h2>
+
+        <section class="tafel spick">
+          <ul>
+            <li><strong>Rückmeldung geben:</strong> Lerngruppe öffnen, Schüler finden, 🟢 / 🟡 / 🔴 antippen.</li>
+            <li><strong>Vertippt:</strong> im Hinweis unten auf „Rückgängig“ tippen.</li>
+            <li><strong>Verfahren starten:</strong> Schüler öffnen, 🛟 oder 🌉 wählen, Ziel antippen, Frist antippen, starten.</li>
+            <li><strong>Entscheidung fällig:</strong> roter Balken über der Liste, entschieden wird von der Klassenleitung.</li>
+            <li><strong>Suchen:</strong> Filterreihen für Status und Level, Suchfeld für Namen.</li>
+            <li><strong>Testbetrieb:</strong> nur erfundene Namen eintragen.</li>
+          </ul>
+        </section>
 
         <!-- ------------------------------------------------------------- -->
         <h2 id="feedback">Rückmeldung an mich</h2>
