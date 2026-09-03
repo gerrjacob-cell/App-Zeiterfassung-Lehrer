@@ -39,7 +39,13 @@ Zwei Festlegungen, die sich später auszahlen:
 
 1. **Ein Schüler = ein Datensatz.** Die Lerngruppenzugehörigkeit ist eine Liste
    von IDs, keine Kopie. Ein Wechsel der Lerngruppe verliert keine Historie.
-2. **Status wird nie gespeichert, sondern abgeleitet.** „Entscheidung fällig“
+2. **Eine Stimme je Lehrkraft und Verfahren.** Die Bilanz zählt nicht alle
+   Rückmeldungen, sondern je Person die zuletzt abgegebene. Ändert jemand seine
+   Einschätzung, wird nichts überschrieben: der neue Eintrag wird angehängt und
+   gilt, der frühere bleibt als „später geändert“ sichtbar. Serverseitig ist
+   das dieselbe Regel - eine Eindeutigkeit auf (Verfahren, Person, Zeitpunkt),
+   ausgewertet über die jeweils neueste Zeile.
+3. **Status wird nie gespeichert, sondern abgeleitet.** „Entscheidung fällig“
    ergibt sich aus offenem Verfahren + Frist + heutigem Datum. Damit kann keine
    Frist übersehen werden, weil niemand die App geöffnet hat.
 

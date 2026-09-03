@@ -236,7 +236,9 @@ export async function abschlussDialog(schueler, verfahren) {
     ]),
     h('p', { class: 'ziel-satz', text: `„${verfahren.zieltext}“` }),
     h('p', { class: 'bilanz-satz' }, [
-      h('span', { text: `Rückmeldungen: 🟢 ${bilanz.erfuellt} · 🟡 ${bilanz.teilweise} · 🔴 ${bilanz.nicht}` }),
+      h('span', {
+        text: `${bilanz.gesamt} ${bilanz.gesamt === 1 ? 'Lehrkraft' : 'Lehrkräfte'}: 🟢 ${bilanz.erfuellt} · 🟡 ${bilanz.teilweise} · 🔴 ${bilanz.nicht}`,
+      }),
       bilanz.quote !== null
         ? h('span', { class: 'quote', text: ` · Zielerreichung ${Math.round(bilanz.quote * 100)} %` })
         : null,

@@ -56,7 +56,10 @@ export function bilanzZeile(bilanz, { klein = true } = {}) {
   if (!bilanz.gesamt) {
     return h('span', { class: 'bilanz leer', text: 'noch keine Rückmeldung' });
   }
-  return h('span', { class: `bilanz${klein ? ' klein' : ''}` }, [
+  return h('span', {
+    class: `bilanz${klein ? ' klein' : ''}`,
+    title: `${bilanz.gesamt} ${bilanz.gesamt === 1 ? 'Lehrkraft hat' : 'Lehrkräfte haben'} bewertet`,
+  }, [
     h('span', { class: 'bilanz-teil gut', text: `🟢 ${bilanz.erfuellt}` }),
     h('span', { class: 'bilanz-teil mittel', text: `🟡 ${bilanz.teilweise}` }),
     h('span', { class: 'bilanz-teil schlecht', text: `🔴 ${bilanz.nicht}` }),
@@ -72,25 +75,42 @@ export function bilanzZeile(bilanz, { klein = true } = {}) {
  */
 export function rueckmeldeKnoepfe(schuelerId, { gross = false, nachAktion = null } = {}) {
   const reihe = h('div', { class: `rueckmeldung${gross ? ' gross' : ''}` });
+  const eigene = store.eigeneStimme(schuelerId);
+
   for (const b of [BEWERTUNG.erfuellt, BEWERTUNG.teilweise, BEWERTUNG.nicht]) {
+    const gewaehlt = eigene && eigene.wert === b.id;
     reihe.appendChild(
       h('button', {
-        class: `rm-knopf rm-${b.id}`,
+        // Die eigene Stimme ist sichtbar gesetzt - sonst tippt man ein zweites
+        // Mal, ohne zu merken, dass man schon abgestimmt hat.
+        class: `rm-knopf rm-${b.id}${gewaehlt ? ' gewaehlt' : ''}`,
         type: 'button',
-        'aria-label': `Rückmeldung: ${b.name}`,
+        'aria-pressed': gewaehlt ? 'true' : 'false',
+        'aria-label': `${b.name}${gewaehlt ? ' – deine Rückmeldung' : ''}`,
         onclick: (e) => {
           e.stopPropagation();
+          const vorher = store.eigeneStimme(schuelerId);
           const r = store.rueckmeldungGeben(schuelerId, b.id);
           if (!r) return;
+          if (r.unveraendert) {
+            toast(`Deine Rückmeldung steht schon auf ${b.ikone} ${b.name}.`);
+            return;
+          }
           markieren(schuelerId, b.id);
           const s = store.schueler(schuelerId);
-          toast(`${b.ikone} ${b.name} · ${vollerName(s)}`, {
-            text: 'Rückgängig',
-            fn: () => {
-              store.rueckmeldungStornieren(r.id, 'direkt zurückgenommen');
-              toast('Rückmeldung zurückgenommen.');
+          const alt = vorher ? BEWERTUNG[vorher.wert] : null;
+          toast(
+            alt
+              ? `${b.ikone} ${b.name} · ersetzt ${alt.ikone} ${alt.name} · ${vollerName(s)}`
+              : `${b.ikone} ${b.name} · ${vollerName(s)}`,
+            {
+              text: 'Rückgängig',
+              fn: () => {
+                store.rueckmeldungStornieren(r.id, 'direkt zurückgenommen');
+                toast(alt ? `Zurück auf ${alt.ikone} ${alt.name}.` : 'Rückmeldung zurückgenommen.');
+              },
             },
-          });
+          );
           if (nachAktion) nachAktion();
         },
       }, [

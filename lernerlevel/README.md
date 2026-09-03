@@ -73,6 +73,7 @@ ziehen. Sofort online mit HTTPS, kein Konto nötig.
 | Startseite mit Lerngruppen-Kacheln (Schüler, Brücken, Flöße, fällige Entscheidungen) | ✅ |
 | Dashboard je Lerngruppe mit Zusammenfassung und allen Schülern | ✅ |
 | 🟢 / 🟡 / 🔴 direkt aus der Klassenübersicht, mit Sofortquittung und „Rückgängig“ | ✅ |
+| Eine Stimme je Lehrkraft und Verfahren, ein zweiter Tipp ersetzt die eigene | ✅ |
 | Filter (Alle / Normal / 🌉 / 🛟 / ⚠️), Levelfilter, Namenssuche | ✅ |
 | Schülerdetail mit Ziel, Verlauf, großen Rückmeldeknöpfen, optionaler Bemerkung | ✅ |
 | Floß und Brücke starten (Kategorien, Zielvorschläge, Beginn, Frist) | ✅ |

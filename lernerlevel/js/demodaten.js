@@ -13,14 +13,22 @@ const zeitAm = (isoDatum, stunde = 10, minute = 15) =>
   new Date(`${isoDatum}T${String(stunde).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`).toISOString();
 
 export function demoStand() {
+  // Jede Lehrkraft hat pro Verfahren eine Stimme. Damit die Bilanzen im
+  // Demobestand realistisch aussehen, braucht es ein Kollegium und nicht drei
+  // Konten: eine Lerngruppe wird von sechs bis acht Personen unterrichtet.
   const benutzer = [
     { id: 'ben_ahrens', name: 'K. Ahrens', kuerzel: 'Ahr', rolle: 'lehrkraft', gruppen: ['gr_flex', 'gr_7a'] },
     { id: 'ben_balzer', name: 'M. Balzer', kuerzel: 'Bal', rolle: 'lehrkraft', gruppen: ['gr_7b', 'gr_8a'] },
     { id: 'ben_cordes', name: 'S. Cordes', kuerzel: 'Cor', rolle: 'leitung', gruppen: ['gr_flex', 'gr_7a', 'gr_7b', 'gr_8a'] },
+    { id: 'ben_dahl', name: 'T. Dahl', kuerzel: 'Dah', rolle: 'lehrkraft', gruppen: ['gr_flex', 'gr_7a'] },
+    { id: 'ben_eggers', name: 'R. Eggers', kuerzel: 'Egg', rolle: 'lehrkraft', gruppen: ['gr_flex', 'gr_7b'] },
+    { id: 'ben_fischer', name: 'P. Fischer', kuerzel: 'Fis', rolle: 'lehrkraft', gruppen: ['gr_flex', 'gr_8a'] },
+    { id: 'ben_goertz', name: 'H. Görtz', kuerzel: 'Gör', rolle: 'lehrkraft', gruppen: ['gr_flex', 'gr_7a', 'gr_7b'] },
+    { id: 'ben_huebner', name: 'A. Hübner', kuerzel: 'Hüb', rolle: 'lehrkraft', gruppen: ['gr_flex', 'gr_8a'] },
+    { id: 'ben_iversen', name: 'J. Iversen', kuerzel: 'Ive', rolle: 'lehrkraft', gruppen: ['gr_flex', 'gr_7a', 'gr_8a'] },
+    { id: 'ben_juergens', name: 'L. Jürgens', kuerzel: 'Jür', rolle: 'lehrkraft', gruppen: ['gr_7a', 'gr_7b', 'gr_8a'] },
   ];
-  const ahrens = benutzer[0];
-  const balzer = benutzer[1];
-  const cordes = benutzer[2];
+  const [ahrens, balzer, cordes, dahl, eggers, fischer, goertz, huebner, iversen, juergens] = benutzer;
 
   const gruppen = [
     { id: 'gr_flex', name: 'FLEX', beschreibung: 'Flexible Eingangsphase', archiviert: false },
@@ -75,9 +83,13 @@ export function demoStand() {
     return v;
   };
 
-  /** Rückmeldungen: Liste aus [TageZurück, Wert] - so bleibt der Verlauf lesbar. */
-  const melde = (v, eintraege, von) => {
-    eintraege.forEach(([vorTagen, wert, bemerkung], i) => {
+  /**
+   * Stimmen zu einem Verfahren: Liste aus [TageZurück, Wert, Lehrkraft, Bemerkung].
+   * Jede Lehrkraft kommt höchstens einmal vor; taucht sie zweimal auf, gilt die
+   * spätere Stimme und die frühere erscheint in der Historie als geändert.
+   */
+  const melde = (v, eintraege) => {
+    eintraege.forEach(([vorTagen, wert, von, bemerkung], i) => {
       const datum = tageVersetzt(-vorTagen);
       // Einträge von heute bekommen eine Uhrzeit, die schon vorbei ist.
       const zeit =
@@ -150,21 +162,18 @@ export function demoStand() {
     fristInTagen: 4,
     von: ahrens,
   });
-  melde(
-    vBen,
-    [
-      [7, 'erfuellt'],
-      [6, 'erfuellt'],
-      [5, 'teilweise', 'Start nach der Pause hat gedauert.'],
-      [4, 'erfuellt'],
-      [3, 'nicht', 'Heute gar nicht angefangen.'],
-      [2, 'erfuellt'],
-      [1, 'teilweise'],
-      [1, 'erfuellt'],
-      [0, 'erfuellt'],
-    ],
-    ahrens,
-  );
+  melde(vBen, [
+    [7, 'erfuellt', ahrens],
+    [6, 'erfuellt', goertz],
+    [5, 'teilweise', huebner, 'Start nach der Pause hat gedauert.'],
+    [4, 'nicht', dahl, 'Heute gar nicht angefangen.'],
+    [3, 'erfuellt', eggers],
+    [2, 'teilweise', fischer],
+    [1, 'erfuellt', iversen],
+    // T. Dahl hat später anders eingeschätzt - die frühere Stimme bleibt in
+    // der Historie stehen, gültig ist diese hier.
+    [1, 'teilweise', dahl, 'Läuft seit dieser Woche besser.'],
+  ]);
 
   const vLeon = starte(leon, 'floss', {
     kategorieId: 'material',
@@ -173,15 +182,11 @@ export function demoStand() {
     fristInTagen: 8,
     von: ahrens,
   });
-  melde(
-    vLeon,
-    [
-      [2, 'teilweise'],
-      [1, 'nicht', 'Mappe vergessen.'],
-      [0, 'erfuellt'],
-    ],
-    cordes,
-  );
+  melde(vLeon, [
+    [2, 'teilweise', ahrens],
+    [1, 'nicht', goertz, 'Mappe vergessen.'],
+    [0, 'erfuellt', eggers],
+  ]);
 
   // Drei laufende Brücken.
   const vDavid = starte(david, 'bruecke', {
@@ -191,17 +196,13 @@ export function demoStand() {
     fristInTagen: 5,
     von: ahrens,
   });
-  melde(
-    vDavid,
-    [
-      [5, 'erfuellt'],
-      [4, 'erfuellt'],
-      [3, 'teilweise'],
-      [2, 'erfuellt'],
-      [0, 'erfuellt'],
-    ],
-    ahrens,
-  );
+  melde(vDavid, [
+    [5, 'erfuellt', ahrens],
+    [4, 'erfuellt', cordes],
+    [3, 'teilweise', dahl],
+    [2, 'erfuellt', fischer],
+    [0, 'erfuellt', iversen],
+  ]);
 
   const vEmilia = starte(emilia, 'bruecke', {
     kategorieId: 'zuverlaessigkeit',
@@ -210,19 +211,14 @@ export function demoStand() {
     fristInTagen: 2,
     von: cordes,
   });
-  melde(
-    vEmilia,
-    [
-      [11, 'erfuellt'],
-      [9, 'erfuellt'],
-      [8, 'erfuellt'],
-      [7, 'teilweise'],
-      [4, 'erfuellt'],
-      [2, 'erfuellt'],
-      [1, 'erfuellt'],
-    ],
-    ahrens,
-  );
+  melde(vEmilia, [
+    [11, 'erfuellt', cordes],
+    [9, 'erfuellt', ahrens],
+    [8, 'erfuellt', goertz],
+    [7, 'teilweise', huebner],
+    [4, 'erfuellt', eggers],
+    [2, 'erfuellt', fischer],
+  ]);
 
   const vJonas = starte(jonas, 'bruecke', {
     kategorieId: 'sozialverhalten',
@@ -231,20 +227,15 @@ export function demoStand() {
     fristInTagen: 2,
     von: ahrens,
   });
-  melde(
-    vJonas,
-    [
-      [9, 'erfuellt'],
-      [8, 'teilweise'],
-      [6, 'erfuellt'],
-      [5, 'erfuellt'],
-      [3, 'nicht', 'Streit in der Gruppenarbeit.'],
-      [2, 'erfuellt'],
-      [1, 'erfuellt'],
-      [0, 'erfuellt'],
-    ],
-    cordes,
-  );
+  melde(vJonas, [
+    [9, 'erfuellt', ahrens],
+    [8, 'teilweise', dahl],
+    [6, 'erfuellt', eggers],
+    [5, 'erfuellt', goertz],
+    [3, 'nicht', huebner, 'Streit in der Gruppenarbeit.'],
+    [2, 'erfuellt', iversen],
+    [1, 'erfuellt', cordes],
+  ]);
 
   // Eine fällige Entscheidung: Frist gestern erreicht.
   const vGreta = starte(greta, 'floss', {
@@ -254,22 +245,16 @@ export function demoStand() {
     fristInTagen: -1,
     von: ahrens,
   });
-  melde(
-    vGreta,
-    [
-      [14, 'erfuellt'],
-      [13, 'teilweise'],
-      [12, 'erfuellt'],
-      [10, 'nicht'],
-      [9, 'erfuellt'],
-      [7, 'erfuellt'],
-      [6, 'teilweise'],
-      [3, 'erfuellt'],
-      [2, 'nicht', 'Aufgaben nicht begonnen.'],
-      [1, 'teilweise'],
-    ],
-    ahrens,
-  );
+  melde(vGreta, [
+    [14, 'erfuellt', ahrens],
+    [13, 'teilweise', dahl],
+    [12, 'erfuellt', eggers],
+    [10, 'nicht', fischer],
+    [9, 'erfuellt', goertz],
+    [6, 'teilweise', huebner],
+    [3, 'teilweise', iversen],
+    [2, 'nicht', cordes, 'Aufgaben nicht begonnen.'],
+  ]);
 
   // Historie: bereits abgeschlossene Verfahren bei ansonsten normalen Schülern.
   const vAmelie = abgeschlossen(amelie, 'bruecke', {
@@ -281,18 +266,14 @@ export function demoStand() {
     ergebnis: { id: 'aufstieg', text: 'Levelaufstieg', ikone: '⬆️', neuesLevel: 3 },
     von: cordes,
   });
-  melde(
-    vAmelie,
-    [
-      [58, 'erfuellt'],
-      [55, 'erfuellt'],
-      [52, 'teilweise'],
-      [48, 'erfuellt'],
-      [44, 'erfuellt'],
-      [41, 'erfuellt'],
-    ],
-    ahrens,
-  );
+  melde(vAmelie, [
+    [58, 'erfuellt', ahrens],
+    [55, 'erfuellt', cordes],
+    [52, 'teilweise', dahl],
+    [48, 'erfuellt', goertz],
+    [44, 'erfuellt', huebner],
+    [41, 'erfuellt', iversen],
+  ]);
   ereignisse.push(
     evVerfahrenAbschluss(
       vAmelie,
@@ -311,17 +292,13 @@ export function demoStand() {
     ergebnis: { id: 'gehalten', text: 'Level gehalten', ikone: '✅', neuesLevel: 3 },
     von: cordes,
   });
-  melde(
-    vMika,
-    [
-      [88, 'teilweise'],
-      [85, 'erfuellt'],
-      [80, 'erfuellt'],
-      [76, 'erfuellt'],
-      [72, 'erfuellt'],
-    ],
-    ahrens,
-  );
+  melde(vMika, [
+    [88, 'teilweise', ahrens],
+    [85, 'erfuellt', eggers],
+    [80, 'erfuellt', fischer],
+    [76, 'erfuellt', goertz],
+    [72, 'erfuellt', cordes],
+  ]);
   ereignisse.push(
     evVerfahrenAbschluss(
       vMika,
@@ -351,15 +328,11 @@ export function demoStand() {
     fristInTagen: 9,
     von: ahrens,
   });
-  melde(
-    vPaul,
-    [
-      [4, 'erfuellt'],
-      [2, 'teilweise'],
-      [1, 'erfuellt'],
-    ],
-    ahrens,
-  );
+  melde(vPaul, [
+    [4, 'erfuellt', ahrens],
+    [2, 'teilweise', juergens],
+    [1, 'erfuellt', dahl],
+  ]);
 
   const vSami = starte(sami, 'floss', {
     kategorieId: 'zuverlaessigkeit',
@@ -368,17 +341,13 @@ export function demoStand() {
     fristInTagen: -2,
     von: ahrens,
   });
-  melde(
-    vSami,
-    [
-      [8, 'nicht'],
-      [6, 'teilweise'],
-      [5, 'erfuellt'],
-      [3, 'erfuellt'],
-      [2, 'teilweise'],
-    ],
-    ahrens,
-  );
+  melde(vSami, [
+    [8, 'nicht', ahrens],
+    [6, 'teilweise', juergens],
+    [5, 'erfuellt', goertz],
+    [3, 'nicht', iversen],
+    [2, 'teilweise', cordes],
+  ]);
 
   /* -------------------------------------------------------------- 7b --- */
 
@@ -401,15 +370,11 @@ export function demoStand() {
     fristInTagen: 6,
     von: balzer,
   });
-  melde(
-    vNoah,
-    [
-      [3, 'teilweise'],
-      [2, 'erfuellt'],
-      [0, 'erfuellt'],
-    ],
-    balzer,
-  );
+  melde(vNoah, [
+    [3, 'teilweise', balzer],
+    [2, 'erfuellt', eggers],
+    [0, 'erfuellt', juergens],
+  ]);
 
   /* -------------------------------------------------------------- 8a --- */
 
@@ -431,16 +396,12 @@ export function demoStand() {
     fristInTagen: 3,
     von: balzer,
   });
-  melde(
-    vPia,
-    [
-      [6, 'erfuellt'],
-      [5, 'erfuellt'],
-      [4, 'teilweise'],
-      [1, 'erfuellt'],
-    ],
-    balzer,
-  );
+  melde(vPia, [
+    [6, 'erfuellt', balzer],
+    [5, 'erfuellt', fischer],
+    [4, 'teilweise', huebner],
+    [1, 'erfuellt', iversen],
+  ]);
 
   ereignisse.sort((a, b) => a.zeit.localeCompare(b.zeit));
 

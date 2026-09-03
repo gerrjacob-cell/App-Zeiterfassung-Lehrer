@@ -1082,6 +1082,27 @@ main {
   color: var(--schlecht);
 }
 
+/* Die eigene Stimme: kräftiger Rahmen und ein Haken. Ohne das tippt man
+   zweimal, ohne zu merken, dass man schon bewertet hat. */
+.rm-knopf.gewaehlt {
+  border-width: 2px;
+  box-shadow: inset 0 0 0 1px currentColor;
+  font-weight: 700;
+}
+
+.rm-knopf.gewaehlt .rm-ikone::after {
+  content: ' ✓';
+  font-size: 0.75em;
+}
+
+.rm-knopf:not(.gewaehlt) {
+  opacity: 0.92;
+}
+
+.eigene-stimme {
+  margin-top: -0.2rem;
+}
+
 .rueckmeldung.gross {
   gap: 0.75rem;
   margin: 0.5rem 0;

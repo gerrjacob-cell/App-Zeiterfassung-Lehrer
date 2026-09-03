@@ -23,6 +23,7 @@ import {
   zeitpunktLang,
 } from '../model.js';
 import { bilanzZeile, levelAbzeichen, markieren, statusAbzeichen } from './bausteine.js';
+import { stimmen } from '../model.js';
 import { abschlussDialog, verfahrenStartenDialog } from './verfahren.js';
 import { produktivUrl, qrElement, rendererVorhanden, zielUrl } from '../qr.js';
 
@@ -80,22 +81,31 @@ function verfahrensTafel(ctx, s, v, status, benutzer) {
   });
   const bemerkungsBox = h('div', { class: 'bemerkung', hidden: true }, [feld('Bemerkung (optional)', bemerkung)]);
 
+  const eigene = store.eigeneStimme(s.id);
   const knoepfe = h('div', { class: 'rueckmeldung gross' });
   for (const b of [BEWERTUNG.erfuellt, BEWERTUNG.teilweise, BEWERTUNG.nicht]) {
+    const gewaehlt = eigene && eigene.wert === b.id;
     knoepfe.appendChild(
       h('button', {
-        class: `rm-knopf rm-${b.id}`,
+        class: `rm-knopf rm-${b.id}${gewaehlt ? ' gewaehlt' : ''}`,
         type: 'button',
+        'aria-pressed': gewaehlt ? 'true' : 'false',
         onclick: () => {
+          const vorher = store.eigeneStimme(s.id);
           const r = store.rueckmeldungGeben(s.id, b.id, bemerkung.value);
           if (!r) return;
+          if (r.unveraendert) {
+            toast(`Deine Rückmeldung steht schon auf ${b.ikone} ${b.name}.`);
+            return;
+          }
           bemerkung.value = '';
           markieren(s.id, b.id);
-          toast(`${b.ikone} ${b.name} gespeichert`, {
+          const altB = vorher ? BEWERTUNG[vorher.wert] : null;
+          toast(altB ? `${b.ikone} ${b.name} · ersetzt ${altB.ikone} ${altB.name}` : `${b.ikone} ${b.name} gespeichert`, {
             text: 'Rückgängig',
             fn: () => {
               store.rueckmeldungStornieren(r.id, 'direkt zurückgenommen');
-              toast('Rückmeldung zurückgenommen.');
+              toast(altB ? `Zurück auf ${altB.ikone} ${altB.name}.` : 'Rückmeldung zurückgenommen.');
             },
           });
         },
@@ -130,10 +140,21 @@ function verfahrensTafel(ctx, s, v, status, benutzer) {
     h('p', { class: 'unter', text: v.art === ART.floss.id ? `Gefährdet: Level ${v.startLevel} → ${v.zielLevel}` : `Möglicher Aufstieg: Level ${v.startLevel} → ${v.zielLevel}` }),
     h('div', { class: 'bilanz-gross' }, [
       bilanzZeile(bilanz, { klein: false }),
-      bilanz.quote !== null ? h('span', { class: 'quote', text: `Zielerreichung ${Math.round(bilanz.quote * 100)} %` }) : null,
+      h('span', {
+        class: 'quote',
+        text: bilanz.gesamt
+          ? `${bilanz.gesamt} ${bilanz.gesamt === 1 ? 'Lehrkraft hat' : 'Lehrkräfte haben'} bewertet · Zielerreichung ${Math.round(bilanz.quote * 100)} %`
+          : 'noch keine Rückmeldung',
+      }),
     ]),
     entscheidung,
     knoepfe,
+    h('p', {
+      class: 'unter eigene-stimme',
+      text: eigene
+        ? `Deine Rückmeldung: ${BEWERTUNG[eigene.wert].ikone} ${BEWERTUNG[eigene.wert].name}. Ein Tipp auf eine andere Farbe ersetzt sie.`
+        : 'Du hast in diesem Verfahren noch nicht bewertet. Jede Lehrkraft gibt eine Rückmeldung.',
+    }),
     h('button', {
       class: 'text-knopf',
       type: 'button',
@@ -150,21 +171,26 @@ function verfahrensTafel(ctx, s, v, status, benutzer) {
 }
 
 function rueckmeldungsListe(v, benutzer) {
-  const eintraege = store.rueckmeldungenZu(v.id).slice().reverse();
+  const alle = store.rueckmeldungenZu(v.id);
+  const eintraege = alle.slice().reverse();
   if (!eintraege.length) return null;
+  // Gültig ist je Lehrkraft die letzte Rückmeldung; frühere sind ersetzt.
+  const gueltigeIds = new Set(stimmen(alle).map((r) => r.id));
   const liste = h('ul', { class: 'rm-liste' });
   for (const r of eintraege) {
     const b = BEWERTUNG[r.wert];
+    const ersetzt = !r.storniert && !gueltigeIds.has(r.id);
     liste.appendChild(
-      h('li', { class: `rm-eintrag${r.storniert ? ' storniert' : ''}` }, [
+      h('li', { class: `rm-eintrag${r.storniert || ersetzt ? ' storniert' : ''}` }, [
         h('span', { class: 'rm-eintrag-ikone', 'aria-hidden': 'true', text: b.ikone }),
         h('span', { class: 'rm-eintrag-text' }, [
           h('strong', { text: b.name }),
           h('span', { class: 'unter', text: `${zeitpunktLang(r.datum)} · ${r.benutzerName}` }),
           r.bemerkung ? h('span', { class: 'rm-bemerkung', text: r.bemerkung }) : null,
           r.storniert ? h('span', { class: 'storno-marke', text: `zurückgenommen${r.stornoGrund ? `: ${r.stornoGrund}` : ''}` }) : null,
+          ersetzt ? h('span', { class: 'storno-marke', text: 'später geändert' }) : null,
         ]),
-        !r.storniert && darf(benutzer, 'rueckmeldung.korrigieren')
+        !r.storniert && !ersetzt && darf(benutzer, 'rueckmeldung.korrigieren')
           ? h('button', {
               class: 'text-knopf',
               text: 'korrigieren',
@@ -180,7 +206,9 @@ function rueckmeldungsListe(v, benutzer) {
     );
   }
   return h('details', { class: 'aufklapp' }, [
-    h('summary', { text: `Rückmeldungen dieses Verfahrens (${eintraege.length})` }),
+    h('summary', {
+      text: `Rückmeldungen dieses Verfahrens (${gueltigeIds.size} von ${eintraege.length} gültig)`,
+    }),
     liste,
   ]);
 }

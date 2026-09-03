@@ -200,9 +200,33 @@ export function abschlussOptionen(verfahren) {
 
 /* ------------------------------------------------------- Rückmeldungen --- */
 
-/** Zählt gültige (nicht stornierte) Rückmeldungen eines Verfahrens. */
+/**
+ * Die gültige Stimme jeder Lehrkraft in einem Verfahren.
+ *
+ * Jede Lehrkraft hat pro Verfahren genau eine Stimme. Ändert sie ihre
+ * Einschätzung, wird die frühere nicht gelöscht, sondern von der neueren
+ * abgelöst: gültig ist die jeweils letzte nicht stornierte Rückmeldung einer
+ * Person. Die Liste bleibt damit vollständig und die Historie nachvollziehbar.
+ */
+export function stimmen(rueckmeldungen) {
+  const je = new Map();
+  for (const r of rueckmeldungen) {
+    if (r.storniert) continue;
+    const schluessel = r.benutzerId || r.benutzerName;
+    const bisher = je.get(schluessel);
+    if (!bisher || r.datum > bisher.datum) je.set(schluessel, r);
+  }
+  return [...je.values()];
+}
+
+/** Die aktuelle Stimme einer bestimmten Lehrkraft, falls vorhanden. */
+export function stimmeVon(rueckmeldungen, benutzerId) {
+  return stimmen(rueckmeldungen).find((r) => r.benutzerId === benutzerId) || null;
+}
+
+/** Zählt die gültigen Stimmen eines Verfahrens - eine je Lehrkraft. */
 export function bilanz(rueckmeldungen) {
-  const gueltig = rueckmeldungen.filter((r) => !r.storniert);
+  const gueltig = stimmen(rueckmeldungen);
   const zaehle = (wert) => gueltig.filter((r) => r.wert === wert).length;
   const erfuellt = zaehle('erfuellt');
   const teilweise = zaehle('teilweise');

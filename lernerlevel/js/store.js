@@ -17,6 +17,7 @@ import {
   STATUS,
   bilanz,
   heuteIso,
+  stimmeVon,
   istOffen,
   neueId,
   neuesToken,
@@ -129,6 +130,14 @@ export function bilanzVon(verfahrenId) {
   return bilanz(rueckmeldungenZu(verfahrenId));
 }
 
+/** Die eigene, aktuell gültige Stimme im laufenden Verfahren eines Schülers. */
+export function eigeneStimme(schuelerId) {
+  const v = offenesVerfahren(schuelerId);
+  const benutzer = aktiverBenutzer();
+  if (!v || !benutzer) return null;
+  return stimmeVon(rueckmeldungenZu(v.id), benutzer.id);
+}
+
 export function historieVon(schuelerId) {
   return stand.ereignisse
     .filter((e) => e.schuelerId === schuelerId)
@@ -168,11 +177,17 @@ export function statistik(gruppenId, heute = heuteIso()) {
  * Die häufigste Aktion der App. Bewusst ohne Rückfrage, ohne Pflichtfeld und
  * ohne Seitenwechsel - ein Tipp genügt. Rückgabe: die neue Rückmeldung, damit
  * die Oberfläche ein "Rückgängig" anbieten kann.
+ *
+ * Jede Lehrkraft hat pro Verfahren eine Stimme. Ein zweiter Tipp ersetzt die
+ * eigene frühere Einschätzung: der neue Eintrag wird angehängt und gilt, der
+ * alte bleibt in der Historie stehen. Derselbe Wert noch einmal ändert nichts.
  */
 export function rueckmeldungGeben(schuelerId, wert, bemerkung = '') {
   const v = offenesVerfahren(schuelerId);
   if (!v) return null;
   const benutzer = aktiverBenutzer();
+  const bisher = eigeneStimme(schuelerId);
+  if (bisher && bisher.wert === wert && !bemerkung.trim()) return { unveraendert: true, ...bisher };
   const r = {
     id: neueId('rm'),
     verfahrenId: v.id,
