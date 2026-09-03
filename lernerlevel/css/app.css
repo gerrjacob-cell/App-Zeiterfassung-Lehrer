@@ -1423,6 +1423,11 @@ main {
   }
 }
 
+/* Breiter Dialog für Listen und Vorschauen. */
+.dialog.breit {
+  width: min(920px, 96vw);
+}
+
 .dialog::backdrop {
   background: rgba(12, 14, 18, 0.45);
   backdrop-filter: blur(2px);
@@ -1568,6 +1573,78 @@ textarea.eingabe {
 
 .bemerkung {
   margin-top: -0.3rem;
+}
+
+/* ---------------------------------------------------------- Listenimport --- */
+
+.import-vorschau {
+  display: flex;
+  flex-direction: column;
+  /* Im Dialog nicht zusammenquetschen lassen: die Vorschau ist der Grund,
+     warum es diesen Dialog gibt. */
+  flex: 0 0 auto;
+  min-height: 9rem;
+  max-height: 32vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--linie);
+  border-radius: var(--radius-klein);
+  background: var(--flaeche-2);
+}
+
+.import-zeile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 5.5rem minmax(0, 1.2fr);
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border-top: 1px solid var(--linie);
+  font-size: 0.92rem;
+}
+
+.import-zeile:first-child {
+  border-top: 0;
+}
+
+.import-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.import-gruppe {
+  color: var(--text-2);
+}
+
+.import-hinweis {
+  color: var(--text-3);
+  font-size: 0.85rem;
+}
+
+.import-zeile.zustand-ergaenzt {
+  background: var(--akzent-flaeche);
+}
+
+.import-zeile.zustand-doppelt,
+.import-zeile.zustand-fehler {
+  background: var(--warnung-flaeche);
+}
+
+.import-zeile.zustand-fehler .import-name {
+  color: var(--warnung);
+  font-weight: 500;
+  font-style: italic;
+}
+
+@media (max-width: 560px) {
+  .import-zeile {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .import-gruppe,
+  .import-hinweis {
+    grid-column: 1 / -1;
+    margin-top: -0.2rem;
+  }
 }
 
 /* ---------------------------------------------------------------- Toast --- */

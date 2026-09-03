@@ -67,5 +67,18 @@ await p2.locator('.vorschlag').first().click();
 await p2.waitForTimeout(300);
 await p2.locator('dialog.dialog').screenshot({ path: `${OUT}/floss-start.png` });
 
+/* Klassenliste importieren. */
+const p3 = await seite(1000);
+await p3.goto(`${B}#/verwaltung`, { waitUntil: 'networkidle' });
+await p3.waitForTimeout(400);
+await p3.locator('.knopf', { hasText: 'Klassenliste importieren' }).click();
+await p3.waitForSelector('dialog.dialog');
+await p3.locator('dialog textarea.eingabe').fill(
+  'Kruse, Hannes\nSchmidt, Marie\nWeber, Tom\nEhlers, David\nJansen, Mia\nKoch, Ali',
+);
+await p3.locator('dialog input[list=gruppen-liste]').fill('9b');
+await p3.waitForTimeout(400);
+await p3.locator('dialog.dialog').screenshot({ path: `${OUT}/import.png` });
+
 await browser.close();
 console.log('Bilder geschrieben nach', OUT);

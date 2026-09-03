@@ -10,6 +10,7 @@ import { h, dialog, bestaetigen, toast, feld } from '../ui.js';
 import * as store from '../store.js';
 import { darf } from '../identitaet.js';
 import { LEVEL, name as vollerName, sortierName } from '../model.js';
+import { vorschau, zusammenfassung } from '../import.js';
 import { levelAbzeichen } from './bausteine.js';
 
 const zustand = { reiter: 'schueler', suche: '', mitArchiv: false };
@@ -117,7 +118,10 @@ function schuelerBereich(ctx) {
   return h('section', { class: 'tafel' }, [
     h('div', { class: 'tafel-kopf' }, [
       h('h2', { text: `Schüler (${liste.length})` }),
-      h('button', { class: 'knopf primaer', text: '+ Schüler hinzufügen', onclick: () => schuelerDialog(null) }),
+      h('div', { class: 'knopf-reihe' }, [
+        h('button', { class: 'knopf', text: '⇪ Klassenliste importieren', onclick: () => importDialog() }),
+        h('button', { class: 'knopf primaer', text: '+ Schüler hinzufügen', onclick: () => schuelerDialog(null) }),
+      ]),
     ]),
     h('div', { class: 'werkzeugleiste' }, [
       h('input', {
@@ -244,6 +248,187 @@ function schuelerDialog(vorhanden) {
   });
 }
 
+/* ------------------------------------------------------------- Import --- */
+
+/**
+ * Klassenliste einlesen: einfügen oder Datei wählen, Vorschau prüfen,
+ * übernehmen. Kein Name muss abgetippt werden.
+ *
+ * Die Vorschau ist der eigentliche Kern: sie zeigt vor dem Speichern, was
+ * ankommt, was schon da ist und was nicht gelesen werden konnte.
+ */
+function importDialog() {
+  const stand = store.getStand();
+  const zustand = {
+    text: '',
+    gruppenName: '',
+    standardLevel: 2,
+    nachnameZuerst: false,
+    ergebnis: { zeilen: [], trenner: null, kopfzeile: false, gruppen: [] },
+  };
+
+  return dialog('Klassenliste importieren', (schliessen) => {
+    const feldText = h('textarea', {
+      class: 'eingabe',
+      rows: '3',
+      placeholder: 'Liste hier einfügen – eine Zeile je Schüler.\nZum Beispiel: Mustermann, Max',
+      oninput: (e) => {
+        zustand.text = e.target.value;
+        neuLesen();
+      },
+    });
+
+    const datei = h('input', {
+      type: 'file',
+      accept: '.csv,.txt,.tsv,text/plain,text/csv',
+      class: 'eingabe',
+      onchange: (e) => {
+        const f = e.target.files && e.target.files[0];
+        if (!f) return;
+        const leser = new FileReader();
+        leser.onload = () => {
+          zustand.text = String(leser.result || '');
+          feldText.value = zustand.text;
+          neuLesen();
+        };
+        leser.readAsText(f, 'utf-8');
+      },
+    });
+
+    const gruppenFeld = h('input', {
+      class: 'eingabe',
+      type: 'text',
+      list: 'gruppen-liste',
+      placeholder: 'z. B. 7a – neue Lerngruppe wird angelegt',
+      oninput: (e) => {
+        zustand.gruppenName = e.target.value;
+        neuLesen();
+      },
+    });
+    const gruppenListe = h(
+      'datalist',
+      { id: 'gruppen-liste' },
+      stand.gruppen.map((g) => h('option', { value: g.name })),
+    );
+
+    const levelWahl = h('div', { class: 'kategorien' });
+    const levelZeichnen = () => {
+      levelWahl.replaceChildren();
+      for (const l of LEVEL) {
+        levelWahl.appendChild(
+          h('button', {
+            class: `chip level-chip level-${l}${zustand.standardLevel === l ? ' aktiv' : ''}`,
+            type: 'button',
+            text: `Level ${l}`,
+            onclick: () => {
+              zustand.standardLevel = l;
+              levelZeichnen();
+              neuLesen();
+            },
+          }),
+        );
+      }
+    };
+    levelZeichnen();
+
+    const reihenfolge = h('label', { class: 'schalter' }, [
+      h('input', {
+        type: 'checkbox',
+        onchange: (e) => {
+          zustand.nachnameZuerst = e.target.checked;
+          neuLesen();
+        },
+      }),
+      h('span', { text: 'Ohne Trennzeichen: Nachname steht vorn' }),
+    ]);
+
+    const bilanzZeile = h('p', { class: 'unter' });
+    const tabelle = h('div', { class: 'import-vorschau' });
+    const uebernehmen = h('button', {
+      class: 'knopf primaer gross',
+      type: 'button',
+      text: 'Übernehmen',
+      onclick: () => {
+        const bericht = store.listeImportieren(zustand.ergebnis.zeilen);
+        toast(
+          `${bericht.angelegt} angelegt, ${bericht.ergaenzt} zugeordnet` +
+            (bericht.gruppen.length ? ` · neu: ${bericht.gruppen.join(', ')}` : ''),
+        );
+        schliessen(bericht);
+      },
+    });
+
+    function neuLesen() {
+      zustand.ergebnis = vorschau(
+        zustand.text,
+        {
+          nachnameZuerst: zustand.nachnameZuerst,
+          standardLevel: zustand.standardLevel,
+          gruppenName: zustand.gruppenName,
+        },
+        stand,
+      );
+      const z = zusammenfassung(zustand.ergebnis.zeilen);
+      const uebernehmbar = z.neu + z.ergaenzt;
+
+      const erkannt = zustand.ergebnis.trenner
+        ? { ';': 'Semikolon', '\t': 'Tabulator', ',': 'Komma' }[zustand.ergebnis.trenner]
+        : 'kein Trennzeichen';
+      bilanzZeile.textContent = z.gesamt
+        ? `${z.gesamt} Zeilen gelesen (${erkannt}${zustand.ergebnis.kopfzeile ? ', mit Kopfzeile' : ''}) · ` +
+          `${z.neu} neu, ${z.ergaenzt} schon vorhanden, ${z.doppelt} doppelt, ${z.fehler} unklar`
+        : 'Noch nichts eingelesen.';
+
+      tabelle.replaceChildren();
+      for (const zeile of zustand.ergebnis.zeilen.slice(0, 60)) {
+        tabelle.appendChild(
+          h('div', { class: `import-zeile zustand-${zeile.zustand}` }, [
+            h('span', { class: 'import-name', text: `${zeile.vorname} ${zeile.nachname}`.trim() || zeile.rohzeile }),
+            h('span', { class: `level level-${zeile.level}`, text: `Level ${zeile.level}` }),
+            h('span', { class: 'import-gruppe', text: zeile.gruppe || '—' }),
+            h('span', { class: 'import-hinweis', text: zeile.hinweis }),
+          ]),
+        );
+      }
+      if (zustand.ergebnis.zeilen.length > 60) {
+        tabelle.appendChild(
+          h('p', { class: 'hinweis', text: `… und ${zustand.ergebnis.zeilen.length - 60} weitere Zeilen` }),
+        );
+      }
+
+      uebernehmen.disabled = uebernehmbar === 0;
+      uebernehmen.textContent = uebernehmbar
+        ? `${uebernehmbar} Schüler übernehmen`
+        : 'Übernehmen';
+    }
+
+    neuLesen();
+
+    return [
+      h('p', { class: 'hinweis', text: 'Liste aus der Schulverwaltung, aus IServ oder aus einer Excel-Spalte. Die Datei wird im Browser gelesen und nicht hochgeladen.' }),
+      feld('Liste einfügen', feldText),
+      feld('… oder Datei wählen', datei, 'CSV oder Textdatei, Semikolon, Komma oder Tabulator'),
+      gruppenListe,
+      h('div', { class: 'zwei-spalten' }, [
+        feld('Lerngruppe', gruppenFeld, 'Leer lassen, wenn die Liste eine Spalte „Klasse“ hat'),
+        h('div', { class: 'feld' }, [
+          h('span', { class: 'feld-beschriftung', text: 'Level für neue Schüler' }),
+          levelWahl,
+        ]),
+      ]),
+      reihenfolge,
+      h('h3', { class: 'unter', text: 'Vorschau' }),
+      bilanzZeile,
+      tabelle,
+      h('p', { class: 'hinweis', text: 'Schüler, die es schon gibt, werden der Lerngruppe zugeordnet statt doppelt angelegt. Ihr Level bleibt unverändert.' }),
+      h('div', { class: 'dialog-fuss' }, [
+        h('button', { class: 'knopf', type: 'button', text: 'Abbrechen', onclick: () => schliessen(null) }),
+        uebernehmen,
+      ]),
+    ];
+  }, { breit: true });
+}
+
 /* -------------------------------------------------------- Lerngruppen --- */
 
 function gruppenBereich(ctx) {
@@ -268,7 +453,10 @@ function gruppenBereich(ctx) {
   return h('section', { class: 'tafel' }, [
     h('div', { class: 'tafel-kopf' }, [
       h('h2', { text: `Lerngruppen (${stand.gruppen.length})` }),
-      h('button', { class: 'knopf primaer', text: '+ Lerngruppe anlegen', onclick: () => gruppenDialog(null) }),
+      h('div', { class: 'knopf-reihe' }, [
+        h('button', { class: 'knopf', text: '⇪ Aus Klassenliste anlegen', onclick: () => importDialog() }),
+        h('button', { class: 'knopf primaer', text: '+ Lerngruppe anlegen', onclick: () => gruppenDialog(null) }),
+      ]),
     ]),
     liste,
   ]);

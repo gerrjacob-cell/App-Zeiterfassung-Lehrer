@@ -307,6 +307,108 @@ export function schuelerAnlegen({ vorname, nachname, level, gruppen }) {
   return s;
 }
 
+/**
+ * Übernimmt eine geprüfte Klassenliste (die Vorschau aus import.js).
+ *
+ * Regeln:
+ * - Fehlerhafte und doppelte Zeilen werden übersprungen, nicht geraten.
+ * - Eine Lerngruppe, die es noch nicht gibt, wird angelegt.
+ * - Ein Schüler, den es schon gibt, bekommt die Lerngruppe dazu. Es entsteht
+ *   kein zweiter Datensatz, und sein Level bleibt, wie es ist: eine Liste aus
+ *   der Verwaltung weiß nichts über laufende Verfahren.
+ */
+export function listeImportieren(zeilen) {
+  const benutzer = aktiverBenutzer();
+  const nachName = new Map(stand.gruppen.map((g) => [g.name.toLowerCase(), g]));
+  const bericht = { angelegt: 0, ergaenzt: 0, uebersprungen: 0, gruppen: [] };
+
+  for (const z of zeilen) {
+    if (z.zustand !== 'neu' && z.zustand !== 'ergaenzt') {
+      bericht.uebersprungen += 1;
+      continue;
+    }
+
+    let gruppe = null;
+    if (z.gruppe) {
+      gruppe = nachName.get(z.gruppe.toLowerCase());
+      if (!gruppe) {
+        gruppe = { id: neueId('gr'), name: z.gruppe, beschreibung: '', archiviert: false };
+        stand.gruppen.push(gruppe);
+        nachName.set(gruppe.name.toLowerCase(), gruppe);
+        bericht.gruppen.push(gruppe.name);
+        if (benutzer && !benutzer.gruppen.includes(gruppe.id)) benutzer.gruppen.push(gruppe.id);
+        stand.ereignisse.push(
+          evStammdaten('gruppe.angelegt', null, 'Lerngruppe angelegt', `${gruppe.name} (aus Liste)`, benutzer),
+        );
+      }
+    }
+
+    const vorhanden = stand.schueler.find(
+      (s) =>
+        s.vorname.toLowerCase() === z.vorname.toLowerCase() &&
+        s.nachname.toLowerCase() === z.nachname.toLowerCase(),
+    );
+
+    if (vorhanden) {
+      if (gruppe && !vorhanden.gruppen.includes(gruppe.id)) {
+        vorhanden.gruppen.push(gruppe.id);
+        stand.ereignisse.push(
+          evStammdaten(
+            'schueler.bearbeitet',
+            vorhanden.id,
+            'Lerngruppe zugeordnet',
+            `${gruppe.name} (aus Liste)`,
+            benutzer,
+          ),
+        );
+        bericht.ergaenzt += 1;
+      } else {
+        bericht.uebersprungen += 1;
+      }
+      continue;
+    }
+
+    const s = {
+      id: neueId('sch'),
+      vorname: z.vorname,
+      nachname: z.nachname,
+      level: z.level,
+      gruppen: gruppe ? [gruppe.id] : [],
+      archiviert: false,
+      token: neuesToken(),
+      angelegtAm: heuteIso(),
+      notiz: '',
+    };
+    stand.schueler.push(s);
+    stand.ereignisse.push(
+      evStammdaten(
+        'schueler.angelegt',
+        s.id,
+        'Schüler aus Liste angelegt',
+        `${s.vorname} ${s.nachname}, Level ${s.level}${gruppe ? `, ${gruppe.name}` : ''}`,
+        benutzer,
+      ),
+    );
+    bericht.angelegt += 1;
+  }
+
+  // Eine Millisekunde später, damit die Zusammenfassung im Protokoll über den
+  // Einzeleinträgen des Imports steht.
+  stand.ereignisse.push(
+    evStammdaten(
+      'import',
+      null,
+      'Klassenliste importiert',
+      `${bericht.angelegt} angelegt, ${bericht.ergaenzt} zugeordnet, ${bericht.uebersprungen} übersprungen` +
+        (bericht.gruppen.length ? ` · neue Lerngruppen: ${bericht.gruppen.join(', ')}` : ''),
+      benutzer,
+      new Date(Date.now() + 1).toISOString(),
+    ),
+  );
+  sichern();
+  return bericht;
+}
+
 export function schuelerBearbeiten(id, aenderungen) {
   const s = schueler(id);
   if (!s) return null;

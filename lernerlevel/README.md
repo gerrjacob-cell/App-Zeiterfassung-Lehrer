@@ -25,6 +25,11 @@ python3 -m http.server 8123
 Alternativ auf jeden Webspace oder GitHub Pages legen und den Ordner aufrufen.
 Auf dem iPad über Safari → Teilen → „Zum Home-Bildschirm“ ablegen.
 
+Wie eine Klassenliste aussehen kann, zeigt
+[`beispiel-klassenliste.csv`](beispiel-klassenliste.csv). Nötig ist dieses
+Format nicht: der Import erkennt Semikolon, Komma und Tabulator, kommt mit und
+ohne Kopfzeile zurecht und liest auch eine schlichte Namensspalte.
+
 Für das Kollegium liegt eine Kurzanleitung bei, als Seite und als Handout:
 
 * **[`anleitung.html`](anleitung.html)** – im Browser lesbar, in der App unten
@@ -82,6 +87,7 @@ ziehen. Sofort online mit HTTPS, kein Konto nötig.
 | Historie je Schüler, append-only, Korrekturen als eigener Eintrag | ✅ |
 | Klassenstatistik (Levelverteilung, laufende Verfahren) | ✅ |
 | Verwaltung: Schüler und Lerngruppen anlegen, bearbeiten, archivieren, zuordnen | ✅ |
+| Klassenlisten importieren (einfügen oder CSV), mit Vorschau und Dublettenabgleich | ✅ |
 | Rollen Lehrkraft / Klassenleitung mit unterschiedlichen Rechten | ✅ |
 | Protokoll aller Änderungen | ✅ |
 | Datenexport (JSON), Zurücksetzen, Löschen | ✅ |
